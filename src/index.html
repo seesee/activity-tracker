@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<!-- {{VERSION}} -->
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Activity Tracker</title>
+    <style>
+        {{CSS}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Activity Tracker</h1>
+            <p>Track your daily activities with automatic reminders</p>
+            
+            <!-- Global Search -->
+            <div class="global-search">
+                <div class="search-container">
+                    <input type="text" id="globalSearch" placeholder="Search activities, todos, and hashtags..." autocomplete="off">
+                    <button class="hashtag-browser-btn" onclick="showHashtagBrowser()" title="Browse hashtags">🏷️</button>
+                    <div class="search-results" id="searchResults" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <div class="nav">
+                <div class="nav-left">
+                    <button class="nav-btn active" onclick="showSection('tracker', event)">Tracker</button>
+                    <button class="nav-btn" onclick="showSection('todo', event)">To Do</button>
+                    <button class="nav-btn" onclick="showSection('reports', event)">Reports</button>
+                    <button class="nav-btn" onclick="showSection('settings', event)">Settings</button>
+                </div>
+                <div class="nav-right">
+                    <button id="pauseButton" class="nav-btn" onclick="togglePause()">Start Reminders</button>
+                    <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">🍅 Start Pomodoro</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div id="statusBanner" class="status-banner" style="display: none;">
+            <div class="status-banner-content">
+                <!-- Pomodoro Status -->
+                <div id="pomodoroStatusSection" class="status-section" style="display: none;">
+                    <div class="pomodoro-bar">
+                        <div id="pomodoroStatus" class="status-label">Pomodoro mode disabled</div>
+                        <div id="pomodoroTimer" class="pomodoro-active-bar" style="display: none;">
+                            <div class="pomodoro-tomato">🍅</div>
+                            <div id="pomodoroPhase" class="session-number">#1</div>
+                            <div id="pomodoroTimeRemaining" class="countdown-timer">25:00</div>
+                            <div id="pomodoroActivityDisplay" class="work-item" style="display: none;">
+                                <div id="pomodoroActivityText" class="work-title"></div>
+                                <div id="pomodoroActivityDesc" class="work-desc"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pomodoroBannerControls" class="status-controls" style="display: none;">
+                        <button id="pomodoroPauseBtn" class="status-button" onclick="togglePomodoroPause()">Pause</button>
+                    </div>
+                </div>
+                
+                <!-- Reminder Status -->
+                <div id="reminderStatusSection" class="status-section" style="display: none;">
+                    <div class="status-info">
+                        <div id="reminderStatus" class="status-label">Next activity logging reminder in:</div>
+                        <div id="reminderTimer" class="status-timer">
+                            <span id="reminderTimeRemaining">--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tracker Section -->
+        <div id="tracker" class="section active">
+            <h2>Activity Entry</h2>
+            <form id="activityForm">
+                <div class="form-group">
+                    <label for="activity">What are you doing?</label>
+                    <input type="text" id="activity" required placeholder="e.g., Writing report, Meeting with team #work" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional)</label>
+                    <textarea id="description" rows="3" placeholder="Additional details about this activity"></textarea>
+                </div>
+                <div class="form-group form-group-row">
+                    <div class="form-group">
+                        <label for="timestamp">Time</label>
+                        <input type="datetime-local" id="timestamp" required>
+                        <div class="todo-quick-set">
+                            <button type="button" class="btn-quick-set" id="todoToggleBtn" onclick="toggleTodoMode()" title="Mark this as a todo item (Shift+Enter to submit as todo automatically)">Mark as Todo</button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="dueDateSection">
+                        <label for="dueDate">Due Date (optional)</label>
+                        <input type="datetime-local" id="dueDate">
+                        <div class="due-date-quick-sets">
+                            <button type="button" class="btn-quick-set" onclick="setDueDate('tomorrow')">Tomorrow</button>
+                            <button type="button" class="btn-quick-set" onclick="setDueDate('nextWeek')">Next Week</button>
+                            <button type="button" class="btn-quick-set" onclick="setDueDate('nextMonth')">Next Month</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Entry</button>
+                <button type="button" class="btn btn-secondary" onclick="addCurrentTime()">Use Current Time</button>
+            </form>
+
+            <div class="entries-list">
+                <h3>Recent Entries</h3>
+                <div id="entriesList"></div>
+                <div class="entries-pagination" id="entriesPagination" style="display: none;">
+                    <button id="entriesPrevBtn" onclick="tracker.previousEntriesPage()">‹ Previous</button>
+                    <span id="entriesPageInfo"></span>
+                    <button id="entriesNextBtn" onclick="tracker.nextEntriesPage()">Next ›</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- To Do Section -->
+        <div id="todo" class="section">
+            <h2>To Do</h2>
+            
+            <div class="todo-filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="todoFilter">Filter:</label>
+                        <select id="todoFilter" onchange="tracker.filterTodos()">
+                            <option value="all">All Todos</option>
+                            <option value="due-today">Due Today</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="no-due-date">No Due Date</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="todoSort">Sort by:</label>
+                        <select id="todoSort" onchange="tracker.sortTodos()">
+                            <option value="created-desc">Newest First</option>
+                            <option value="created-asc">Oldest First</option>
+                            <option value="due-asc">Due Date (Earliest)</option>
+                            <option value="due-desc">Due Date (Latest)</option>
+                            <option value="activity-asc">Activity A-Z</option>
+                            <option value="activity-desc">Activity Z-A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="todo-stats" id="todoStats">
+                <span id="todoCount">0 todos</span>
+            </div>
+
+            <div class="todo-list" id="todoList">
+                <p class="empty-state">No todos found. Add activities as todos to see them here!</p>
+            </div>
+
+            <div class="todo-pagination" id="todoPagination" style="display: none;">
+                <button class="btn btn-secondary" id="todoPrevBtn" onclick="tracker.previousTodoPage()">← Previous</button>
+                <span id="todoPageInfo">Page 1 of 1</span>
+                <button class="btn btn-secondary" id="todoNextBtn" onclick="tracker.nextTodoPage()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="section">
+            <h2>Activity Reports</h2>
+
+            <!-- Report Generation -->
+            <div class="reports-grid">
+                <div class="reports-section">
+                    <h3>Date Range</h3>
+                    <p class="settings-description">Select the time period for your report</p>
+                    <div class="form-group">
+                        <label for="reportStartDate" title="Choose the start date for your report">Start Date</label>
+                        <input type="date" id="reportStartDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="reportEndDate" title="Choose the end date for your report">End Date</label>
+                        <input type="date" id="reportEndDate">
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn btn-primary" onclick="generateReport()" title="Generate report for the selected date range">Generate Report</button>
+                        <button class="btn btn-secondary" onclick="setWeeklyReport()" title="Set date range to current week">This Week</button>
+                    </div>
+                </div>
+
+                <div class="reports-section">
+                    <h3>Template & Options</h3>
+                    <p class="settings-description">Choose format, options and download your report</p>
+                    <div class="form-group">
+                        <label for="reportTemplate" title="Select the format for your report">Report Template</label>
+                        <select id="reportTemplate" onchange="tracker.previewReport()"></select>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="includeIncompleteTodos" onchange="tracker.generateReport()">
+                            <label for="includeIncompleteTodos" title="Include uncompleted todo items in the report">Include incomplete todos</label>
+                        </div>
+                    </div>
+                    <div class="download-actions">
+                        <button class="btn btn-success" onclick="downloadReport()" title="Download the generated report">Download Report</button>
+                        <button class="btn btn-primary" onclick="openReportInNewTab()" title="Open the generated report in a new tab">Open in New Tab</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week Navigation -->
+            <div class="report-navigation-section">
+                <div class="report-navigation">
+                    <button class="btn btn-secondary" onclick="previousWeek()">← Previous Week</button>
+                    <div class="week-display" id="weekDisplay">Week of ...</div>
+                    <button class="btn btn-secondary" onclick="nextWeek()">Next Week →</button>
+                </div>
+            </div>
+
+            <div id="reportPreviewContainer" class="report-preview-container">
+                <div class="report-preview-header">
+                    <h3>Report Preview</h3>
+                    <div class="preview-controls">
+                        <div class="preview-format-tabs">
+                            <button class="preview-tab active" id="reportPreviewTabRendered" onclick="switchReportPreviewTab('rendered')" title="View the formatted report output">Rendered</button>
+                            <button class="preview-tab" id="reportPreviewTabSource" onclick="switchReportPreviewTab('source')" title="View the raw source code of the report">Source</button>
+                        </div>
+                        <button class="btn-copy-report" id="copyReportBtn" onclick="copyReportToClipboard()" title="Copy report content to clipboard" style="display: none;">Copy Report</button>
+                    </div>
+                </div>
+                <div id="reportPreview" class="report-preview-content">
+                    Select a date range and generate a report to see a preview.
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="section">
+            <h2>Settings</h2>
+            
+            <div class="notification-status" id="notificationStatus">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="statusText">Checking notification status...</span>
+            </div>
+
+            <!-- Reminder Control Buttons -->
+            <div class="settings-buttons-section">
+                <div class="reminder-buttons">
+                    <button class="btn btn-primary" onclick="enableNotifications()">Enable Reminders</button>
+                    <button class="btn btn-info" onclick="showAbout()" title="View app information, version details, and diagnostic tools">About & Diagnostics</button>
+                    <button class="btn btn-info" onclick="showUserGuide()" title="View user guide and shortcuts">📚 User Guide</button>
+                </div>
+            </div>
+
+            <!-- General Settings (Shared between all modes) -->
+            <div class="settings-section general-settings">
+                <h3>General Settings</h3>
+                <p class="settings-description">Settings that apply to all modes of operation</p>
+                <div class="settings-grid settings-grid-four-col">
+                    <div class="form-group">
+                        <label for="darkModePreference" title="Choose your colour theme preference">Colour Theme</label>
+                        <select id="darkModePreference">
+                            <option value="light">Light mode</option>
+                            <option value="dark">Dark mode</option>
+                            <option value="system">Follow system settings</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="soundMuteMode" title="Choose which sounds to mute">Sound Settings</label>
+                        <select id="soundMuteMode">
+                            <option value="none">All sounds enabled</option>
+                            <option value="all">Mute all sounds</option>
+                            <option value="pomodoro">Mute Pomodoro sounds only</option>
+                            <option value="notifications">Mute notification sounds only</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paginationSize" title="Number of items to show per page in lists">Items per page</label>
+                        <select id="paginationSize">
+                            <option value="10">10 items</option>
+                            <option value="20" selected>20 items</option>
+                            <option value="30">30 items</option>
+                            <option value="50">50 items</option>
+                            <option value="100">100 items</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="systemNotificationsGroup" style="display: none;">
+                        <label for="sendSystemNotifications" title="Send system notifications to your operating system">System Notifications</label>
+                        <select id="sendSystemNotifications">
+                            <option value="true" selected>Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Settings Grid -->
+            <div class="settings-grid settings-grid-two-col">
+                <div class="settings-section">
+                    <h3>Reminder Settings</h3>
+                    <div class="form-group">
+                        <label for="notificationInterval" title="How often you'll receive activity reminder notifications">Reminder Interval</label>
+                        <select id="notificationInterval">
+                            <option value="1">1 minute</option>
+                            <option value="2">2 minutes</option>
+                            <option value="5">5 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60" selected>1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                            <option value="180">3 hours</option>
+                            <option value="240">4 hours</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pauseDuration" title="How long alerts remain paused before automatically resuming">Auto-resume alerts after</label>
+                        <select id="pauseDuration">
+                            <option value="1">1 minute</option>
+                            <option value="2">2 minutes</option>
+                            <option value="5">5 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                            <option value="180">3 hours</option>
+                            <option value="240">4 hours</option>
+                            <option value="480">8 hours</option>
+                            <option value="1440">24 hours</option>
+                            <option value="-1">Never</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="autoStartAlerts" title="Automatically start reminders when the app opens">Auto start reminders upon opening app</label>
+                        <select id="autoStartAlerts">
+                            <option value="false" selected>No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notificationSoundType" title="Choose the sound that plays with reminders">Reminder Sound</label>
+                        <select id="notificationSoundType" onchange="previewNotificationSound()">
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Working Schedule</h3>
+                    <p class="settings-description">Set your active working hours and days for notifications</p>
+                    
+                    <div class="schedule-section">
+                        <h4>Working Hours</h4>
+                        <div class="time-inputs">
+                            <div class="form-group">
+                                <label for="startTime" title="When your work day starts">Start Time</label>
+                                <input type="time" id="startTime" value="08:00">
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime" title="When your work day ends">End Time</label>
+                                <input type="time" id="endTime" value="18:00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-section">
+                        <h4>Working Days</h4>
+                        <div class="working-days-grid">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="monday" checked>
+                                <label for="monday">Monday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="tuesday" checked>
+                                <label for="tuesday">Tuesday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="wednesday" checked>
+                                <label for="wednesday">Wednesday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="thursday" checked>
+                                <label for="thursday">Thursday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="friday" checked>
+                                <label for="friday">Friday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="saturday">
+                                <label for="saturday">Saturday</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="sunday">
+                                <label for="sunday">Sunday</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pomodoro Mode Section -->
+            <div class="pomodoro-section">
+                <div class="settings-card">
+                    <h3>Pomodoro Mode</h3>
+                    <p class="card-description">Structured work/break intervals with automatic notifications</p>
+                    <div class="pomodoro-settings">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="pomodoroEnabled">
+                            <label for="pomodoroEnabled" title="Enable Pomodoro timing mode with work and break alerts">Enable Pomodoro Mode</label>
+                        </div>
+                        
+                        <div class="pomodoro-config" id="pomodoroConfig" style="display: none;">
+                            
+                            <!-- Timer Configuration -->
+                            <div class="pomodoro-timers">
+                                <div class="form-group">
+                                    <label for="pomodoroWorkDuration" title="Length of work periods in minutes">Work Duration (minutes)</label>
+                                    <select id="pomodoroWorkDuration">
+                                        <option value="15">15 minutes</option>
+                                        <option value="20">20 minutes</option>
+                                        <option value="25" selected>25 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="45">45 minutes</option>
+                                        <option value="60">60 minutes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pomodoroBreakDuration" title="Length of short break periods in minutes">Short Break Duration (minutes)</label>
+                                    <select id="pomodoroBreakDuration">
+                                        <option value="3">3 minutes</option>
+                                        <option value="5" selected>5 minutes</option>
+                                        <option value="10">10 minutes</option>
+                                        <option value="15">15 minutes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pomodoroLongBreakDuration" title="Length of long break periods in minutes">Long Break Duration (minutes)</label>
+                                    <select id="pomodoroLongBreakDuration">
+                                        <option value="15" selected>15 minutes</option>
+                                        <option value="20">20 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="45">45 minutes</option>
+                                        <option value="60">60 minutes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pomodoroLongBreakInterval" title="Number of work sessions before taking a long break">Sessions before long break</label>
+                                    <select id="pomodoroLongBreakInterval">
+                                        <option value="2">Every 2 sessions</option>
+                                        <option value="3">Every 3 sessions</option>
+                                        <option value="4" selected>Every 4 sessions</option>
+                                        <option value="5">Every 5 sessions</option>
+                                        <option value="6">Every 6 sessions</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Tick Sound Configuration -->
+                            <div class="pomodoro-sounds">
+                                <h4>Tick Sounds</h4>
+                                <div class="form-group">
+                                    <label for="pomodoroTickSound" title="Optional tick sound to remind you're in a work session">Tick Sound Type</label>
+                                    <select id="pomodoroTickSound">
+                                        <option value="none" selected>No ticking</option>
+                                        <option value="soft">Soft tick</option>
+                                        <option value="classic">Classic tick</option>
+                                        <option value="digital">Digital tick</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pomodoroTickInterval" title="How often to play the tick sound in seconds">Tick Interval (seconds)</label>
+                                    <select id="pomodoroTickInterval">
+                                        <option value="0" selected>Off (no ticking)</option>
+                                        <option value="1">Every 1 second</option>
+                                        <option value="2">Every 2 seconds</option>
+                                        <option value="3">Every 3 seconds</option>
+                                        <option value="4">Every 4 seconds</option>
+                                        <option value="5">Every 5 seconds</option>
+                                        <option value="10">Every 10 seconds</option>
+                                        <option value="15">Every 15 seconds</option>
+                                        <option value="30">Every 30 seconds</option>
+                                        <option value="60">Every minute</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Announce Sound Configuration -->
+                            <div class="pomodoro-announce-sounds">
+                                <h4>Announce Sounds</h4>
+                                <div class="form-group">
+                                    <label for="pomodoroShortBreakSound" title="Sound to play when short break starts">Short Break Announce</label>
+                                    <select id="pomodoroShortBreakSound">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pomodoroLongBreakSound" title="Sound to play when long break starts">Long Break Announce</label>
+                                    <select id="pomodoroLongBreakSound">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pomodoroResumeSound" title="Sound to play when resuming work after break">Resume Work Announce</label>
+                                    <select id="pomodoroResumeSound">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Pomodoro Options -->
+                            <div class="pomodoro-options">
+                                <h4>Options</h4>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="pomodoroAutoStart">
+                                    <label for="pomodoroAutoStart" title="Automatically start the next session without requiring manual intervention">Automatically start next session</label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="pomodoroAutoLog" checked>
+                                    <label for="pomodoroAutoLog" title="Prompt for activity description and create log entries for work sessions">Prompt for work session descriptions</label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="pomodoroLogBreaks">
+                                    <label for="pomodoroLogBreaks" title="Also log break sessions in the activity tracker">Log break sessions too</label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="pomodoroLongBreak" checked>
+                                    <label for="pomodoroLongBreak" title="Enable long breaks after completing multiple sessions">Enable long breaks</label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="pomodoroPauseAllowed" checked>
+                                    <label for="pomodoroPauseAllowed" title="Allow pausing Pomodoro sessions from the banner">Allow session pausing</label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="pomodoroAutoResetDaily">
+                                    <label for="pomodoroAutoResetDaily" title="Automatically reset session counter to 1 when the day changes">Auto-reset sessions daily</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Session Management -->
+                            <div class="pomodoro-session-management">
+                                <h5>Session Management</h5>
+                                <div class="session-actions">
+                                    <button type="button" class="btn btn-outline btn-warning" onclick="resetPomodoroSessions()" title="Reset session counter back to 1">
+                                        Reset Session Counter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Management Section -->
+            <div class="data-management-section">
+                <div class="data-management-grid">
+                    <div class="settings-card">
+                        <h3>Report Templates</h3>
+                        <p class="card-description">Manage templates for report generation</p>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="openTemplateManager()" title="Open the template editor to create and modify report templates">Manage Templates</button>
+                            <button class="btn btn-secondary" onclick="resetReportTemplates()" title="Restore all templates to their original default versions">Reset to Default</button>
+                            <button class="btn btn-info" onclick="showTemplateGuide()" title="View help documentation for template syntax and available data">📋 Template Guide</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Database Backup</h3>
+                        <p class="card-description">Export or import your activity data</p>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="exportDatabase()">Export Database</button>
+                            <button class="btn btn-secondary" onclick="importDatabase()">Import Database</button>
+                            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="handleImportFile(event)">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>Warning Settings</h3>
+                        <p class="card-description">Configure confirmation dialogs for destructive actions</p>
+                        <div class="warning-settings">
+                            <div class="form-group">
+                                <label for="warnOnActivityDelete" title="Show confirmation dialog when deleting activities">Warn on activity delete</label>
+                                <select id="warnOnActivityDelete">
+                                    <option value="true" selected>Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="warnOnSessionReset" title="Show confirmation dialog when resetting Pomodoro session counter">Warn on session reset</label>
+                                <select id="warnOnSessionReset">
+                                    <option value="true" selected>Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button class="btn btn-primary" onclick="saveSettings()">Manual Save Settings</button>
+            <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+        </div>
+
+        <!-- Search Results Section -->
+        <div id="search" class="section">
+            <h2>Search Results</h2>
+            
+            <div class="search-controls">
+                <div class="search-info" id="searchInfo">
+                    <span id="searchQuery"></span>
+                    <span id="searchCount">0 results</span>
+                </div>
+                
+                <div class="search-options">
+                    <div class="filter-group">
+                        <label for="searchSort">Sort by:</label>
+                        <select id="searchSort" onchange="tracker.sortSearchResults()">
+                            <option value="relevance">Relevance</option>
+                            <option value="date-desc">Newest First</option>
+                            <option value="date-asc">Oldest First</option>
+                            <option value="activity-asc">Activity A-Z</option>
+                            <option value="activity-desc">Activity Z-A</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="searchFilter">Show:</label>
+                        <select id="searchFilter" onchange="tracker.filterSearchResults()">
+                            <option value="all">All Items</option>
+                            <option value="activities">Activities Only</option>
+                            <option value="todos">Todos Only</option>
+                            <option value="completed">Completed Only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-results-list" id="searchResultsList">
+                <p class="empty-state">Use the search box above to find activities, todos, and hashtags.</p>
+            </div>
+
+            <div class="search-pagination" id="searchPagination" style="display: none;">
+                <button class="btn btn-secondary" id="searchPrevBtn" onclick="tracker.previousSearchPage()">← Previous</button>
+                <span id="searchPageInfo">Page 1 of 1</span>
+                <button class="btn btn-secondary" id="searchNextBtn" onclick="tracker.nextSearchPage()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Stack Container -->
+    <div id="notificationStack" class="notification-stack"></div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content edit-modal-content">
+            <div class="modal-header">
+                <h3>Edit Entry</h3>
+                <button class="btn-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId">
+                    <div class="form-group">
+                        <label for="editActivity">Activity</label>
+                        <input type="text" id="editActivity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Description</label>
+                        <textarea id="editDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group form-group-row">
+                        <div class="form-group">
+                            <label for="editTimestamp">Time</label>
+                            <input type="datetime-local" id="editTimestamp" required>
+                            <div class="todo-quick-set">
+                                <button type="button" id="editTodoButton" class="btn-quick-set" onclick="toggleEditTodo()">
+                                    <span id="editTodoButtonText">Mark as Todo</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group" id="editDueDateSection">
+                            <label for="editDueDate">Due Date (optional)</label>
+                            <input type="datetime-local" id="editDueDate">
+                            <div class="due-date-quick-sets">
+                                <button type="button" class="btn-quick-set" onclick="setEditDueDate('tomorrow')">Tomorrow</button>
+                                <button type="button" class="btn-quick-set" onclick="setEditDueDate('nextWeek')">Next Week</button>
+                                <button type="button" class="btn-quick-set" onclick="setEditDueDate('nextMonth')">Next Month</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn btn-primary">Update Entry</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Management Overlay -->
+    <div id="templateManagerOverlay" class="template-overlay">
+        <div class="template-overlay-content">
+            <div class="template-manager-header">
+                <h2>Template Manager</h2>
+                <div class="template-manager-actions">
+                    <button class="btn btn-primary" onclick="saveAllTemplates()">Save All Changes</button>
+                    <button class="btn btn-secondary" onclick="closeTemplateManager()">Close</button>
+                </div>
+            </div>
+            
+            <div class="template-manager-body">
+                <div class="template-list-panel">
+                    <h3>Templates</h3>
+                    <div class="template-list" id="templateList">
+                        <!-- Template list items will be added here -->
+                    </div>
+                    <div class="template-list-actions">
+                        <button class="btn btn-primary" onclick="addNewTemplate()">Add Template</button>
+                        <button class="btn btn-secondary" onclick="resetToDefaults()">Reset All</button>
+                    </div>
+                </div>
+                
+                <div class="template-editor-panel">
+                    <div class="template-editor-header">
+                        <h3 id="templateEditorTitle">Select a template to edit</h3>
+                        <div class="template-editor-actions" id="templateEditorActions" style="display: none;">
+                            <button class="btn btn-success" onclick="saveCurrentTemplate()">Save</button>
+                            <button class="btn btn-danger" onclick="deleteCurrentTemplate()">Delete</button>
+                            <button class="btn btn-secondary" onclick="duplicateCurrentTemplate()">Duplicate</button>
+                        </div>
+                    </div>
+                    
+                    <div class="template-editor-tabs" id="templateEditorTabs" style="display: none;">
+                        <button class="template-tab active" id="tabEditor" onclick="switchTemplateTab('editor')">Editor</button>
+                        <button class="template-tab" id="tabPreview" onclick="switchTemplateTab('preview')">Preview</button>
+                    </div>
+                    
+                    <div class="template-editor-content">
+                        <div class="template-editor-form" id="templateEditorForm" style="display: none;">
+                            <div class="form-group">
+                                <label for="templateName">Template Name</label>
+                                <input type="text" id="templateName" placeholder="e.g., My Custom Template">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="templateDescription">Description</label>
+                                <input type="text" id="templateDescription" placeholder="Brief description of the template">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="templateType">Output Type</label>
+                                <select id="templateType">
+                                    <option value="html">HTML</option>
+                                    <option value="markdown">Markdown</option>
+                                    <option value="csv">CSV</option>
+                                    <option value="text">Plain Text</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="templateContent">Template Content</label>
+                                <textarea id="templateContent" rows="20" placeholder="Enter your template content here..."></textarea>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="templateIsDefault">
+                                <label for="templateIsDefault">Set as default template</label>
+                            </div>
+                        </div>
+                        
+                        <div class="template-preview-panel" id="templatePreviewPanel" style="display: none;">
+                            <div class="template-preview-header">
+                                <h4>Preview</h4>
+                                <div class="template-preview-controls">
+                                    <div class="preview-format-tabs">
+                                        <button class="preview-tab active" id="previewTabRendered" onclick="switchPreviewTab('rendered')">Rendered</button>
+                                        <button class="preview-tab" id="previewTabSource" onclick="switchPreviewTab('source')">Source</button>
+                                    </div>
+                                    <button class="btn btn-secondary btn-small" onclick="refreshTemplatePreview()">Refresh</button>
+                                </div>
+                            </div>
+                            <div class="template-preview-content" id="templatePreviewContent">
+                                <p class="template-preview-placeholder">Select a template to see preview</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Template Guide Modal -->
+    <div id="templateGuideModal" class="modal">
+        <div class="modal-content template-guide-content">
+            <div class="modal-header">
+                <h3>📋 Template Guide</h3>
+                <button class="btn-close" onclick="closeTemplateGuide()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="template-guide-content">
+                    <div class="guide-section">
+                        <h4>🚀 Getting Started</h4>
+                        <p>Templates use a simple variable substitution syntax with double curly braces to create dynamic reports.</p>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>📝 Basic Syntax</h4>
+                        <ul>
+                            <li><code>{{variable}}</code> - Simple variable substitution</li>
+                            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Loop through arrays</li>
+                            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Conditional content</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>🔧 Pipe Syntax & Function Chaining</h4>
+                        <p>Transform data using the pipe (<code>|</code>) syntax to chain multiple functions together:</p>
+                        
+                        <h5>Basic Pipe Syntax</h5>
+                        <ul>
+                            <li><code>{{ variable | function }}</code> - Apply a single transformation</li>
+                            <li><code>{{ variable | function1 | function2 }}</code> - Chain multiple transformations</li>
+                            <li><code>{{ variable | function('parameter') }}</code> - Pass parameters to functions</li>
+                        </ul>
+
+                        <h5>Available Transformation Functions</h5>
+                        <ul>
+                            <li><code>date('format')</code> - Format timestamps as dates
+                                <ul>
+                                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                                </ul>
+                            </li>
+                            <li><code>time</code> - Extract time from timestamps
+                                <ul>
+                                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                                </ul>
+                            </li>
+                            <li><code>escapeCsv</code> - Escape CSV special characters
+                                <ul>
+                                    <li>Wraps text in quotes if it contains commas, quotes, or newlines</li>
+                                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                                </ul>
+                            </li>
+                            <li><code>stripLinebreaks</code> - Remove line breaks from text
+                                <ul>
+                                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h5>CSV Template Example with Chaining</h5>
+                        <p>Here's how the CSV template uses chaining to create clean, properly escaped output:</p>
+                        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+                        
+                        <p><strong>How this works:</strong></p>
+                        <ul>
+                            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Converts timestamp to YYYY-MM-DD format</li>
+                            <li><code>entry.timestamp | time</code> - Extracts time portion</li>
+                            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - First removes line breaks, then escapes for CSV</li>
+                            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Same process for descriptions</li>
+                        </ul>
+
+                        <h5>Order Matters in Chaining!</h5>
+                        <p>Functions are applied left to right, so order is important:</p>
+                        <ul>
+                            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Remove breaks first, then escape</li>
+                            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Escaping first may interfere with break removal</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>📊 Available Data</h4>
+                        <p>The following data is available in your templates:</p>
+                        <ul>
+                            <li><code>{{reportTitle}}</code> - The report title</li>
+                            <li><code>{{startDate}}</code> - Report start date (formatted)</li>
+                            <li><code>{{endDate}}</code> - Report end date (formatted)</li>
+                            <li><code>{{totalEntries}}</code> - Total number of activity entries</li>
+                            <li><code>{{entries}}</code> - Array of all activity entries</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>📅 Entry Properties</h4>
+                        <p>Each entry in the <code>{{#each entries}}</code> loop has:</p>
+                        <ul>
+                            <li><code>{{activity}}</code> - The activity name</li>
+                            <li><code>{{description}}</code> - Activity description</li>
+                            <li><code>{{timestamp}}</code> - Raw ISO timestamp</li>
+                            <li><code>{{formattedTime}}</code> - Nicely formatted time (e.g., "2:30 PM")</li>
+                            <li><code>{{formattedDate}}</code> - Nicely formatted date (e.g., "Jan 15, 2025")</li>
+                            <li><code>{{isTodo}}</code> - Boolean: true if this is a todo item</li>
+                            <li><code>{{tags}}</code> - Array of hashtags for this entry</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>🔄 Common Transformations</h4>
+                        <p>Transform timestamps and format data:</p>
+                        <ul>
+                            <li><strong>Date formats</strong>: Use <code>{{formattedDate}}</code> and <code>{{formattedTime}}</code> for human-readable formats</li>
+                            <li><strong>Conditional content</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - only show if description exists</li>
+                            <li><strong>Loop through tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - display all hashtags</li>
+                            <li><strong>Todo filtering</strong>: <code>{{#if isTodo}}📋 TODO: {{/if}}</code> - mark todo items</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>📝 Markdown Formatting</h4>
+                        <p>Use Markdown syntax for readable formatting:</p>
+                        <ul>
+                            <li><code># {{reportTitle}}</code> - Large heading</li>
+                            <li><code>## {{activity}}</code> - Medium heading</li>
+                            <li><code>**{{activity}}**</code> - Bold text</li>
+                            <li><code>*{{description}}*</code> - Italic text</li>
+                            <li><code>- {{activity}}</code> - Bullet point</li>
+                            <li><code>`{{formattedTime}}`</code> - Code formatting</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>💡 Example Template</h4>
+                        <pre><code># {{reportTitle}}
+From {{startDate}} to {{endDate}}
+
+Total activities: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**📋 TODO ITEM**
+{{/if}}
+
+{{/each}}</code></pre>
+                    </div>
+
+                    <div class="guide-section">
+                        <h4>✨ Pro Tips</h4>
+                        <ul>
+                            <li><strong>HTML templates</strong>: Use for rich formatting with CSS styles and complex layouts</li>
+                            <li><strong>Markdown templates</strong>: Perfect for simple, readable documentation</li>
+                            <li><strong>CSV templates</strong>: Ideal for data analysis in spreadsheets</li>
+                            <li><strong>Preview feature</strong>: Always test your templates before saving</li>
+                            <li><strong>Custom formats</strong>: Combine multiple variables for unique layouts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pomodoro Activity Modal -->
+    <div id="pomodoroActivityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Work Session Activity</h3>
+                <button class="btn-close" onclick="closePomodoroActivityModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="pomodoroActivityForm">
+                    <div class="form-group">
+                        <label for="pomodoroActivityName">What will you be working on?</label>
+                        <input type="text" id="pomodoroActivityName" required placeholder="e.g., Writing report, Meeting preparation">
+                        <div class="quick-actions" style="margin-top: 8px;">
+                            <button type="button" id="usePreviousActivityBtn" class="btn btn-small btn-outline" onclick="usePreviousActivity()">Use Previous Activity</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pomodoroActivityDescription">Description (optional)</label>
+                        <textarea id="pomodoroActivityDescription" rows="3" placeholder="Additional details about this work session"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn btn-primary">Start Work Session</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePomodoroActivityModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pomodoro Abandonment Dialog -->
+    <div id="pomodoroAbandonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pomodoroAbandonTitle">Session Abandonment</h3>
+                <button class="btn-close" onclick="closePomodoroAbandonDialog()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="abandon-info">
+                    <p id="pomodoroAbandonTimeSpent">You worked for X minutes</p>
+                    <p>Would you like to save what you accomplished during this partial session?</p>
+                </div>
+                <form id="pomodoroAbandonForm">
+                    <div class="form-group">
+                        <label for="pomodoroAbandonActivityName">Activity accomplished</label>
+                        <input type="text" id="pomodoroAbandonActivityName" placeholder="What did you work on during this time?">
+                    </div>
+                    <div class="form-group">
+                        <label for="pomodoroAbandonActivityDescription">Description (optional)</label>
+                        <textarea id="pomodoroAbandonActivityDescription" rows="2" placeholder="Additional details about what you accomplished"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-primary" onclick="handlePomodoroAbandonmentSave(true)">Save Work & Abandon</button>
+                        <button type="button" class="btn btn-secondary" onclick="handlePomodoroAbandonmentSave(false)">Just Abandon</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirmationTitle">Confirm Action</h3>
+                <button class="btn-close" onclick="closeConfirmationDialog()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-content">
+                    <p id="confirmationMessage">Are you sure you want to perform this action?</p>
+                </div>
+                
+                <div class="confirmation-options" id="confirmationSkipSection" style="display: none;">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirmationSkipFuture">
+                        <label for="confirmationSkipFuture">Don't ask again for this type of action</label>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="confirmationConfirmBtn" class="btn btn-danger">Confirm</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeConfirmationDialog()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hashtag Browser Modal -->
+    <div id="hashtagBrowserModal" class="modal">
+        <div class="modal-content hashtag-browser-content">
+            <div class="modal-header">
+                <h3>Hashtag Browser</h3>
+                <button class="btn-close" onclick="closeHashtagBrowser()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="hashtag-stats" id="hashtagStats">
+                    <span id="hashtagCount">0 hashtags found</span>
+                </div>
+                <div class="hashtag-cloud" id="hashtagCloud">
+                    <p class="empty-state">No hashtags found. Add activities with #hashtags to see them here!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Guide Modal -->
+    <div id="userGuideModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📚 User Guide</h3>
+                <button class="btn-close" onclick="closeUserGuide()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="user-guide-content">
+                    <div class="guide-section">
+                        <h4>🚀 Getting Started</h4>
+                        <p>Activity Tracker helps you log activities, manage todos, and generate reports with automatic reminders.</p>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>⌨️ Keyboard Shortcuts</h4>
+                        <ul>
+                            <li><kbd>Shift</kbd> + <kbd>Space</kbd> - Focus activity input field</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>Enter</kbd> - Submit activity form</li>
+                            <li><kbd>Shift</kbd> + <kbd>Enter</kbd> - Mark as todo and submit</li>
+                            <li><kbd>Esc</kbd> - Close modals</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>📝 Adding Activities</h4>
+                        <ul>
+                            <li>Enter what you're doing in the activity field</li>
+                            <li>Add #hashtags for easy categorization</li>
+                            <li>Use the "Mark as Todo" button for tasks that need completion</li>
+                            <li>Set due dates for todos using quick-set buttons</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>🔍 Search & Navigation</h4>
+                        <ul>
+                            <li>Use the global search to find activities, todos, and hashtags</li>
+                            <li>Click the 🏷️ button to browse hashtags in a visual cloud</li>
+                            <li>Click any hashtag to search for related items</li>
+                            <li>Use pagination controls to navigate through large lists</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>✅ Managing Todos</h4>
+                        <ul>
+                            <li>View all todos in the dedicated "To Do" section</li>
+                            <li>Filter by status, due date, or category</li>
+                            <li>Click "Mark Complete" to finish todos</li>
+                            <li>Overdue items are highlighted in red</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>📊 Reports</h4>
+                        <ul>
+                            <li>Generate weekly, custom date range, or template-based reports</li>
+                            <li>Export reports in HTML, Markdown, or CSV formats</li>
+                            <li>Create custom report templates with variables</li>
+                            <li>Include/exclude completed todos from reports</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>🍅 Pomodoro Mode (Optional)</h4>
+                        <ul>
+                            <li>Enable Pomodoro technique with customizable work/break intervals</li>
+                            <li>Automatic activity logging during Pomodoro sessions</li>
+                            <li>Audio notifications for work/break transitions</li>
+                            <li>Focus timer to help maintain productivity</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>⚙️ Settings & Customization</h4>
+                        <ul>
+                            <li>Customize notification intervals and working hours</li>
+                            <li>Choose from multiple notification sounds</li>
+                            <li>Switch between light/dark themes</li>
+                            <li>Set pagination size for better navigation</li>
+                            <li>All settings auto-save as you change them</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h4>💾 Data Management</h4>
+                        <ul>
+                            <li>Export your data as JSON backup</li>
+                            <li>Import previously exported data</li>
+                            <li>Data is stored locally in your browser</li>
+                            <li>Works offline after initial load</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <!-- Notification Permission Setup Modal -->
+    <div id="notificationPermissionModal" class="modal">
+        <div class="modal-content notification-permission-content">
+            <div class="modal-header">
+                <h3>Enable System Notifications?</h3>
+            </div>
+            <div class="modal-body">
+                <div class="notification-permission-info">
+                    <p><strong>Activity Tracker</strong> can send reminder notifications directly to your operating system.</p>
+                    <p>This allows you to receive activity reminders even when the app is minimized or you're using other applications.</p>
+                    
+                    <div class="permission-options">
+                        <div class="permission-option permission-clickable" onclick="requestNotificationPermission()">
+                            <h4>✅ Enable System Notifications</h4>
+                            <p>Get reminder alerts through your operating system's notification center, plus sound alerts in the app.</p>
+                        </div>
+                        <div class="permission-option permission-clickable" onclick="declineNotificationPermission()">
+                            <h4>🔊 Sound Only</h4>
+                            <p>Use only sound alerts within the app (no system notifications).</p>
+                        </div>
+                    </div>
+                    
+                    <p class="permission-note"><em>You can change this setting later in the General Settings section.</em></p>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-primary" onclick="requestNotificationPermission()">Enable System Notifications</button>
+                    <button type="button" class="btn btn-secondary" onclick="declineNotificationPermission()">Sound Only</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-content about-modal-content">
+            <div class="modal-header">
+                <h3>About Activity Tracker</h3>
+                <button class="btn-close" onclick="closeAbout()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="about-section">
+                    <h4>Application Info</h4>
+                    <div class="debug-info" id="aboutDebugInfo">Loading...</div>
+                </div>
+                
+                <div class="about-section">
+                    <h4>Diagnostic Tools</h4>
+                    <div class="diagnostic-buttons">
+                        <button class="btn btn-secondary" onclick="testNotification()" title="Send a test reminder">Test Reminder</button>
+                        <button class="btn btn-primary" onclick="testNotificationSound()" title="Play a test reminder sound">Test Reminder Sound</button>
+                        <button class="btn btn-secondary" onclick="runServiceWorkerTest()" title="Run comprehensive service worker diagnostics">Test Service Worker</button>
+                        <button class="btn btn-secondary" onclick="refreshNotificationStatus()" title="Refresh the reminder permission status display - useful if permissions changed outside the app">Refresh Reminder Status</button>
+                        <button class="btn btn-warning" onclick="forceEnableNotifications()" title="Force show notification permission dialog (for edge cases where detection fails)">Force Enable Notifications</button>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h4>Version History</h4>
+                    <p>This is a personal activity tracking application with smart notifications, comprehensive reporting, and Pomodoro timer functionality.</p>
+                    <p><strong>Features:</strong></p>
+                    <ul>
+                        <li>🍅 Pomodoro Timer with configurable work/break cycles</li>
+                        <li>⏰ Smart notification system with customizable sounds</li>
+                        <li>📊 Comprehensive activity reporting with custom templates</li>
+                        <li>🌙 Dark mode support</li>
+                        <li>💾 Offline functionality with service worker</li>
+                        <li>📱 Progressive Web App (PWA) support</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section copyright-section">
+                    <div class="copyright-content">
+                        <div class="copyright-main">
+                            <p class="copyright-text">
+                                Activity Tracker &copy; <span id="copyrightYear">2025</span> 
+                                <a href="https://github.com/seesee" target="_blank" rel="noopener noreferrer" class="author-link">Chris Carline</a>
+                            </p>
+                        </div>
+                        <div class="copyright-links">
+                            <a href="https://github.com/seesee" target="_blank" rel="noopener noreferrer" class="github-link">
+                                <span class="github-icon">⚡</span> View on GitHub
+                            </a>
+                        </div>
+                        <div class="license-info">
+                            <p class="license-text">Personal activity tracking application built as a Progressive Web App. All data is stored locally on your device and remains completely private. No cookies, analytics, or tracking technologies are used.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        {{JAVASCRIPT}}
+    </script>
+</body>
+</html>
