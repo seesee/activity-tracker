@@ -6,7 +6,6 @@ __pycache__/
 .prompt
 .tiles_history
 .version-history.json
-package-lock.json
 
 node_modules/
 
