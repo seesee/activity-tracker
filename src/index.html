@@ -29,6 +29,7 @@
                 <div class="nav-left">
                     <button class="nav-btn active" onclick="showSection('tracker', event)">Tracker</button>
                     <button class="nav-btn" onclick="showSection('todo', event)">To Do</button>
+                    <button class="nav-btn" onclick="showSection('notes', event)">Notes</button>
                     <button class="nav-btn" onclick="showSection('reports', event)">Reports</button>
                     <button class="nav-btn" onclick="showSection('settings', event)">Settings</button>
                 </div>
@@ -90,7 +91,8 @@
                         <label for="timestamp">Time</label>
                         <input type="datetime-local" id="timestamp" required>
                         <div class="todo-quick-set">
-                            <button type="button" class="btn-quick-set" id="todoToggleBtn" onclick="toggleTodoMode()" title="Mark this as a todo item (Shift+Enter to submit as todo automatically)">Mark as Todo</button>
+                            <button type="button" class="btn-quick-set" id="todoToggleBtn" onclick="toggleTodoMode()" title="Mark this as a todo item (Ctrl+T to toggle)">Mark as Todo</button>
+                            <button type="button" class="btn-quick-set" id="noteToggleBtn" onclick="toggleNoteMode()" title="Mark this as a note (Ctrl+N to toggle)">Mark as Note</button>
                         </div>
                     </div>
                     <div class="form-group" id="dueDateSection">
@@ -159,6 +161,47 @@
                 <button class="btn btn-secondary" id="todoPrevBtn" onclick="tracker.previousTodoPage()">← Previous</button>
                 <span id="todoPageInfo">Page 1 of 1</span>
                 <button class="btn btn-secondary" id="todoNextBtn" onclick="tracker.nextTodoPage()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div id="notes" class="section">
+            <h2>Notes</h2>
+            
+            <div class="notes-filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="noteFilter">Filter:</label>
+                        <select id="noteFilter" onchange="tracker.filterNotes()">
+                            <option value="all">All Notes</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="noteSort">Sort:</label>
+                        <select id="noteSort" onchange="tracker.sortNotes()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="activity">Activity Name</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <input type="text" id="noteSearchInput" placeholder="Search through notes..." onkeyup="tracker.searchNotes()" oninput="tracker.toggleNoteClearButton()" autocomplete="off">
+                        <button class="btn btn-secondary btn-small" id="noteClearBtn" onclick="tracker.clearNoteSearch()" style="display: none;">Clear</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="noteList" class="entry-list">
+                <p class="no-entries">No notes found.</p>
+            </div>
+            
+            <div class="notes-pagination" id="notesPagination" style="display: none;">
+                <button class="btn btn-secondary" id="notesPrevBtn" onclick="tracker.previousNotePage()">← Previous</button>
+                <span id="notesPageInfo">Page 1 of 1</span>
+                <button class="btn btn-secondary" id="notesNextBtn" onclick="tracker.nextNotePage()">Next →</button>
             </div>
         </div>
 
@@ -311,7 +354,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="pauseDuration" title="How long alerts remain paused before automatically resuming">Auto-resume alerts after</label>
+                        <label for="pauseDuration" title="How long alerts remain paused before automatically resuming">When pausing, resume after</label>
                         <select id="pauseDuration">
                             <option value="1">1 minute</option>
                             <option value="2">2 minutes</option>
@@ -674,6 +717,9 @@
                             <div class="todo-quick-set">
                                 <button type="button" id="editTodoButton" class="btn-quick-set" onclick="toggleEditTodo()">
                                     <span id="editTodoButtonText">Mark as Todo</span>
+                                </button>
+                                <button type="button" id="editNoteButton" class="btn-quick-set" onclick="toggleEditNote()">
+                                    <span id="editNoteButtonText">Mark as Note</span>
                                 </button>
                             </div>
                         </div>
@@ -1080,8 +1126,9 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                         <h4>⌨️ Keyboard Shortcuts</h4>
                         <ul>
                             <li><kbd>Shift</kbd> + <kbd>Space</kbd> - Focus activity input field</li>
-                            <li><kbd>Ctrl</kbd> + <kbd>Enter</kbd> - Submit activity form</li>
-                            <li><kbd>Shift</kbd> + <kbd>Enter</kbd> - Mark as todo and submit</li>
+                            <li><kbd>Shift</kbd> + <kbd>Enter</kbd> - Submit activity form</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>T</kbd> - Toggle todo/not todo status</li>
+                            <li><kbd>Ctrl</kbd> + <kbd>N</kbd> - Toggle note status</li>
                             <li><kbd>Esc</kbd> - Close modals</li>
                         </ul>
                     </div>
@@ -1092,6 +1139,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                             <li>Enter what you're doing in the activity field</li>
                             <li>Add #hashtags for easy categorization</li>
                             <li>Use the "Mark as Todo" button for tasks that need completion</li>
+                            <li>Use the "Mark as Note" button for reference items (excluded from reports)</li>
                             <li>Set due dates for todos using quick-set buttons</li>
                         </ul>
                     </div>

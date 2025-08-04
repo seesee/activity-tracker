@@ -527,7 +527,7 @@ function toggleTodoMode() {
         }
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Todo Mode';
+        btn.textContent = '✓ Todo';
         // Show due date section when in todo mode
         if (dueDateSection) {
             dueDateSection.style.display = 'block';
@@ -540,6 +540,32 @@ function toggleTodoMode() {
  */
 function isTodoModeActive() {
     const btn = document.getElementById('todoToggleBtn');
+    return btn ? btn.classList.contains('active') : false;
+}
+
+/**
+ * Toggle note mode for activity form
+ */
+function toggleNoteMode() {
+    const btn = document.getElementById('noteToggleBtn');
+    if (!btn) return;
+    
+    const isActive = btn.classList.contains('active');
+    
+    if (isActive) {
+        btn.classList.remove('active');
+        btn.textContent = 'Mark as Note';
+    } else {
+        btn.classList.add('active');
+        btn.textContent = '✓ Note';
+    }
+}
+
+/**
+ * Check if note mode is active
+ */
+function isNoteModeActive() {
+    const btn = document.getElementById('noteToggleBtn');
     return btn ? btn.classList.contains('active') : false;
 }
 
@@ -752,6 +778,19 @@ function toggleEditTodo() {
     if (button) {
         const currentState = button.dataset.isTodo === 'true';
         tracker.setEditTodoButtonState(!currentState);
+    }
+}
+
+/**
+ * Toggle the edit note button state
+ */
+function toggleEditNote() {
+    if (!tracker) return;
+    
+    const button = document.getElementById('editNoteButton');
+    if (button) {
+        const currentState = button.dataset.isNote === 'true';
+        tracker.setEditNoteButtonState(!currentState);
     }
 }
 
@@ -1224,18 +1263,13 @@ document.addEventListener('keydown', (e) => {
         }
     }
     
-    // Shift + Enter marks as todo and submits the activity form when focused
+    // Shift + Enter submits the activity form when focused
     if (e.shiftKey && e.key === 'Enter') {
         const activeElement = document.activeElement;
         
         // Main activity form
         if (activeElement && (activeElement.id === 'activity' || activeElement.id === 'description')) {
             e.preventDefault();
-            const todoBtn = document.getElementById('todoToggleBtn');
-            if (todoBtn && !todoBtn.classList.contains('active')) {
-                todoBtn.classList.add('active');
-                todoBtn.textContent = '✓ Todo Mode';
-            }
             const form = document.getElementById('activityForm');
             if (form) {
                 form.dispatchEvent(new Event('submit'));
@@ -1244,14 +1278,55 @@ document.addEventListener('keydown', (e) => {
         return;
     }
     
-    // Shift + Space focuses the activity input field
+    // Shift + Space focuses the activity input field (only when not in description textarea)
     if (e.shiftKey && e.key === ' ') {
+        const activeElement = document.activeElement;
+        // Don't trigger if currently focused on description textarea
+        if (activeElement && activeElement.id === 'description') {
+            return;
+        }
         e.preventDefault();
         const activityInput = document.getElementById('activity');
         if (activityInput) {
             activityInput.focus();
             // Also switch to tracker section if not already there
             showSection('tracker');
+        }
+        return;
+    }
+    
+    // Ctrl/Cmd + T toggles todo mode
+    if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+        const activeElement = document.activeElement;
+        
+        // Main activity form - toggle todo mode
+        if (activeElement && (activeElement.id === 'activity' || activeElement.id === 'description')) {
+            e.preventDefault();
+            toggleTodoMode();
+        }
+        
+        // Edit modal form - toggle todo mode
+        if (activeElement && (activeElement.id === 'editActivity' || activeElement.id === 'editDescription' || activeElement.id === 'editTimestamp')) {
+            e.preventDefault();
+            toggleEditTodo();
+        }
+        return;
+    }
+    
+    // Ctrl/Cmd + N toggles note mode
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        const activeElement = document.activeElement;
+        
+        // Main activity form - toggle note mode
+        if (activeElement && (activeElement.id === 'activity' || activeElement.id === 'description')) {
+            e.preventDefault();
+            toggleNoteMode();
+        }
+        
+        // Edit modal form - toggle note mode
+        if (activeElement && (activeElement.id === 'editActivity' || activeElement.id === 'editDescription' || activeElement.id === 'editTimestamp')) {
+            e.preventDefault();
+            toggleEditNote();
         }
         return;
     }

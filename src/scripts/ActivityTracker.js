@@ -16,6 +16,9 @@ class ActivityTracker {
                     if (typeof entry.isTodo === 'undefined') {
                         entry.isTodo = false;
                     }
+                    if (typeof entry.isNote === 'undefined') {
+                        entry.isNote = false;
+                    }
                     if (!entry.tags) {
                         entry.tags = [];
                     }
@@ -88,6 +91,7 @@ class ActivityTracker {
         this.initTemplatePreviewGrid();
         this.displayEntries();
         this.displayTodos();
+        this.displayNotes();
         this.updateNotificationStatus();
         this.updateDebugInfo();
         this.updatePauseButtonState();
@@ -411,6 +415,7 @@ class ActivityTracker {
             const description = document.getElementById('description').value;
             const timestamp = document.getElementById('timestamp').value;
             const isTodo = isTodoModeActive();
+            const isNote = isNoteModeActive();
             const dueDate = document.getElementById('dueDate')?.value || null;
 
             // Extract hashtags from text and add pomodoro hashtags if active
@@ -425,6 +430,7 @@ class ActivityTracker {
                 timestamp: new Date(timestamp).toISOString(),
                 created: new Date().toISOString(),
                 isTodo: isTodo,
+                isNote: isNote,
                 tags: allTags,
                 dueDate: dueDate ? new Date(dueDate).toISOString() : null,
                 startedAt: isTodo ? new Date(timestamp).toISOString() : null
@@ -442,6 +448,7 @@ class ActivityTracker {
         this.saveEntries();
         this.displayEntries();
         this.displayTodos();
+        this.displayNotes();
 
         if (!entry) {
             document.getElementById('activityForm').reset();
@@ -450,6 +457,13 @@ class ActivityTracker {
             if (todoBtn) {
                 todoBtn.classList.remove('active');
                 todoBtn.textContent = 'Mark as Todo';
+            }
+            
+            // Reset note mode button
+            const noteBtn = document.getElementById('noteToggleBtn');
+            if (noteBtn) {
+                noteBtn.classList.remove('active');
+                noteBtn.textContent = 'Mark as Note';
             }
             this.setCurrentTime();
             document.getElementById('activity').focus();
@@ -468,6 +482,8 @@ class ActivityTracker {
         const timestamp = document.getElementById('editTimestamp').value;
         const todoButton = document.getElementById('editTodoButton');
         const isTodo = todoButton ? todoButton.dataset.isTodo === 'true' : false;
+        const noteButton = document.getElementById('editNoteButton');
+        const isNote = noteButton ? noteButton.dataset.isNote === 'true' : false;
         const dueDate = document.getElementById('editDueDate').value;
 
         const entryIndex = this.entries.findIndex(entry => entry.id === id);
@@ -485,6 +501,7 @@ class ActivityTracker {
                 description,
                 timestamp: new Date(timestamp).toISOString(),
                 isTodo,
+                isNote,
                 tags: allTags,
                 dueDate: dueDate ? new Date(dueDate).toISOString() : null,
                 // Preserve startedAt if it exists, or set it if becoming a todo
@@ -494,6 +511,7 @@ class ActivityTracker {
             this.saveEntries();
             this.displayEntries();
             this.displayTodos();
+            this.displayNotes();
             this.closeEditModal();
             showNotification('Entry updated successfully!', 'success');
         }
@@ -550,6 +568,7 @@ class ActivityTracker {
         this.saveEntries();
         this.displayEntries();
         this.displayTodos();
+        this.displayNotes();
         
         showNotification('Entry deleted successfully! <button onclick="tracker.undoLastDeletion()" class="undo-btn">Undo</button>', 'success', 5000);
     }
@@ -614,6 +633,7 @@ class ActivityTracker {
         this.saveEntries();
         this.displayEntries();
         this.displayTodos();
+        this.displayNotes();
         
         // Update state
         this.saveState();
@@ -665,6 +685,9 @@ class ActivityTracker {
             // Update todo button state
             this.setEditTodoButtonState(entry.isTodo || false);
             
+            // Update note button state
+            this.setEditNoteButtonState(entry.isNote || false);
+            
             document.getElementById('editDueDate').value = 
                 entry.dueDate ? new Date(entry.dueDate).toISOString().slice(0, 16) : '';
             
@@ -696,6 +719,25 @@ class ActivityTracker {
                 if (editDueDateSection) {
                     editDueDateSection.style.display = 'none';
                 }
+            }
+        }
+    }
+
+    /**
+     * Set the edit note button state
+     */
+    setEditNoteButtonState(isNote) {
+        const button = document.getElementById('editNoteButton');
+        const buttonText = document.getElementById('editNoteButtonText');
+        
+        if (button && buttonText) {
+            button.dataset.isNote = isNote.toString();
+            if (isNote) {
+                button.classList.add('active');
+                buttonText.textContent = 'Remove from Notes';
+            } else {
+                button.classList.remove('active');
+                buttonText.textContent = 'Mark as Note';
             }
         }
     }
@@ -734,7 +776,7 @@ class ActivityTracker {
             return;
         }
 
-        container.innerHTML = paginatedEntries.map(entry => this.renderEntry(entry, { showTodoIndicator: true })).join('');
+        container.innerHTML = paginatedEntries.map(entry => this.renderEntry(entry, { showTodoIndicator: true, showNoteIndicator: true })).join('');
         
         // Update pagination controls
         this.updateEntriesPagination(this.entries.length);
@@ -749,6 +791,7 @@ class ActivityTracker {
     renderEntry(entry, options = {}) {
         const {
             showTodoIndicator = false,
+            showNoteIndicator = false,
             showCreatedTime = false
         } = options;
 
@@ -768,6 +811,7 @@ class ActivityTracker {
         // For todo section, show created time instead of timestamp, and optionally show todo indicator
         const timeToShow = showCreatedTime && entry.created ? entry.created : entry.timestamp;
         const todoIndicator = (showTodoIndicator && entry.isTodo) ? '<span class="entry-todo-indicator">📋 Todo</span>' : '';
+        const noteIndicator = (showNoteIndicator && entry.isNote) ? '<span class="entry-note-indicator">📝 Note</span>' : '';
 
         // Process description with inline hashtags
         const processedDescription = entry.description ? this.renderDescriptionWithInlineHashtags(entry.description, entry.tags) : '';
@@ -775,7 +819,7 @@ class ActivityTracker {
         return `
             <div class="${itemClass}">
                 <div class="entry-content">
-                    <div class="entry-time">${formatDateTime(timeToShow)} ${todoIndicator}</div>
+                    <div class="entry-time">${formatDateTime(timeToShow)} ${todoIndicator}${noteIndicator}</div>
                     <div class="entry-activity">${escapeHtml(entry.activity)}</div>
                     ${processedDescription ? `<div class="entry-description">${processedDescription}</div>` : ''}
                     ${dueDateHtml}
@@ -831,9 +875,14 @@ class ActivityTracker {
         // First apply markdown rendering
         let processedText = this.renderDescriptionMarkdown(fullText);
         
-        // Then replace hashtags with clickable links
-        // Use a more specific regex that handles word boundaries properly
-        processedText = processedText.replace(/#(\w+)/g, (match, tag) => {
+        // Convert URLs to clickable links first (before hashtags to avoid conflicts)
+        processedText = processedText.replace(/(https?:\/\/[^\s<>"\[\]]+)/gi, (match, url) => {
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="external-link">${url}</a>`;
+        });
+        
+        // Then replace hashtags with clickable links (but not inside HTML tags)
+        // Use negative lookbehind to avoid matching hashtags inside href attributes
+        processedText = processedText.replace(/(?<!href="[^"]*|href='[^']*)#([\w][\w-]*)/g, (match, tag) => {
             return `<a href="#" class="hashtag-link" onclick="tracker.searchByHashtag('${tag}'); return false;">#${tag}</a>`;
         });
         
@@ -1158,6 +1207,12 @@ class ActivityTracker {
             this.todoPagination.currentPage = 1; // Reset to first page
         }
         
+        // Update notes pagination
+        if (this.notesPagination) {
+            this.notesPagination.itemsPerPage = newSize;
+            this.notesPagination.currentPage = 1; // Reset to first page
+        }
+        
         // Update search pagination
         if (this.searchState && this.searchState.searchPagination) {
             this.searchState.searchPagination.itemsPerPage = newSize;
@@ -1167,6 +1222,7 @@ class ActivityTracker {
         // Refresh displays
         this.displayEntries();
         this.displayTodos();
+        this.displayNotes();
         
         // Refresh search results if there's an active search
         if (this.searchState && this.searchState.currentQuery) {
@@ -2040,26 +2096,37 @@ class ActivityTracker {
      * @param {boolean} showNotif - Whether to show notification
      */
     togglePause(showNotif = true) {
-        if (this.settings.notificationsEnabled) {
-            // Stop notifications
-            this.settings.notificationsEnabled = false;
-            this.stopNotificationTimer();
-            if (showNotif) {
-                showNotification('Reminders stopped', 'info');
+        if (this.pauseManager) {
+            if (this.pauseManager.isPaused()) {
+                // Currently paused, so resume
+                this.pauseManager.resume();
+            } else {
+                // Not paused, so start pause with default duration
+                this.pauseManager.startPause(this.settings.pauseDuration);
             }
         } else {
-            // Start notifications
-            this.settings.notificationsEnabled = true;
-            this.startNotificationTimer();
-            if (showNotif) {
-                showNotification('Reminders started', 'success');
+            // Fallback to old behavior if PauseManager isn't available
+            if (this.settings.notificationsEnabled) {
+                // Stop notifications
+                this.settings.notificationsEnabled = false;
+                this.stopNotificationTimer();
+                if (showNotif) {
+                    showNotification('Reminders stopped', 'info');
+                }
+            } else {
+                // Start notifications
+                this.settings.notificationsEnabled = true;
+                this.startNotificationTimer();
+                if (showNotif) {
+                    showNotification('Reminders started', 'success');
+                }
             }
+            
+            this.updatePauseButtonState();
+            this.saveSettings();
+            this.updateNotificationStatus();
+            this.updateDebugInfo();
         }
-        
-        this.updatePauseButtonState();
-        this.saveSettings();
-        this.updateNotificationStatus();
-        this.updateDebugInfo();
     }
 
     /**
@@ -2759,21 +2826,25 @@ class ActivityTracker {
     }
 
     /**
-     * Extract hashtags from text (case insensitive)
+     * Extract hashtags from text (preserves original case, deduplicates case-insensitively)
      * @param {string} text - Text to extract hashtags from
      * @returns {string[]} Array of hashtags without the # symbol
      */
     extractHashtags(text) {
         if (!text || typeof text !== 'string') return [];
         
-        const hashtagRegex = /#(\w+)/g;
+        const hashtagRegex = /#([\w][\w-]*)/g;
         const hashtags = [];
+        const seenTags = new Set(); // For case-insensitive deduplication
         let match;
         
         while ((match = hashtagRegex.exec(text)) !== null) {
-            const tag = match[1].toLowerCase();
-            if (!hashtags.includes(tag)) {
-                hashtags.push(tag);
+            const originalTag = match[1]; // Preserve original case
+            const lowerTag = originalTag.toLowerCase(); // For comparison
+            
+            if (!seenTags.has(lowerTag)) {
+                seenTags.add(lowerTag);
+                hashtags.push(originalTag); // Store original case
             }
         }
         
@@ -2847,6 +2918,7 @@ class ActivityTracker {
         this.saveEntries();
         this.displayEntries();
         this.displayTodos();
+        this.displayNotes();
         showNotification('Todo completed!', 'success');
     }
 
@@ -2870,6 +2942,7 @@ class ActivityTracker {
             this.saveEntries();
             this.displayEntries();
             this.displayTodos();
+            this.displayNotes();
             showNotification('Entry marked as todo!', 'success');
         }
     }
@@ -3093,6 +3166,220 @@ class ActivityTracker {
         if (this.todoPagination.currentPage < totalPages) {
             this.todoPagination.currentPage++;
             this.displayTodos();
+        }
+    }
+
+    /**
+     * Display notes with filtering, sorting, and pagination
+     */
+    displayNotes() {
+        const noteList = document.getElementById('noteList');
+        
+        if (!noteList) return;
+
+        // Initialize pagination state if not exists
+        if (!this.notesPagination) {
+            this.notesPagination = {
+                currentPage: 1,
+                itemsPerPage: this.settings.paginationSize || 20,
+                filter: 'all',
+                sort: 'newest',
+                searchQuery: ''
+            };
+        }
+
+        // Update pagination size from settings
+        this.notesPagination.itemsPerPage = this.settings.paginationSize || 20;
+
+        const notes = this.getFilteredNotes();
+        const totalNotes = notes.length;
+
+        if (totalNotes === 0) {
+            noteList.innerHTML = '<p class="no-entries">No notes found.</p>';
+            document.getElementById('notesPagination').style.display = 'none';
+            return;
+        }
+
+        // Apply pagination
+        const startIndex = (this.notesPagination.currentPage - 1) * this.notesPagination.itemsPerPage;
+        const endIndex = startIndex + this.notesPagination.itemsPerPage;
+        const paginatedNotes = notes.slice(startIndex, endIndex);
+
+        // Render notes using unified renderEntry method with note indicator
+        noteList.innerHTML = paginatedNotes.map(note => this.renderEntry(note, { showCreatedTime: true })).join('');
+
+        // Update pagination controls
+        this.updateNotesPagination(totalNotes);
+    }
+
+    /**
+     * Get filtered and sorted notes
+     */
+    getFilteredNotes() {
+        let notes = this.entries.filter(entry => entry.isNote);
+
+        // Apply search filter
+        if (this.notesPagination.searchQuery) {
+            const query = this.notesPagination.searchQuery.toLowerCase();
+            notes = notes.filter(note => 
+                note.activity.toLowerCase().includes(query) ||
+                (note.description && note.description.toLowerCase().includes(query)) ||
+                note.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+        }
+
+        // Apply filter
+        const now = new Date();
+        switch (this.notesPagination.filter) {
+            case 'today':
+                const today = now.toDateString();
+                notes = notes.filter(note => new Date(note.timestamp).toDateString() === today);
+                break;
+            case 'week':
+                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                notes = notes.filter(note => new Date(note.timestamp) >= weekAgo);
+                break;
+            case 'month':
+                const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                notes = notes.filter(note => new Date(note.timestamp) >= monthAgo);
+                break;
+            case 'all':
+            default:
+                // No additional filtering
+                break;
+        }
+
+        // Apply sort
+        switch (this.notesPagination.sort) {
+            case 'oldest':
+                notes.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                break;
+            case 'activity':
+                notes.sort((a, b) => a.activity.localeCompare(b.activity));
+                break;
+            case 'newest':
+            default:
+                notes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                break;
+        }
+
+        return notes;
+    }
+
+    /**
+     * Update notes pagination controls
+     */
+    updateNotesPagination(totalNotes) {
+        const pagination = document.getElementById('notesPagination');
+        const pageInfo = document.getElementById('notesPageInfo');
+        const prevBtn = document.getElementById('notesPrevBtn');
+        const nextBtn = document.getElementById('notesNextBtn');
+        
+        if (!pagination || !pageInfo || !prevBtn || !nextBtn) return;
+        
+        const totalPages = Math.ceil(totalNotes / this.notesPagination.itemsPerPage);
+        
+        if (totalPages <= 1) {
+            pagination.style.display = 'none';
+            return;
+        }
+
+        pagination.style.display = 'flex';
+        pageInfo.textContent = `Page ${this.notesPagination.currentPage} of ${totalPages}`;
+        
+        prevBtn.disabled = this.notesPagination.currentPage <= 1;
+        nextBtn.disabled = this.notesPagination.currentPage >= totalPages;
+    }
+
+    /**
+     * Filter notes
+     */
+    filterNotes() {
+        const filterSelect = document.getElementById('noteFilter');
+        if (filterSelect) {
+            this.notesPagination.filter = filterSelect.value;
+            this.notesPagination.currentPage = 1; // Reset to first page
+            this.displayNotes();
+        }
+    }
+
+    /**
+     * Sort notes
+     */
+    sortNotes() {
+        const sortSelect = document.getElementById('noteSort');
+        if (sortSelect) {
+            this.notesPagination.sort = sortSelect.value;
+            this.notesPagination.currentPage = 1; // Reset to first page
+            this.displayNotes();
+        }
+    }
+
+    /**
+     * Search notes
+     */
+    searchNotes() {
+        const searchInput = document.getElementById('noteSearchInput');
+        if (searchInput) {
+            this.notesPagination.searchQuery = searchInput.value.trim();
+            this.notesPagination.currentPage = 1; // Reset to first page
+            this.displayNotes();
+        }
+    }
+
+    /**
+     * Clear note search
+     */
+    clearNoteSearch() {
+        const searchInput = document.getElementById('noteSearchInput');
+        const clearBtn = document.getElementById('noteClearBtn');
+        if (searchInput) {
+            searchInput.value = '';
+            this.notesPagination.searchQuery = '';
+            this.notesPagination.currentPage = 1;
+            this.displayNotes();
+        }
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    /**
+     * Toggle visibility of note clear button based on search input
+     */
+    toggleNoteClearButton() {
+        const searchInput = document.getElementById('noteSearchInput');
+        const clearBtn = document.getElementById('noteClearBtn');
+        
+        if (searchInput && clearBtn) {
+            if (searchInput.value.trim().length > 0) {
+                clearBtn.style.display = 'inline-block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        }
+    }
+
+    /**
+     * Navigate to previous notes page
+     */
+    previousNotePage() {
+        if (this.notesPagination.currentPage > 1) {
+            this.notesPagination.currentPage--;
+            this.displayNotes();
+        }
+    }
+
+    /**
+     * Navigate to next notes page
+     */
+    nextNotePage() {
+        const totalNotes = this.getFilteredNotes().length;
+        const totalPages = Math.ceil(totalNotes / this.notesPagination.itemsPerPage);
+        
+        if (this.notesPagination.currentPage < totalPages) {
+            this.notesPagination.currentPage++;
+            this.displayNotes();
         }
     }
 
@@ -3338,7 +3625,7 @@ class ActivityTracker {
         const paginatedResults = results.slice(startIndex, endIndex);
 
         // Render results using unified renderEntry method
-        resultsList.innerHTML = paginatedResults.map(result => this.renderEntry(result, { showTodoIndicator: true, showCreatedTime: true })).join('');
+        resultsList.innerHTML = paginatedResults.map(result => this.renderEntry(result, { showTodoIndicator: true, showNoteIndicator: true, showCreatedTime: true })).join('');
 
         // Update pagination
         this.updateSearchPagination(results.length);

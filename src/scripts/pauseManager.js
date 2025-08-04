@@ -63,8 +63,6 @@ class PauseManager {
         menu.style.cssText = `
             position: fixed;
             z-index: 10000;
-            background: var(--bg-color, #fff);
-            border: 1px solid var(--border-color, #ccc);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             padding: 8px 0;
@@ -83,20 +81,8 @@ class PauseManager {
         
         options.forEach(option => {
             const menuItem = document.createElement('div');
-            menuItem.style.cssText = `
-                padding: 8px 16px;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            `;
+            menuItem.className = 'pause-context-menu-item';
             menuItem.textContent = option.label;
-            
-            menuItem.addEventListener('mouseenter', () => {
-                menuItem.style.backgroundColor = 'var(--hover-color, #f0f0f0)';
-            });
-            
-            menuItem.addEventListener('mouseleave', () => {
-                menuItem.style.backgroundColor = '';
-            });
             
             menuItem.addEventListener('click', () => {
                 this.startPause(option.duration);

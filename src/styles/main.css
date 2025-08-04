@@ -131,6 +131,15 @@ h3 {
     border: 1px solid #e2e8f0;
 }
 
+/* Notes Section Styles */
+.notes-filters {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
 .filter-row {
     display: flex;
     gap: 20px;
@@ -158,6 +167,22 @@ h3 {
     font-size: 14px;
     background: white;
     min-width: 150px;
+}
+
+.filter-group input {
+    padding: 8px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    min-width: 150px;
+    transition: border-color 0.3s ease;
+}
+
+.filter-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .todo-stats {
@@ -798,6 +823,18 @@ h3 {
     text-decoration: underline;
 }
 
+.external-link {
+    color: #3182ce;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.external-link:hover {
+    color: #2b6cb0;
+    text-decoration: underline;
+}
+
 .entry-due-date {
     font-size: 12px;
     color: #a0aec0;
@@ -807,6 +844,12 @@ h3 {
 .entry-todo-indicator {
     font-size: 12px;
     color: #f56565;
+    margin-left: 10px;
+}
+
+.entry-note-indicator {
+    font-size: 12px;
+    color: #3182ce;
     margin-left: 10px;
 }
 
@@ -1032,6 +1075,30 @@ h3 {
     0% { opacity: 1; }
     50% { opacity: 0.7; }
     100% { opacity: 1; }
+}
+
+/* Pause Context Menu Styles */
+.pause-context-menu {
+    position: fixed;
+    z-index: 10000;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 8px 0;
+    min-width: 150px;
+    font-size: 14px;
+    color: #4a5568;
+}
+
+.pause-context-menu-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.pause-context-menu-item:hover {
+    background-color: #f7fafc;
 }
 
 /* Markdown rendering styles */
@@ -1731,6 +1798,22 @@ body.dark-mode {
     color: #fc8181;
 }
 
+.dark-mode .entry-note-indicator {
+    color: #63b3ed;
+}
+
+/* Dark mode pause context menu */
+.dark-mode .pause-context-menu {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.dark-mode .pause-context-menu-item:hover {
+    background-color: #1a202c;
+}
+
 .dark-mode .hashtag-link {
     color: #68d391;
 }
@@ -1739,8 +1822,22 @@ body.dark-mode {
     color: #9ae6b4;
 }
 
+.dark-mode .external-link {
+    color: #63b3ed;
+}
+
+.dark-mode .external-link:hover {
+    color: #90cdf4;
+}
+
 /* Dark mode todo styles */
 .dark-mode .todo-filters {
+    background: #1a202c;
+    border-color: #4a5568;
+}
+
+/* Dark mode notes styles */
+.dark-mode .notes-filters {
     background: #1a202c;
     border-color: #4a5568;
 }
@@ -1753,6 +1850,17 @@ body.dark-mode {
     background: #2d3748;
     border-color: #4a5568;
     color: #e2e8f0;
+}
+
+.dark-mode .filter-group input {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+.dark-mode .filter-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .dark-mode .todo-stats {

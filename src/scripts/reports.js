@@ -131,6 +131,11 @@ Object.assign(ActivityTracker.prototype, {
             const entryDate = new Date(entry.timestamp);
             const isInDateRange = entryDate >= start && entryDate <= end;
             
+            // Exclude notes from reports
+            if (entry.isNote) {
+                return false;
+            }
+            
             // Exclude incomplete todos unless checkbox is checked
             if (entry.isTodo && !includeIncompleteTodos) {
                 return false;

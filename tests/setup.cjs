@@ -115,6 +115,16 @@ beforeEach(() => {
     // Reset console methods
     console.error = jest.fn();
     console.warn = jest.fn();
+    
+    // Mock global functions used in onclick handlers
+    global.toggleEditTodo = jest.fn();
+    global.toggleEditNote = jest.fn();
+    global.setEditDueDate = jest.fn();
+    global.closeEditModal = jest.fn();
+    global.previousNotesPage = jest.fn();
+    global.nextNotesPage = jest.fn();
+    global.toggleNoteMode = jest.fn();
+    global.toggleTodoMode = jest.fn();
 });
 
 afterEach(() => {
@@ -144,17 +154,53 @@ global.createMockDOMStructure = () => {
             
             <form id="activityForm">
                 <input type="text" id="activity" placeholder="Activity" required />
+                <textarea id="description" placeholder="Description (optional)" rows="3"></textarea>
                 <input type="datetime-local" id="timestamp" />
                 <select id="category">
                     <option value="">Select category</option>
                     <option value="work">Work</option>
                     <option value="personal">Personal</option>
                 </select>
+                <div class="form-actions">
+                    <button type="button" id="todoButton" class="btn-quick-set">
+                        <span id="todoButtonText">Mark as Todo</span>
+                    </button>
+                    <button type="button" id="noteButton" class="btn-quick-set">
+                        <span id="noteButtonText">Mark as Note</span>
+                    </button>
+                </div>
                 <button type="submit">Add Activity</button>
             </form>
             
             <div id="activityList"></div>
             <div id="todoList"></div>
+            
+            <!-- Notes Section -->
+            <div id="notesSection">
+                <div class="section-header">
+                    <h2>Notes</h2>
+                    <div class="filter-group">
+                        <select id="notesFilter">
+                            <option value="all">All</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                        <select id="notesSort">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                        <input type="text" id="notesSearch" placeholder="Search through notes..." />
+                        <button id="clearNotesSearchBtn" style="display: none;">Clear</button>
+                    </div>
+                </div>
+                <div id="notesList"></div>
+                <div id="notesPagination" class="pagination">
+                    <button id="notesPrevBtn" onclick="previousNotesPage()">Previous</button>
+                    <span id="notesPageInfo">Page 1 of 1</span>
+                    <button id="notesNextBtn" onclick="nextNotesPage()">Next</button>
+                </div>
+            </div>
             
             <!-- Edit Modal -->
             <div id="editModal" class="modal">
@@ -178,9 +224,12 @@ global.createMockDOMStructure = () => {
                                 <div class="form-group">
                                     <label for="editTimestamp">Time</label>
                                     <input type="datetime-local" id="editTimestamp" required>
-                                    <div class="todo-quick-set">
+                                    <div class="quick-set-buttons">
                                         <button type="button" id="editTodoButton" class="btn-quick-set" onclick="toggleEditTodo()">
                                             <span id="editTodoButtonText">Mark as Todo</span>
+                                        </button>
+                                        <button type="button" id="editNoteButton" class="btn-quick-set" onclick="toggleEditNote()">
+                                            <span id="editNoteButtonText">Mark as Note</span>
                                         </button>
                                     </div>
                                 </div>
