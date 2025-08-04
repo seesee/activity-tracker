@@ -303,8 +303,8 @@ class PauseManager {
             } else {
                 // Notifications are on but outside working hours
                 this.pauseButton.textContent = 'Outside working hours';
-                this.pauseButton.title = 'Reminders are only available during your configured working schedule';
-                this.pauseButton.disabled = true;
+                this.pauseButton.title = 'Click to learn about working hours settings. Reminders are only available during your configured working schedule.';
+                this.pauseButton.disabled = false; // Keep enabled so events fire
                 this.pauseButton.style.background = '#9ca3af';
                 this.pauseButton.style.opacity = '0.6';
                 this.pauseButton.style.cursor = 'not-allowed';
@@ -313,7 +313,7 @@ class PauseManager {
             // Notifications are completely disabled
             this.pauseButton.textContent = 'All reminders disabled';
             this.pauseButton.title = 'Activity reminders are turned off. Click "Turn on activity reminders" in the notification status to enable.';
-            this.pauseButton.disabled = true;
+            this.pauseButton.disabled = false; // Keep enabled so events fire
             this.pauseButton.style.background = '#9ca3af';
             this.pauseButton.style.opacity = '0.6';
             this.pauseButton.style.cursor = 'not-allowed';

@@ -32,6 +32,7 @@
                     <button class="nav-btn" onclick="showSection('notes', event)">📔 Notes</button>
                 </div>
                 <div class="nav-right">
+                    <button id="overdueAlertButton" class="nav-btn alert-btn" onclick="showOverdueAlert()" style="display: none;" title="View overdue items">⚠️ Alert</button>
                     <button id="pauseButton" class="nav-btn" onclick="togglePause()">Start Reminders</button>
                     <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">🍅 Start Pomodoro</button>
                 </div>
@@ -1245,6 +1246,58 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 <div class="modal-actions">
                     <button type="button" id="confirmationConfirmBtn" class="btn btn-danger">Confirm</button>
                     <button type="button" class="btn btn-secondary" onclick="closeConfirmationDialog()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Working Hours Info Modal -->
+    <div id="workingHoursInfoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⏰ Working Hours Information</h3>
+                <button class="btn-close" onclick="closeWorkingHoursInfo()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="working-hours-info">
+                    <p><strong>Reminder alerts are switched off outside of working hours.</strong></p>
+                    <p>To receive activity reminders, please update your work schedule in the settings section. You can customize:</p>
+                    <ul>
+                        <li>Working days (Monday through Sunday)</li>
+                        <li>Start and end times for each day</li>
+                        <li>Different schedules for different days</li>
+                    </ul>
+                    <p>When you're outside your configured working hours, reminders are automatically paused to avoid disrupting your personal time.</p>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-primary" onclick="goToWorkingHoursSettings()">
+                        ⚙️ Configure Working Hours
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeWorkingHoursInfo()">Got It</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overdue Alert Modal -->
+    <div id="overdueAlertModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Overdue Items</h3>
+                <button class="btn-close" onclick="closeOverdueAlert()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="overdue-info">
+                    <p>The following items are past their due date:</p>
+                </div>
+                
+                <div class="overdue-items-list" id="overdueItemsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeOverdueAlert()">Got It</button>
                 </div>
             </div>
         </div>

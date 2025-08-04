@@ -4544,6 +4544,336 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-bt
     color: #ed8936;
 }
 
+/* Working Hours Info Modal Styles */
+.working-hours-info {
+    margin-bottom: 25px;
+}
+
+.working-hours-info p {
+    margin: 0 0 16px 0;
+    line-height: 1.6;
+    color: #4a5568;
+}
+
+.working-hours-info p:last-child {
+    margin-bottom: 0;
+}
+
+.working-hours-info ul {
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.working-hours-info li {
+    margin: 8px 0;
+    line-height: 1.5;
+    color: #4a5568;
+}
+
+.working-hours-info strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+/* Dark mode styles for working hours info */
+.dark-mode .working-hours-info p,
+.dark-mode .working-hours-info li {
+    color: #cbd5e0;
+}
+
+.dark-mode .working-hours-info strong {
+    color: #e2e8f0;
+}
+
+/* Overdue Alert System Styles */
+.alert-btn {
+    background: #e53e3e !important;
+    color: white !important;
+    animation: alertPulse 2s ease-in-out infinite;
+    border: 1px solid #c53030 !important;
+}
+
+.alert-btn:hover {
+    background: #c53030 !important;
+    border-color: #9c2626 !important;
+}
+
+@keyframes alertPulse {
+    0%, 100% { 
+        box-shadow: 0 0 8px rgba(229, 62, 62, 0.6);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 16px rgba(229, 62, 62, 0.8);
+        transform: scale(1.02);
+    }
+}
+
+.overdue-items-list {
+    margin: 20px 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.overdue-item {
+    background: #fef5e7;
+    border: 1px solid #f6ad55;
+    border-radius: 8px;
+    padding: 0;
+    margin: 12px 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.overdue-item.critical {
+    background: #fed7d7;
+    border-color: #fc8181;
+}
+
+.overdue-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.overdue-item-title {
+    font-weight: 600;
+    color: #d69e2e;
+    margin: 0;
+    flex: 1;
+}
+
+.overdue-item.critical .overdue-item-title {
+    color: #c53030;
+}
+
+.overdue-time {
+    font-size: 12px;
+    color: #d69e2e;
+    font-weight: 500;
+    background: rgba(214, 158, 46, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 12px;
+}
+
+.overdue-item.critical .overdue-time {
+    color: #c53030;
+    background: rgba(197, 48, 48, 0.1);
+}
+
+.overdue-item-description {
+    color: #744210;
+    font-size: 14px;
+    margin: 8px 0 0 0;
+    line-height: 1.4;
+}
+
+.overdue-item.critical .overdue-item-description {
+    color: #742a2a;
+}
+
+.overdue-item-due-date {
+    font-size: 12px;
+    color: #a0aec0;
+    margin-top: 8px;
+}
+
+/* Overdue item layout styles */
+.overdue-item-content {
+    padding: 16px;
+    flex: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.overdue-item-content:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.overdue-item.critical .overdue-item-content:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.overdue-item-actions {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.overdue-item.critical .overdue-item-actions {
+    border-top-color: rgba(197, 48, 48, 0.2);
+    background: rgba(197, 48, 48, 0.05);
+}
+
+/* Reschedule dropdown styles */
+.reschedule-dropdown {
+    position: relative;
+}
+
+.reschedule-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10001;
+    min-width: 140px;
+    margin-top: 4px;
+}
+
+.reschedule-options button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 13px;
+    color: #4a5568;
+    transition: background-color 0.2s ease;
+}
+
+.reschedule-options button:hover {
+    background: #f7fafc;
+    color: #2d3748;
+}
+
+.reschedule-options button:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.reschedule-options button:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+/* Due date countdown display in entry lists */
+.entry-due-countdown {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.entry-due-countdown.upcoming {
+    background: #e6fffa;
+    color: #038770;
+    border: 1px solid #81e6d9;
+}
+
+.entry-due-countdown.soon {
+    background: #fefcbf;
+    color: #d69e2e;
+    border: 1px solid #f6e05e;
+}
+
+.entry-due-countdown.overdue {
+    background: #fed7d7;
+    color: #c53030;
+    border: 1px solid #fc8181;
+    animation: overdueGlow 2s ease-in-out infinite;
+}
+
+@keyframes overdueGlow {
+    0%, 100% { box-shadow: 0 0 4px rgba(197, 48, 48, 0.3); }
+    50% { box-shadow: 0 0 8px rgba(197, 48, 48, 0.6); }
+}
+
+/* Dark mode styles for overdue system */
+.dark-mode .overdue-item {
+    background: #2d3748;
+    border-color: #ed8936;
+}
+
+.dark-mode .overdue-item.critical {
+    background: #3c2415;
+    border-color: #e53e3e;
+}
+
+.dark-mode .overdue-item-title {
+    color: #ed8936;
+}
+
+.dark-mode .overdue-item.critical .overdue-item-title {
+    color: #fc8181;
+}
+
+.dark-mode .overdue-item-description {
+    color: #cbd5e0;
+}
+
+.dark-mode .overdue-time {
+    color: #ed8936;
+    background: rgba(237, 137, 54, 0.1);
+}
+
+.dark-mode .overdue-item.critical .overdue-time {
+    color: #fc8181;
+    background: rgba(252, 129, 129, 0.1);
+}
+
+/* Dark mode styles for overdue item actions */
+.dark-mode .overdue-item-content:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .overdue-item.critical .overdue-item-content:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .overdue-item-actions {
+    border-top-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .overdue-item.critical .overdue-item-actions {
+    border-top-color: rgba(252, 129, 129, 0.2);
+    background: rgba(252, 129, 129, 0.05);
+}
+
+.dark-mode .reschedule-options {
+    background: #2d3748;
+    border-color: #4a5568;
+    z-index: 10001;
+}
+
+.dark-mode .reschedule-options button {
+    color: #cbd5e0;
+}
+
+.dark-mode .reschedule-options button:hover {
+    background: #4a5568;
+    color: #f7fafc;
+}
+
+.dark-mode .entry-due-countdown.upcoming {
+    background: #1a202c;
+    color: #68d391;
+    border-color: #38a169;
+}
+
+.dark-mode .entry-due-countdown.soon {
+    background: #2d3748;
+    color: #ed8936;
+    border-color: #dd6b20;
+}
+
+.dark-mode .entry-due-countdown.overdue {
+    background: #3c2415;
+    color: #fc8181;
+    border-color: #e53e3e;
+}
+
 /* Entry form toggle styles */
 .entry-header {
     display: flex;

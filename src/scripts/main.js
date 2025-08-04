@@ -785,6 +785,484 @@ function setCurrentDateTime(fieldId) {
     }
 }
 
+/**
+ * Escape HTML to prevent XSS
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// === Due Date System ===
+
+/**
+ * Format time remaining until due date in human-friendly format
+ */
+function formatTimeUntilDue(dueDate) {
+    if (!dueDate) return null;
+    
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diffMs = due.getTime() - now.getTime();
+    
+    // If overdue
+    if (diffMs < 0) {
+        const overdueDiffMs = Math.abs(diffMs);
+        const overdueDays = Math.floor(overdueDiffMs / (1000 * 60 * 60 * 24));
+        const overdueHours = Math.floor((overdueDiffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const overdueMinutes = Math.floor((overdueDiffMs % (1000 * 60 * 60)) / (1000 * 60));
+        
+        if (overdueDays > 0) {
+            return `${overdueDays} day${overdueDays === 1 ? '' : 's'} overdue`;
+        } else if (overdueHours > 0) {
+            return `${overdueHours} hour${overdueHours === 1 ? '' : 's'} overdue`;
+        } else if (overdueMinutes > 0) {
+            return `${overdueMinutes} minute${overdueMinutes === 1 ? '' : 's'} overdue`;
+        } else {
+            return 'Just overdue';
+        }
+    }
+    
+    // Time remaining
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (days > 0) {
+        return `${days} day${days === 1 ? '' : 's'} till due`;
+    } else if (hours > 0) {
+        return `${hours} hour${hours === 1 ? '' : 's'} till due`;
+    } else if (minutes > 0) {
+        return `${minutes} minute${minutes === 1 ? '' : 's'} till due`;
+    } else {
+        return 'Due now';
+    }
+}
+
+/**
+ * Check if an item is overdue
+ */
+function isOverdue(dueDate) {
+    if (!dueDate) return false;
+    return new Date(dueDate) < new Date();
+}
+
+/**
+ * Get overdue items sorted by most overdue first
+ */
+function getOverdueItems() {
+    if (!tracker || !tracker.entries) return [];
+    
+    const overdueItems = tracker.entries.filter(entry => 
+        entry.dueDate && isOverdue(entry.dueDate)
+    );
+    
+    // Sort by most overdue first (oldest due date first)
+    return overdueItems.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+}
+
+/**
+ * Update overdue alert button visibility
+ */
+function updateOverdueAlertButton() {
+    const alertButton = document.getElementById('overdueAlertButton');
+    if (!alertButton) return;
+    
+    const overdueItems = getOverdueItems();
+    
+    if (overdueItems.length > 0) {
+        alertButton.style.display = '';
+        alertButton.textContent = `⚠️ Alert (${overdueItems.length})`;
+        alertButton.title = `${overdueItems.length} item${overdueItems.length === 1 ? '' : 's'} overdue`;
+    } else {
+        alertButton.style.display = 'none';
+    }
+}
+
+/**
+ * Show overdue alert modal
+ */
+function showOverdueAlert() {
+    const modal = document.getElementById('overdueAlertModal');
+    const itemsList = document.getElementById('overdueItemsList');
+    
+    if (!modal || !itemsList) return;
+    
+    const overdueItems = getOverdueItems();
+    
+    // Clear existing content
+    itemsList.innerHTML = '';
+    
+    if (overdueItems.length === 0) {
+        itemsList.innerHTML = '<p>No overdue items.</p>';
+    } else {
+        overdueItems.forEach(item => {
+            const timeOverdue = formatTimeUntilDue(item.dueDate);
+            const overdueDays = Math.floor((Date.now() - new Date(item.dueDate).getTime()) / (1000 * 60 * 60 * 24));
+            const isCritical = overdueDays >= 7; // 7+ days overdue is critical
+            
+            const itemElement = document.createElement('div');
+            itemElement.className = `overdue-item${isCritical ? ' critical' : ''}`;
+            
+            itemElement.innerHTML = `
+                <div class="overdue-item-content" onclick="navigateToOverdueItem('${item.id}')">
+                    <div class="overdue-item-header">
+                        <h4 class="overdue-item-title">${escapeHtml(item.activity)}</h4>
+                        <span class="overdue-time">${timeOverdue}</span>
+                    </div>
+                    ${item.description ? `<div class="overdue-item-description">${escapeHtml(item.description)}</div>` : ''}
+                    <div class="overdue-item-due-date">
+                        Due: ${new Date(item.dueDate).toLocaleString()}
+                    </div>
+                </div>
+                <div class="overdue-item-actions">
+                    <button class="btn btn-success btn-small" onclick="event.stopPropagation(); markOverdueItemComplete('${item.id}')" title="Mark as completed">✓ Complete</button>
+                    <div class="reschedule-dropdown">
+                        <button class="btn btn-secondary btn-small reschedule-btn" onclick="event.stopPropagation(); toggleRescheduleOptions('${item.id}')" title="Reschedule item">📅 Reschedule</button>
+                        <div class="reschedule-options" id="reschedule-${item.id}" style="display: none;">
+                            <button onclick="event.stopPropagation(); rescheduleOverdueItem('${item.id}', 'tomorrow')">Tomorrow</button>
+                            <button onclick="event.stopPropagation(); rescheduleOverdueItem('${item.id}', 'next-week')">Next Week</button>
+                            <button onclick="event.stopPropagation(); rescheduleOverdueItem('${item.id}', 'next-month')">Next Month</button>
+                            <button onclick="event.stopPropagation(); rescheduleOverdueItemCustom('${item.id}')">Custom Date</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            itemsList.appendChild(itemElement);
+        });
+    }
+    
+    modal.style.display = 'block';
+}
+
+/**
+ * Close overdue alert modal
+ */
+function closeOverdueAlert() {
+    const modal = document.getElementById('overdueAlertModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Mark an overdue item as complete
+ */
+function markOverdueItemComplete(itemId) {
+    if (tracker) {
+        tracker.completeEntry(itemId);
+        // Refresh the overdue modal
+        showOverdueAlert();
+        // Update alert button state
+        updateOverdueAlertButton();
+        // Play sound if enabled
+        if (tracker.soundManager && !tracker.isNotificationSoundMuted()) {
+            tracker.soundManager.playSound('classic', false);
+        }
+    }
+}
+
+/**
+ * Navigate to the section containing an overdue item
+ */
+function navigateToOverdueItem(itemId) {
+    if (!tracker) return;
+    
+    const item = tracker.entries.find(entry => entry.id === itemId);
+    if (!item) return;
+    
+    // Close the overdue modal
+    closeOverdueAlert();
+    
+    // Navigate to appropriate section and find the correct page
+    if (item.isTodo) {
+        // Switch to todo section
+        showSection('todo');
+        // Find which page the item is on and navigate to it
+        navigateToItemInSection('todo', itemId);
+    } else if (item.isNote) {
+        // Switch to notes section
+        showSection('notes');
+        // Find which page the item is on and navigate to it
+        navigateToItemInSection('notes', itemId);
+    } else {
+        // Switch to tracker section for regular entries
+        showSection('tracker');
+        // Find which page the item is on and navigate to it
+        navigateToItemInSection('tracker', itemId);
+    }
+}
+
+/**
+ * Navigate to a specific item in a section, handling pagination
+ */
+function navigateToItemInSection(section, itemId) {
+    setTimeout(() => {
+        // With overdue prioritization, overdue items should be on first pages
+        // But let's be extra sure by checking if the item is visible
+        let targetElement = document.querySelector(`[onclick*="${itemId}"]`);
+        
+        if (!targetElement) {
+            // Item not visible on current page, it might be on another page
+            // Since overdue items are now prioritized and shown first, 
+            // this shouldn't happen for overdue items, but let's handle it anyway
+            
+            // Go to first page to look for overdue items
+            if (section === 'todo' && tracker.todoPagination) {
+                tracker.todoPagination.currentPage = 1;
+                tracker.displayTodos();
+            } else if (section === 'notes' && tracker.notesPagination) {
+                tracker.notesPagination.currentPage = 1;
+                tracker.displayNotes();
+            } else if (section === 'tracker' && tracker.entriesPagination) {
+                tracker.entriesPagination.currentPage = 1;
+                tracker.displayEntries();
+            }
+            
+            // Try to find the element again after refresh
+            setTimeout(() => {
+                targetElement = document.querySelector(`[onclick*="${itemId}"]`);
+                if (targetElement) {
+                    highlightAndScrollToElement(targetElement);
+                }
+            }, 100);
+        } else {
+            // Element is visible, just scroll to it
+            highlightAndScrollToElement(targetElement);
+        }
+    }, 100);
+}
+
+/**
+ * Highlight and scroll to a target element
+ */
+function highlightAndScrollToElement(element) {
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.style.background = '#fff3cd';
+        element.style.transition = 'background-color 0.3s ease';
+        setTimeout(() => {
+            element.style.background = '';
+            setTimeout(() => {
+                element.style.transition = '';
+            }, 300);
+        }, 2000);
+    }
+}
+
+/**
+ * Toggle reschedule options dropdown for an overdue item
+ */
+function toggleRescheduleOptions(itemId) {
+    const dropdown = document.getElementById(`reschedule-${itemId}`);
+    if (!dropdown) return;
+    
+    // Close all other open dropdowns first
+    document.querySelectorAll('.reschedule-options').forEach(option => {
+        if (option.id !== `reschedule-${itemId}`) {
+            option.style.display = 'none';
+        }
+    });
+    
+    // Toggle this dropdown
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+/**
+ * Reschedule an overdue item to a preset date
+ */
+function rescheduleOverdueItem(itemId, rescheduleType) {
+    if (!tracker) return;
+    
+    const item = tracker.entries.find(entry => entry.id === itemId);
+    if (!item) return;
+    
+    const now = new Date();
+    let newDueDate;
+    
+    switch (rescheduleType) {
+        case 'tomorrow':
+            newDueDate = new Date(now);
+            newDueDate.setDate(now.getDate() + 1);
+            newDueDate.setHours(9, 0, 0, 0); // Default to 9 AM
+            break;
+        case 'next-week':
+            newDueDate = new Date(now);
+            newDueDate.setDate(now.getDate() + 7);
+            newDueDate.setHours(9, 0, 0, 0); // Default to 9 AM
+            break;
+        case 'next-month':
+            newDueDate = new Date(now);
+            newDueDate.setMonth(now.getMonth() + 1);
+            newDueDate.setHours(9, 0, 0, 0); // Default to 9 AM
+            break;
+        default:
+            return;
+    }
+    
+    // Update the item's due date
+    item.dueDate = newDueDate.toISOString();
+    tracker.saveEntries();
+    
+    // Refresh displays
+    tracker.displayEntries();
+    tracker.displayTodos();
+    tracker.displayNotes();
+    showOverdueAlert();
+    updateOverdueAlertButton();
+    
+    // Close dropdown
+    const dropdown = document.getElementById(`reschedule-${itemId}`);
+    if (dropdown) dropdown.style.display = 'none';
+    
+    // Show confirmation
+    showNotification(`Item rescheduled to ${newDueDate.toLocaleDateString()}`, 'success');
+    
+    // Play sound if enabled
+    if (tracker.soundManager && !tracker.isNotificationSoundMuted()) {
+        tracker.soundManager.playSound('classic', false);
+    }
+}
+
+/**
+ * Show custom date picker for rescheduling an overdue item
+ */
+function rescheduleOverdueItemCustom(itemId) {
+    if (!tracker) return;
+    
+    const item = tracker.entries.find(entry => entry.id === itemId);
+    if (!item) return;
+    
+    // Create a simple prompt for custom date/time
+    const currentDue = item.dueDate ? new Date(item.dueDate) : new Date();
+    const defaultValue = currentDue.toISOString().slice(0, 16); // Format for datetime-local input
+    
+    const customDate = prompt(`Enter new due date and time for "${item.activity}":`, defaultValue);
+    if (customDate) {
+        const newDueDate = new Date(customDate);
+        if (!isNaN(newDueDate.getTime())) {
+            // Update the item's due date
+            item.dueDate = newDueDate.toISOString();
+            tracker.saveEntries();
+            
+            // Refresh displays
+            tracker.displayEntries();
+            tracker.displayTodos();
+            tracker.displayNotes();
+            showOverdueAlert();
+            updateOverdueAlertButton();
+            
+            // Close dropdown
+            const dropdown = document.getElementById(`reschedule-${itemId}`);
+            if (dropdown) dropdown.style.display = 'none';
+            
+            // Show confirmation
+            showNotification(`Item rescheduled to ${newDueDate.toLocaleString()}`, 'success');
+            
+            // Play sound if enabled
+            if (tracker.soundManager && !tracker.isNotificationSoundMuted()) {
+                tracker.soundManager.playSound('classic', false);
+            }
+        } else {
+            showNotification('Invalid date format. Please try again.', 'error');
+        }
+    }
+}
+
+/**
+ * Generate due date countdown HTML for entry display
+ */
+function generateDueDateCountdown(dueDate) {
+    if (!dueDate) return '';
+    
+    const timeText = formatTimeUntilDue(dueDate);
+    if (!timeText) return '';
+    
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diffMs = due.getTime() - now.getTime();
+    
+    let cssClass = 'upcoming';
+    if (diffMs < 0) {
+        cssClass = 'overdue';
+    } else if (diffMs < 24 * 60 * 60 * 1000) { // Less than 24 hours
+        cssClass = 'soon';
+    }
+    
+    return `<span class="entry-due-countdown ${cssClass}">${timeText}</span>`;
+}
+
+/**
+ * Check for newly due items and send notifications
+ */
+function checkDueItemsForNotifications() {
+    if (!tracker || !tracker.entries) return;
+    
+    const now = new Date();
+    const oneMinuteAgo = new Date(now.getTime() - 60000);
+    
+    // Find items that became due in the last minute
+    const newlyDueItems = tracker.entries.filter(entry => {
+        if (!entry.dueDate) return false;
+        
+        const dueDate = new Date(entry.dueDate);
+        return dueDate <= now && dueDate > oneMinuteAgo;
+    });
+    
+    // Send notifications for newly due items
+    newlyDueItems.forEach(item => {
+        sendDueItemNotification(item);
+    });
+}
+
+/**
+ * Send notification for a due item
+ */
+function sendDueItemNotification(item) {
+    // Check if notifications are enabled
+    if (!tracker.settings.notificationsEnabled) return;
+    
+    // Play sound if enabled
+    if (!tracker.settings.muteSound && tracker.soundManager) {
+        tracker.soundManager.playNotificationSound();
+    }
+    
+    // Send browser notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+        const notification = new Notification('Item Due Now!', {
+            body: `${item.activity}${item.description ? ' - ' + item.description : ''}`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e53e3e"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+            tag: 'due-item-' + item.id,
+            requireInteraction: true
+        });
+        
+        // Auto-close after 10 seconds
+        setTimeout(() => {
+            if (notification) {
+                notification.close();
+            }
+        }, 10000);
+    }
+}
+
+/**
+ * Initialize due date monitoring system
+ */
+function initializeDueDateSystem() {
+    // Check for due items every minute
+    setInterval(() => {
+        checkDueItemsForNotifications();
+        updateOverdueAlertButton();
+    }, 60000);
+    
+    // Initial check
+    updateOverdueAlertButton();
+    
+    console.log('Due date monitoring system initialized');
+}
+
 // === Entry Form Toggle System ===
 
 // Global state for entry form visibility (persistent across tabs)
@@ -993,8 +1471,83 @@ function showPomodoroActivityModal() {
  */
 function togglePause() {
     if (tracker) {
+        const pauseButton = document.getElementById('pauseButton');
+        
+        // Check if button shows "Outside working hours" and show info modal
+        if (pauseButton && pauseButton.textContent === 'Outside working hours') {
+            showWorkingHoursInfo();
+            return;
+        }
+        
+        // Check if notifications are completely disabled
+        if (pauseButton && pauseButton.textContent === 'All reminders disabled') {
+            // Focus user's attention on the notification status section
+            const notificationStatus = document.querySelector('.notification-status');
+            if (notificationStatus) {
+                notificationStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Add a subtle highlight effect
+                notificationStatus.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+                setTimeout(() => {
+                    notificationStatus.style.backgroundColor = '';
+                }, 3000);
+            }
+            return;
+        }
+        
+        // Proceed with normal pause toggle
         tracker.togglePause();
     }
+}
+
+/**
+ * Show working hours information modal
+ */
+function showWorkingHoursInfo() {
+    const modal = document.getElementById('workingHoursInfoModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+/**
+ * Close working hours information modal
+ */
+function closeWorkingHoursInfo() {
+    const modal = document.getElementById('workingHoursInfoModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Navigate to working hours settings
+ */
+function goToWorkingHoursSettings() {
+    // Close the modal first
+    closeWorkingHoursInfo();
+    
+    // Switch to settings section
+    showSection('settings');
+    
+    // Scroll to the working hours settings
+    setTimeout(() => {
+        const workingHoursSection = document.querySelector('.settings-section h3');
+        if (workingHoursSection) {
+            // Look for the Working Schedule section
+            const sections = document.querySelectorAll('.settings-section h3');
+            for (let section of sections) {
+                if (section.textContent.includes('Working Schedule') || section.textContent.includes('Schedule')) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Add a subtle highlight effect
+                    section.parentElement.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+                    setTimeout(() => {
+                        section.parentElement.style.backgroundColor = '';
+                    }, 3000);
+                    break;
+                }
+            }
+        }
+    }, 200);
 }
 
 /**
@@ -1643,6 +2196,13 @@ document.addEventListener('click', (e) => {
             closeEditModal();
         }
     }
+    
+    // Close reschedule dropdowns when clicking outside
+    if (!e.target.closest('.reschedule-dropdown')) {
+        document.querySelectorAll('.reschedule-options').forEach(dropdown => {
+            dropdown.style.display = 'none';
+        });
+    }
 });
 
 /**
@@ -1660,6 +2220,7 @@ document.addEventListener('keydown', (e) => {
         const confirmationModal = document.getElementById('confirmationModal');
         const hashtagBrowserModal = document.getElementById('hashtagBrowserModal');
         const userGuideModal = document.getElementById('userGuideModal');
+        const workingHoursInfoModal = document.getElementById('workingHoursInfoModal');
         
         if (templateGuideModal && templateGuideModal.style.display === 'block') {
             closeTemplateGuide();
@@ -1675,6 +2236,10 @@ document.addEventListener('keydown', (e) => {
             closeHashtagBrowser();
         } else if (userGuideModal && userGuideModal.style.display === 'block') {
             closeUserGuide();
+        } else if (workingHoursInfoModal && workingHoursInfoModal.style.display === 'block') {
+            closeWorkingHoursInfo();
+        } else if (document.getElementById('overdueAlertModal') && document.getElementById('overdueAlertModal').style.display === 'block') {
+            closeOverdueAlert();
         } else if (editModal && editModal.style.display === 'block') {
             closeEditModal();
         }

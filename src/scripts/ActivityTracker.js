@@ -120,6 +120,11 @@ class ActivityTracker {
         if (window.location.protocol === 'file:') {
             console.warn('Running from local file - notifications may have limitations');
         }
+        
+        // Initialize due date monitoring system
+        if (typeof initializeDueDateSystem === 'function') {
+            initializeDueDateSystem();
+        }
     }
 
     /**
@@ -766,10 +771,13 @@ class ActivityTracker {
         // Update pagination size if settings changed
         this.entriesPagination.itemsPerPage = this.settings.paginationSize || 20;
         
+        // Sort entries with overdue items first
+        const sortedEntries = this.getSortedEntriesWithOverduePriority();
+        
         // Calculate pagination
         const startIndex = (this.entriesPagination.currentPage - 1) * this.entriesPagination.itemsPerPage;
         const endIndex = startIndex + this.entriesPagination.itemsPerPage;
-        const paginatedEntries = this.entries.slice(startIndex, endIndex);
+        const paginatedEntries = sortedEntries.slice(startIndex, endIndex);
 
         if (paginatedEntries.length === 0) {
             container.innerHTML = '<p>No entries yet. Add your first activity above!</p>';
@@ -779,7 +787,24 @@ class ActivityTracker {
         container.innerHTML = paginatedEntries.map(entry => this.renderEntry(entry, { showTodoIndicator: true, showNoteIndicator: true })).join('');
         
         // Update pagination controls
-        this.updateEntriesPagination(this.entries.length);
+        this.updateEntriesPagination(sortedEntries.length);
+    }
+
+    /**
+     * Get entries sorted with overdue items prioritized first
+     */
+    getSortedEntriesWithOverduePriority() {
+        const now = new Date();
+        const overdueEntries = this.entries.filter(entry => entry.dueDate && new Date(entry.dueDate) < now);
+        const regularEntries = this.entries.filter(entry => !entry.dueDate || new Date(entry.dueDate) >= now);
+
+        // Sort overdue entries by how overdue they are (most overdue first)
+        const sortedOverdue = overdueEntries.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        // Keep regular entries in their original order (newest first, which is the default)
+        const sortedRegular = regularEntries;
+
+        // Return overdue items first, then regular items
+        return [...sortedOverdue, ...sortedRegular];
     }
 
     /**
@@ -804,9 +829,19 @@ class ActivityTracker {
             itemClass += isOverdue ? ' entry-todo entry-overdue' : ' entry-todo';
         }
         
-        const dueDateHtml = entry.dueDate 
-            ? `<div class="entry-due-date">Due: ${formatDateTime(entry.dueDate)}</div>`
-            : '';
+        // Generate human-friendly due date display
+        let dueDateHtml = '';
+        if (entry.dueDate && typeof formatTimeUntilDue === 'function') {
+            const countdownText = formatTimeUntilDue(entry.dueDate);
+            if (countdownText) {
+                const isOverdueItem = typeof isOverdue === 'function' && isOverdue(entry.dueDate);
+                const badgeClass = isOverdueItem ? 'due-badge-overdue' : 'due-badge-normal';
+                dueDateHtml = `<div class="entry-due-date"><span class="due-countdown-badge ${badgeClass}">${countdownText}</span></div>`;
+            }
+        } else if (entry.dueDate) {
+            // Fallback to formatted date if countdown functions aren't available
+            dueDateHtml = `<div class="entry-due-date">Due: ${formatDateTime(entry.dueDate)}</div>`;
+        }
 
         // For todo section, show created time instead of timestamp, and optionally show todo indicator
         const timeToShow = showCreatedTime && entry.created ? entry.created : entry.timestamp;
@@ -3040,39 +3075,47 @@ class ActivityTracker {
                 break;
         }
 
-        // Apply sort
-        switch (this.todoPagination.sort) {
-            case 'created-asc':
-                todos.sort((a, b) => new Date(a.created) - new Date(b.created));
-                break;
-            case 'created-desc':
-                todos.sort((a, b) => new Date(b.created) - new Date(a.created));
-                break;
-            case 'due-asc':
-                todos.sort((a, b) => {
-                    if (!a.dueDate && !b.dueDate) return 0;
-                    if (!a.dueDate) return 1;
-                    if (!b.dueDate) return -1;
-                    return new Date(a.dueDate) - new Date(b.dueDate);
-                });
-                break;
-            case 'due-desc':
-                todos.sort((a, b) => {
-                    if (!a.dueDate && !b.dueDate) return 0;
-                    if (!a.dueDate) return 1;
-                    if (!b.dueDate) return -1;
-                    return new Date(b.dueDate) - new Date(a.dueDate);
-                });
-                break;
-            case 'activity-asc':
-                todos.sort((a, b) => a.activity.localeCompare(b.activity));
-                break;
-            case 'activity-desc':
-                todos.sort((a, b) => b.activity.localeCompare(a.activity));
-                break;
-        }
+        // Separate overdue and non-overdue items for prioritization
+        const now = new Date();
+        const overdueTodos = todos.filter(todo => todo.dueDate && new Date(todo.dueDate) < now);
+        const regularTodos = todos.filter(todo => !todo.dueDate || new Date(todo.dueDate) >= now);
 
-        return todos;
+        // Apply sort to both groups separately
+        const applySortToGroup = (todoGroup) => {
+            switch (this.todoPagination.sort) {
+                case 'created-asc':
+                    return todoGroup.sort((a, b) => new Date(a.created) - new Date(b.created));
+                case 'created-desc':
+                    return todoGroup.sort((a, b) => new Date(b.created) - new Date(a.created));
+                case 'due-asc':
+                    return todoGroup.sort((a, b) => {
+                        if (!a.dueDate && !b.dueDate) return 0;
+                        if (!a.dueDate) return 1;
+                        if (!b.dueDate) return -1;
+                        return new Date(a.dueDate) - new Date(b.dueDate);
+                    });
+                case 'due-desc':
+                    return todoGroup.sort((a, b) => {
+                        if (!a.dueDate && !b.dueDate) return 0;
+                        if (!a.dueDate) return 1;
+                        if (!b.dueDate) return -1;
+                        return new Date(b.dueDate) - new Date(a.dueDate);
+                    });
+                case 'activity-asc':
+                    return todoGroup.sort((a, b) => a.activity.localeCompare(b.activity));
+                case 'activity-desc':
+                    return todoGroup.sort((a, b) => b.activity.localeCompare(a.activity));
+                default:
+                    return todoGroup;
+            }
+        };
+
+        // Sort overdue items by how overdue they are (most overdue first)
+        const sortedOverdue = overdueTodos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        const sortedRegular = applySortToGroup(regularTodos);
+
+        // Return overdue items first, then regular items
+        return [...sortedOverdue, ...sortedRegular];
     }
 
     /**
@@ -3273,21 +3316,29 @@ class ActivityTracker {
                 break;
         }
 
-        // Apply sort
-        switch (this.notesPagination.sort) {
-            case 'oldest':
-                notes.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                break;
-            case 'activity':
-                notes.sort((a, b) => a.activity.localeCompare(b.activity));
-                break;
-            case 'newest':
-            default:
-                notes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                break;
-        }
+        // Separate overdue and non-overdue notes for prioritization
+        const overdueNotes = notes.filter(note => note.dueDate && new Date(note.dueDate) < now);
+        const regularNotes = notes.filter(note => !note.dueDate || new Date(note.dueDate) >= now);
 
-        return notes;
+        // Apply sort to both groups separately
+        const applySortToGroup = (noteGroup) => {
+            switch (this.notesPagination.sort) {
+                case 'oldest':
+                    return noteGroup.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                case 'activity':
+                    return noteGroup.sort((a, b) => a.activity.localeCompare(b.activity));
+                case 'newest':
+                default:
+                    return noteGroup.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            }
+        };
+
+        // Sort overdue notes by how overdue they are (most overdue first)
+        const sortedOverdue = overdueNotes.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        const sortedRegular = applySortToGroup(regularNotes);
+
+        // Return overdue notes first, then regular notes
+        return [...sortedOverdue, ...sortedRegular];
     }
 
     /**
