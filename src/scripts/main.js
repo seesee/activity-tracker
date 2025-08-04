@@ -34,12 +34,17 @@ function showSection(sectionName, event) {
         }
     }
 
-    // Focus on activity input when showing tracker
-    if (sectionName === 'tracker') {
+    // Focus on entry input when showing tracker, todo, or notes (if form is visible)
+    if (sectionName === 'tracker' || sectionName === 'todo' || sectionName === 'notes') {
         setTimeout(() => {
-            const activityInput = document.getElementById('activity');
-            if (activityInput) {
-                activityInput.focus();
+            const inputId = sectionName === 'tracker' ? 'activity' : 
+                           sectionName === 'todo' ? 'todoActivity' : 'notesActivity';
+            const input = document.getElementById(inputId);
+            const component = document.getElementById(`${sectionName}EntryComponent`);
+            
+            // Only focus if the form is visible (not collapsed)
+            if (input && component && !component.classList.contains('collapsed')) {
+                input.focus();
             }
         }, 100);
     }
@@ -533,6 +538,9 @@ function toggleTodoMode() {
             dueDateSection.style.display = 'block';
         }
     }
+    
+    // Update form labels and examples
+    updateFormLabelsAndExamples('tracker');
 }
 
 /**
@@ -559,6 +567,9 @@ function toggleNoteMode() {
         btn.classList.add('active');
         btn.textContent = '✓ Note';
     }
+    
+    // Update form labels and examples
+    updateFormLabelsAndExamples('tracker');
 }
 
 /**
@@ -567,6 +578,386 @@ function toggleNoteMode() {
 function isNoteModeActive() {
     const btn = document.getElementById('noteToggleBtn');
     return btn ? btn.classList.contains('active') : false;
+}
+
+/**
+ * Update form labels and placeholders based on current mode flags
+ */
+function updateFormLabelsAndExamples(context = 'tracker') {
+    const isTodo = context === 'tracker' ? isTodoModeActive() : 
+                   context === 'todo' ? document.getElementById('todoTodoToggleBtn')?.classList.contains('active') :
+                   document.getElementById('notesTodToggleBtn')?.classList.contains('active');
+    
+    const isNote = context === 'tracker' ? isNoteModeActive() :
+                   context === 'todo' ? document.getElementById('todoNoteToggleBtn')?.classList.contains('active') :
+                   document.getElementById('notesNoteToggleBtn')?.classList.contains('active');
+    
+    let prefix = context === 'tracker' ? '' : context;
+    let titleElement, activityLabel, activityInput, descriptionLabel, descriptionInput, addButton;
+    
+    if (context === 'tracker') {
+        titleElement = document.getElementById('entryTitle');
+        activityLabel = document.getElementById('activityLabel');
+        activityInput = document.getElementById('activity');
+        descriptionLabel = document.getElementById('descriptionLabel');
+        descriptionInput = document.getElementById('description');
+        addButton = document.getElementById('addEntryBtn');
+    } else if (context === 'todo') {
+        titleElement = document.getElementById('todoEntryTitle');
+        activityLabel = document.getElementById('todoActivityLabel');
+        activityInput = document.getElementById('todoActivity');
+        descriptionLabel = document.getElementById('todoDescriptionLabel');
+        descriptionInput = document.getElementById('todoDescription');
+        addButton = document.getElementById('todoAddEntryBtn');
+    } else if (context === 'notes') {
+        titleElement = document.getElementById('notesEntryTitle');
+        activityLabel = document.getElementById('notesActivityLabel');
+        activityInput = document.getElementById('notesActivity');
+        descriptionLabel = document.getElementById('notesDescriptionLabel');
+        descriptionInput = document.getElementById('notesDescription');
+        addButton = document.getElementById('notesAddEntryBtn');
+    }
+    
+    // Update based on flag combinations
+    if (isTodo && isNote) {
+        // Both flags active - Todo Note
+        if (titleElement) titleElement.textContent = context === 'tracker' ? 'New Todo Note' : 'New Todo Note';
+        if (activityLabel) activityLabel.textContent = 'What do you need to note and do?';
+        if (activityInput) activityInput.placeholder = 'e.g., Research budget options, Review meeting agenda #work';
+        if (descriptionLabel) descriptionLabel.textContent = 'Note details and todo description';
+        if (descriptionInput) descriptionInput.placeholder = 'Capture your notes and describe what needs to be done...';
+        if (addButton) addButton.textContent = 'Add Todo Note';
+    } else if (isTodo) {
+        // Only todo flag active
+        if (titleElement) titleElement.textContent = context === 'tracker' ? 'New Todo Item' : 'New Todo Item';
+        if (activityLabel) activityLabel.textContent = 'What do you need to do?';
+        if (activityInput) activityInput.placeholder = 'e.g., Call client about project, Review budget #work';
+        if (descriptionLabel) descriptionLabel.textContent = 'Todo description (optional)';
+        if (descriptionInput) descriptionInput.placeholder = 'Additional details about this task, steps needed, context...';
+        if (addButton) addButton.textContent = 'Add Todo';
+    } else if (isNote) {
+        // Only note flag active
+        if (titleElement) titleElement.textContent = context === 'tracker' ? 'New Note' : 'New Note';
+        if (activityLabel) activityLabel.textContent = 'Note title or topic';
+        if (activityInput) activityInput.placeholder = 'e.g., Meeting notes, Ideas for project #brainstorm';
+        if (descriptionLabel) descriptionLabel.textContent = 'Note content';
+        if (descriptionInput) descriptionInput.placeholder = 'Write your note content, ideas, observations, or thoughts here...';
+        if (addButton) addButton.textContent = 'Add Note';
+    } else {
+        // Neither flag active - regular activity
+        if (titleElement) titleElement.textContent = context === 'tracker' ? 'Activity Entry' : 'New Activity';
+        if (activityLabel) activityLabel.textContent = 'What are you doing?';
+        if (activityInput) activityInput.placeholder = 'e.g., Writing report, Meeting with team #work';
+        if (descriptionLabel) descriptionLabel.textContent = 'Description (optional)';
+        if (descriptionInput) descriptionInput.placeholder = 'Additional details about this activity...';
+        if (addButton) addButton.textContent = 'Add Entry';
+    }
+}
+
+// === Todo Section Toggle Functions ===
+
+/**
+ * Toggle todo mode for todo section form
+ */
+function toggleTodoModeForTodo() {
+    const btn = document.getElementById('todoTodoToggleBtn');
+    if (!btn) return;
+    
+    const isActive = btn.classList.contains('active');
+    const dueDateSection = document.getElementById('todoDueDateSection');
+    
+    if (isActive) {
+        btn.classList.remove('active');
+        btn.textContent = 'Mark as Todo';
+        if (dueDateSection) dueDateSection.style.display = 'none';
+    } else {
+        btn.classList.add('active');
+        btn.textContent = '✓ Todo';
+        if (dueDateSection) dueDateSection.style.display = 'block';
+    }
+    
+    updateFormLabelsAndExamples('todo');
+}
+
+/**
+ * Toggle note mode for todo section form
+ */
+function toggleNoteModeForTodo() {
+    const btn = document.getElementById('todoNoteToggleBtn');
+    if (!btn) return;
+    
+    const isActive = btn.classList.contains('active');
+    
+    if (isActive) {
+        btn.classList.remove('active');
+        btn.textContent = 'Mark as Note';
+    } else {
+        btn.classList.add('active');
+        btn.textContent = '✓ Note';
+    }
+    
+    updateFormLabelsAndExamples('todo');
+}
+
+// === Notes Section Toggle Functions ===
+
+/**
+ * Toggle todo mode for notes section form
+ */
+function toggleTodoModeForNotes() {
+    const btn = document.getElementById('notesTodToggleBtn');
+    if (!btn) return;
+    
+    const isActive = btn.classList.contains('active');
+    const dueDateSection = document.getElementById('notesDueDateSection');
+    
+    if (isActive) {
+        btn.classList.remove('active');
+        btn.textContent = 'Mark as Todo';
+        if (dueDateSection) dueDateSection.style.display = 'none';
+    } else {
+        btn.classList.add('active');
+        btn.textContent = '✓ Todo';
+        if (dueDateSection) dueDateSection.style.display = 'block';
+    }
+    
+    updateFormLabelsAndExamples('notes');
+}
+
+/**
+ * Toggle note mode for notes section form
+ */
+function toggleNoteModeForNotes() {
+    const btn = document.getElementById('notesNoteToggleBtn');
+    if (!btn) return;
+    
+    const isActive = btn.classList.contains('active');
+    
+    if (isActive) {
+        btn.classList.remove('active');
+        btn.textContent = 'Mark as Note';
+    } else {
+        btn.classList.add('active');
+        btn.textContent = '✓ Note';
+    }
+    
+    updateFormLabelsAndExamples('notes');
+}
+
+// === Helper Functions for New Forms ===
+
+/**
+ * Set due date for todo form
+ */
+function setDueDateForTodo(preset) {
+    setDueDatePreset('todoDueDate', preset);
+}
+
+/**
+ * Set due date for notes form
+ */
+function setDueDateForNotes(preset) {
+    setDueDatePreset('notesDueDate', preset);
+}
+
+/**
+ * Add current time for todo form
+ */
+function addCurrentTimeForTodo() {
+    setCurrentDateTime('todoTimestamp');
+}
+
+/**
+ * Add current time for notes form
+ */
+function addCurrentTimeForNotes() {
+    setCurrentDateTime('notesTimestamp');
+}
+
+/**
+ * Set current date/time for any field
+ */
+function setCurrentDateTime(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        const now = new Date();
+        field.value = now.toISOString().slice(0, 16);
+    }
+}
+
+// === Entry Form Toggle System ===
+
+// Global state for entry form visibility (persistent across tabs)
+let entryFormsVisible = true;
+let userStruggleTimeout = null;
+
+/**
+ * Create latch click sound effect
+ */
+function createLatchClickSound() {
+    // Create a synthetic latch click sound using Web Audio API
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Create multiple oscillators for a complex latch sound
+    const clickDuration = 0.08;
+    const now = audioContext.currentTime;
+    
+    // Main click sound (sharp transient)
+    const oscillator1 = audioContext.createOscillator();
+    const gainNode1 = audioContext.createGain();
+    
+    oscillator1.connect(gainNode1);
+    gainNode1.connect(audioContext.destination);
+    
+    oscillator1.frequency.setValueAtTime(800, now);
+    oscillator1.frequency.exponentialRampToValueAtTime(200, now + 0.02);
+    
+    gainNode1.gain.setValueAtTime(0.3, now);
+    gainNode1.gain.exponentialRampToValueAtTime(0.01, now + clickDuration);
+    
+    // Secondary resonance (metallic ring)
+    const oscillator2 = audioContext.createOscillator();
+    const gainNode2 = audioContext.createGain();
+    
+    oscillator2.connect(gainNode2);
+    gainNode2.connect(audioContext.destination);
+    
+    oscillator2.frequency.setValueAtTime(1200, now + 0.01);
+    oscillator2.frequency.exponentialRampToValueAtTime(400, now + 0.04);
+    
+    gainNode2.gain.setValueAtTime(0.15, now + 0.01);
+    gainNode2.gain.exponentialRampToValueAtTime(0.01, now + clickDuration);
+    
+    // Start and stop oscillators
+    oscillator1.start(now);
+    oscillator1.stop(now + clickDuration);
+    
+    oscillator2.start(now + 0.01);
+    oscillator2.stop(now + clickDuration);
+}
+
+/**
+ * Play latch click sound if sound is enabled
+ */
+function playLatchClick() {
+    if (tracker && tracker.settings && !tracker.settings.muteSound) {
+        try {
+            createLatchClickSound();
+        } catch (error) {
+            console.log('Could not play latch click sound:', error.message);
+        }
+    }
+}
+
+/**
+ * Toggle entry form visibility for a specific section
+ */
+function toggleEntryForm(section) {
+    const component = document.getElementById(`${section}EntryComponent`);
+    const toggleBtn = document.getElementById(`${section}ToggleBtn${section === 'tracker' ? '' : '2'}`);
+    
+    if (!component || !toggleBtn) return;
+    
+    entryFormsVisible = !entryFormsVisible;
+    
+    // Play sound effect
+    playLatchClick();
+    
+    // Update all sections to maintain consistency
+    updateAllEntryForms();
+    
+    // Clear any struggle hints
+    clearStruggleHint();
+    
+    // If showing form, focus on appropriate input after animation completes
+    if (entryFormsVisible) {
+        setTimeout(() => {
+            const inputId = section === 'tracker' ? 'activity' : 
+                           section === 'todo' ? 'todoActivity' : 'notesActivity';
+            const input = document.getElementById(inputId);
+            const component = document.getElementById(`${section}EntryComponent`);
+            
+            // Only focus if the form is actually visible (not collapsed)
+            if (input && component && !component.classList.contains('collapsed')) {
+                input.focus();
+            }
+        }, 400); // Wait for animation to complete
+    }
+}
+
+/**
+ * Update all entry forms to match global visibility state
+ */
+function updateAllEntryForms() {
+    const sections = ['tracker', 'todo', 'notes'];
+    
+    sections.forEach(section => {
+        const component = document.getElementById(`${section}EntryComponent`);
+        const toggleBtn = document.getElementById(`${section}ToggleBtn${section === 'tracker' ? '' : '2'}`);
+        
+        if (component && toggleBtn) {
+            if (entryFormsVisible) {
+                component.classList.remove('collapsed');
+                toggleBtn.classList.remove('hidden-form');
+                toggleBtn.title = 'Hide entry form';
+            } else {
+                component.classList.add('collapsed');
+                toggleBtn.classList.add('hidden-form');
+                toggleBtn.title = 'Show entry form';
+            }
+        }
+    });
+}
+
+/**
+ * Start struggle detection timer
+ */
+function startStruggleDetection() {
+    if (userStruggleTimeout) clearTimeout(userStruggleTimeout);
+    
+    // If forms are hidden and user hasn't interacted for 10 seconds, show hint
+    if (!entryFormsVisible) {
+        userStruggleTimeout = setTimeout(() => {
+            showStruggleHint();
+        }, 10000);
+    }
+}
+
+/**
+ * Show struggle hint on toggle buttons
+ */
+function showStruggleHint() {
+    const sections = ['tracker', 'todo', 'notes'];
+    
+    sections.forEach(section => {
+        const toggleBtn = document.getElementById(`${section}ToggleBtn${section === 'tracker' ? '' : '2'}`);
+        if (toggleBtn && !entryFormsVisible) {
+            toggleBtn.classList.add('glow-hint');
+        }
+    });
+    
+    // Remove hint after 5 seconds
+    setTimeout(() => {
+        clearStruggleHint();
+    }, 5000);
+}
+
+/**
+ * Clear struggle hint from all toggle buttons
+ */
+function clearStruggleHint() {
+    if (userStruggleTimeout) {
+        clearTimeout(userStruggleTimeout);
+        userStruggleTimeout = null;
+    }
+    
+    const sections = ['tracker', 'todo', 'notes'];
+    sections.forEach(section => {
+        const toggleBtn = document.getElementById(`${section}ToggleBtn${section === 'tracker' ? '' : '2'}`);
+        if (toggleBtn) {
+            toggleBtn.classList.remove('glow-hint');
+        }
+    });
 }
 
 /**
@@ -1105,6 +1496,29 @@ function initializeUIState() {
 }
 
 /**
+ * Initialize entry form toggle system
+ */
+function initializeEntryFormToggle() {
+    // Set initial form state
+    updateAllEntryForms();
+    
+    // Add event listeners for user interaction detection
+    const interactionEvents = ['click', 'scroll', 'keydown', 'mousemove'];
+    
+    interactionEvents.forEach(eventType => {
+        document.addEventListener(eventType, () => {
+            clearStruggleHint();
+            startStruggleDetection();
+        }, { passive: true });
+    });
+    
+    // Start initial struggle detection if forms are hidden
+    startStruggleDetection();
+    
+    console.log('Entry form toggle system initialized');
+}
+
+/**
  * Initialize the application when DOM is loaded
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1112,6 +1526,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize UI state
     initializeUIState();
+    
+    // Initialize entry form toggle system
+    initializeEntryFormToggle();
     
     // Create tracker instance
     tracker = new ActivityTracker();
@@ -1278,7 +1695,7 @@ document.addEventListener('keydown', (e) => {
         return;
     }
     
-    // Shift + Space focuses the activity input field (only when not in description textarea)
+    // Shift + Space focuses the activity input field and unfurls form if hidden
     if (e.shiftKey && e.key === ' ') {
         const activeElement = document.activeElement;
         // Don't trigger if currently focused on description textarea
@@ -1286,12 +1703,28 @@ document.addEventListener('keydown', (e) => {
             return;
         }
         e.preventDefault();
-        const activityInput = document.getElementById('activity');
-        if (activityInput) {
-            activityInput.focus();
+        
+        // If forms are hidden, show them first
+        if (!entryFormsVisible) {
+            entryFormsVisible = true;
+            playLatchClick();
+            updateAllEntryForms();
+            clearStruggleHint();
+        }
+        
+        // Focus the activity input and switch to tracker section
+        setTimeout(() => {
+            const activityInput = document.getElementById('activity');
+            const component = document.getElementById('trackerEntryComponent');
+            
             // Also switch to tracker section if not already there
             showSection('tracker');
-        }
+            
+            // Only focus if the form is visible
+            if (activityInput && component && !component.classList.contains('collapsed')) {
+                activityInput.focus();
+            }
+        }, entryFormsVisible ? 0 : 400);
         return;
     }
     

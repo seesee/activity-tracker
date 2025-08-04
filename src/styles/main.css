@@ -139,9 +139,9 @@ h3 {
     position: absolute;
     top: 100%;
     right: 0;
-    margin-top: 8px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    margin-top: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
     border-radius: 8px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     z-index: 1001;
@@ -162,6 +162,14 @@ h3 {
     transition: background-color 0.2s ease;
 }
 
+.burger-emoji {
+    margin-right: 8px;
+}
+
+.burger-text {
+    /* Text styling can be added here if needed */
+}
+
 .burger-item:hover {
     background: #f7fafc;
     color: #2d3748;
@@ -169,7 +177,8 @@ h3 {
 
 /* Dark mode styles for burger menu */
 .dark-mode .burger-dropdown {
-    background: rgba(26, 32, 44, 0.95);
+    background: rgba(26, 32, 44, 0.9);
+    backdrop-filter: blur(20px);
     border: 1px solid #4a5568;
 }
 
@@ -180,6 +189,16 @@ h3 {
 .dark-mode .burger-item:hover {
     background: #4a5568;
     color: #f7fafc;
+}
+
+.burger-separator {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 8px 0;
+}
+
+.dark-mode .burger-separator {
+    background: #4a5568;
 }
 
 .section {
@@ -4427,6 +4446,214 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-bt
     border-color: #60a5fa;
     background: #1e3a8a;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Diagnostics Section Styles */
+.diagnostics-container {
+    margin-top: 20px;
+}
+
+.diagnostic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.diagnostic-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.diagnostic-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.diagnostic-card.dangerous {
+    border-color: #fed7d7;
+    background: #fffaf0;
+}
+
+.diagnostic-card h4 {
+    margin: 0 0 12px 0;
+    color: #2d3748;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.diagnostic-warning {
+    color: #d69e2e;
+    font-size: 13px;
+    margin: 0 0 15px 0;
+    font-weight: 500;
+}
+
+.diagnostic-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.diagnostic-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: left;
+    justify-content: flex-start;
+}
+
+.diagnostic-btn .btn-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.diagnostic-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode styles for diagnostics */
+.dark-mode .diagnostic-card {
+    background: #2d3748;
+    border-color: #4a5568;
+}
+
+.dark-mode .diagnostic-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .diagnostic-card.dangerous {
+    border-color: #c53030;
+    background: #3c2415;
+}
+
+.dark-mode .diagnostic-card h4 {
+    color: #e2e8f0;
+}
+
+.dark-mode .diagnostic-warning {
+    color: #ed8936;
+}
+
+/* Entry form toggle styles */
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.entry-toggle-btn {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+}
+
+.entry-toggle-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.entry-toggle-btn.hidden-form {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.entry-toggle-btn.hidden-form:hover {
+    background: #5a67d8;
+    border-color: #5a67d8;
+}
+
+.entry-toggle-btn.glow-hint {
+    animation: glowPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(102, 126, 234, 0.6);
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(102, 126, 234, 0.6); }
+    50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.entry-toggle-btn.hidden-form .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Dark mode styles for entry toggle */
+.dark-mode .entry-toggle-btn {
+    background: rgba(45, 55, 72, 0.8);
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+.dark-mode .entry-toggle-btn:hover {
+    background: rgba(45, 55, 72, 1);
+    border-color: #718096;
+}
+
+.dark-mode .entry-toggle-btn.hidden-form {
+    background: #667eea;
+    border-color: #667eea;
+    color: white;
+}
+
+/* Section separator */
+.section-separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+    margin: 30px 0;
+}
+
+.dark-mode .section-separator {
+    background: linear-gradient(90deg, transparent, #4a5568, transparent);
+}
+
+/* Activity entry component animation */
+.activity-entry-component {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.activity-entry-component.collapsed {
+    max-height: 64px;
+}
+
+.activity-entry-component form,
+.activity-entry-component .section-separator {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.activity-entry-component.collapsed form,
+.activity-entry-component.collapsed .section-separator {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
 }
 
 
