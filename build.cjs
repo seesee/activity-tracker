@@ -58,10 +58,44 @@ class ActivityTrackerBuilder {
                 html
             );
             
-            // Copy service worker
-            await fs.copy(
+            // Process service worker (minify if needed)
+            const swContent = await fs.readFile(
                 path.join(this.srcDir, 'sw.js'),
-                path.join(this.distDir, 'sw.js')
+                'utf8'
+            );
+            
+            let processedSW = swContent;
+            if (this.minify) {
+                const result = await minifyJS(swContent, {
+                    compress: {
+                        drop_console: false, // Keep console logs in SW for debugging
+                        drop_debugger: true,
+                        dead_code: true
+                    },
+                    mangle: {
+                        reserved: [] // No reserved names needed for SW
+                    },
+                    format: {
+                        comments: false
+                    }
+                });
+                
+                if (result.error) {
+                    console.warn('⚠️ Service Worker minification failed:', result.error);
+                    processedSW = swContent; // Fallback to original
+                } else {
+                    processedSW = result.code;
+                    if (this.verbose) {
+                        const originalSize = Math.round(swContent.length / 1024);
+                        const minifiedSize = Math.round(processedSW.length / 1024);
+                        console.log(`📦 Service Worker: ${originalSize}KB → ${minifiedSize}KB (${Math.round((1 - minifiedSize/originalSize) * 100)}% reduction)`);
+                    }
+                }
+            }
+            
+            await fs.writeFile(
+                path.join(this.distDir, 'sw.js'),
+                processedSW
             );
 
             const faviconPath = path.join(this.srcDir, 'favicon.ico');
@@ -123,6 +157,7 @@ class ActivityTrackerBuilder {
             'markdownRenderer.js',
             'templating.js',
             'report-templates.js',
+            'versionHistory.js',
             'ActivityTracker.js', 
             'reports.js', 
             'main.js'
@@ -153,6 +188,7 @@ class ActivityTrackerBuilder {
             'markdownRenderer.js',
             'templating.js',
             'report-templates.js',
+            'versionHistory.js',
             'ActivityTracker.js', 
             'reports.js', 
             'main.js'

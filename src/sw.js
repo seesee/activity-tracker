@@ -7,24 +7,24 @@ const CACHE_NAME = 'activity-tracker-v1';
 const urlsToCache = [
     './',
     './index.html',
-    './activity_tracker.html'
+    './sw.js'
 ];
 
 /**
  * Service Worker installation
  */
 self.addEventListener('install', (event) => {
-    console.log('🔧 Service Worker installing...');
+    console.log('Service Worker installing...');
     
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
-                console.log('📦 Opened cache');
+                console.log('Opened cache');
                 // Try to cache files individually with error handling
                 return Promise.allSettled(
                     urlsToCache.map(url => {
                         return cache.add(url).catch(error => {
-                            console.warn(`⚠️ Failed to cache ${url}:`, error.message);
+                            console.warn(`Failed to cache ${url}:`, error.message);
                             // Don't let individual cache failures break the whole install
                             return null;
                         });
@@ -32,11 +32,11 @@ self.addEventListener('install', (event) => {
                 ).then(results => {
                     const successful = results.filter(result => result.status === 'fulfilled').length;
                     const failed = results.filter(result => result.status === 'rejected').length;
-                    console.log(`📦 Cache results: ${successful} successful, ${failed} failed`);
+                    console.log(`Cache results: ${successful} successful, ${failed} failed`);
                 });
             })
             .catch(error => {
-                console.error('❌ Cache installation failed:', error);
+                console.error('Cache installation failed:', error);
                 // Continue with SW installation even if caching fails
             })
     );
@@ -49,14 +49,14 @@ self.addEventListener('install', (event) => {
  * Service Worker activation
  */
 self.addEventListener('activate', (event) => {
-    console.log('✅ Service Worker activated');
+    console.log('Service Worker activated');
     
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
                     if (cacheName !== CACHE_NAME) {
-                        console.log('🗑️ Deleting old cache:', cacheName);
+                        console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
@@ -83,7 +83,7 @@ self.addEventListener('fetch', (event) => {
                     }
                     
                     return fetch(event.request).catch(error => {
-                        console.warn('⚠️ Fetch failed for:', event.request.url, error.message);
+                        console.warn('Fetch failed for:', event.request.url, error.message);
                         // Return a basic offline response for navigation requests
                         if (event.request.mode === 'navigate') {
                             return new Response('App offline', { 
@@ -96,7 +96,7 @@ self.addEventListener('fetch', (event) => {
                     });
                 })
                 .catch(error => {
-                    console.warn('⚠️ Cache match failed for:', event.request.url, error.message);
+                    console.warn('Cache match failed for:', event.request.url, error.message);
                     return fetch(event.request);
                 })
         );
@@ -107,7 +107,7 @@ self.addEventListener('fetch', (event) => {
  * Notification click handler
  */
 self.addEventListener('notificationclick', (event) => {
-    console.log('🔔 Notification clicked:', event.notification.tag);
+    console.log('Notification clicked:', event.notification.tag);
     
     event.notification.close();
     
@@ -140,13 +140,13 @@ self.addEventListener('notificationclick', (event) => {
  * Notification action handler (for inline replies)
  */
 self.addEventListener('notificationactionclick', (event) => {
-    console.log('🔔 Notification action clicked:', event.action);
+    console.log('Notification action clicked:', event.action);
     
     event.notification.close();
     
     if (event.action === 'reply') {
         const reply = event.reply;
-        console.log('📝 User replied:', reply);
+        console.log('User replied:', reply);
         
         if (reply && reply.trim()) {
             // Create a new activity entry from the notification reply
@@ -198,7 +198,7 @@ self.addEventListener('notificationactionclick', (event) => {
  * Push notification handler (for future web push functionality)
  */
 self.addEventListener('push', (event) => {
-    console.log('📬 Push message received');
+    console.log('Push message received');
     
     let data = {};
     
@@ -240,14 +240,14 @@ self.addEventListener('push', (event) => {
  * Background sync handler (for future offline sync functionality)
  */
 self.addEventListener('sync', (event) => {
-    console.log('🔄 Background sync triggered:', event.tag);
+    console.log('Background sync triggered:', event.tag);
     
     if (event.tag === 'sync-activities') {
         event.waitUntil(
             // Here you would implement syncing logic
             // For example, upload offline entries to a server
             Promise.resolve().then(() => {
-                console.log('📤 Activities synced');
+                console.log('Activities synced');
             })
         );
     }
@@ -257,7 +257,7 @@ self.addEventListener('sync', (event) => {
  * Message handler for communication with main app
  */
 self.addEventListener('message', (event) => {
-    console.log('💬 Message received in SW:', event.data);
+    console.log('Message received in SW:', event.data);
     
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
@@ -272,14 +272,14 @@ self.addEventListener('message', (event) => {
  * Error handler
  */
 self.addEventListener('error', (event) => {
-    console.error('❌ Service Worker error:', event.error);
+    console.error('Service Worker error:', event.error);
 });
 
 /**
  * Unhandled rejection handler
  */
 self.addEventListener('unhandledrejection', (event) => {
-    console.error('❌ Service Worker unhandled rejection:', event.reason);
+    console.error('Service Worker unhandled rejection:', event.reason);
 });
 
 /**
@@ -326,4 +326,4 @@ function getAppUrl() {
     }
 }
 
-console.log('🔧 Service Worker loaded');
+console.log('Service Worker loaded');

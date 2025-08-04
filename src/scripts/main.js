@@ -1072,7 +1072,7 @@ async function runServiceWorkerTest() {
         }
         
         // Show detailed results in console and user notification
-        console.log('🔍 Service Worker Diagnostics:', diagnostics);
+        console.log('Service Worker Diagnostics:', diagnostics);
         alert(message);
         
         const status = diagnostics.available && diagnostics.registration ? 'success' : 'warning';
@@ -1108,7 +1108,7 @@ function initializeUIState() {
  * Initialize the application when DOM is loaded
  */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Initializing Activity Tracker...');
+    console.log('Initializing Activity Tracker...');
     
     // Initialize UI state
     initializeUIState();
@@ -1120,23 +1120,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if ('serviceWorker' in navigator) {
         // Check if we're on a supported protocol
         if (window.location.protocol === 'file:') {
-            console.log('🔍 Service Worker not registering: file:// protocol detected');
-            console.log('ℹ️  App will function normally without Service Worker');
+            console.log('Service Worker not registering: file:// protocol detected');
+            console.log('App will function normally without Service Worker');
         } else {
-            console.log('🔧 Registering Service Worker...');
+            console.log('Registering Service Worker...');
             
             navigator.serviceWorker.register('./sw.js')
                 .then(registration => {
-                    console.log('✅ Service Worker registered with scope:', registration.scope);
+                    console.log('Service Worker registered with scope:', registration.scope);
                     
                     // Handle updates
                     registration.addEventListener('updatefound', () => {
-                        console.log('🔄 Service Worker update found');
+                        console.log('Service Worker update found');
                         const newWorker = registration.installing;
                         if (newWorker) {
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('🔄 New Service Worker installed, refresh recommended');
+                                    console.log('New Service Worker installed, refresh recommended');
                                     showNotification('App updated! Refresh for latest version.', 'info', 10000);
                                 }
                             });
@@ -1148,13 +1148,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 })
                 .catch(error => {
-                    console.error('❌ Service Worker registration failed:', error);
-                    console.log('ℹ️  App will function normally without Service Worker');
+                    console.error('Service Worker registration failed:', error);
+                    console.log('App will function normally without Service Worker');
                     
                     // Check for common macOS issues
                     if (navigator.platform.includes('Mac') && error.name === 'SecurityError') {
-                        console.warn('🍎 macOS Security Error: This may be due to strict security settings');
-                        console.warn('💡 Try serving over HTTP/HTTPS instead of file://');
+                        console.warn('macOS Security Error: This may be due to strict security settings');
+                        console.warn('Try serving over HTTP/HTTPS instead of file://');
                     }
                     
                     if (tracker) {
@@ -1165,7 +1165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Listen for messages from service worker
         navigator.serviceWorker.addEventListener('message', event => {
-            console.log('💬 Message from SW:', event.data);
+            console.log('Message from SW:', event.data);
             
             if (event.data && event.data.type === 'add-entry') {
                 if (tracker) {
@@ -1181,15 +1181,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Listen for service worker control changes
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-            console.log('🔄 Service Worker controller changed');
+            console.log('Service Worker controller changed');
             if (tracker) {
                 tracker.updateDebugInfo();
             }
         });
 
     } else {
-        console.log('❌ Service Worker not supported in this browser');
-        console.log('ℹ️  App will function normally without Service Worker');
+        console.log('Service Worker not supported in this browser');
+        console.log('App will function normally without Service Worker');
     }
 
     // Handle hash navigation (if coming from notification)
@@ -1199,7 +1199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         history.replaceState(null, document.title, window.location.pathname + window.location.search);
     }
 
-    console.log('✅ Activity Tracker initialized successfully');
+    console.log('Activity Tracker initialized successfully');
 });
 
 /**
@@ -1377,12 +1377,12 @@ document.addEventListener('visibilitychange', () => {
  * Handle online/offline events
  */
 window.addEventListener('online', () => {
-    console.log('📶 Connection restored');
+    console.log('Connection restored');
     showNotification('Connection restored', 'success');
 });
 
 window.addEventListener('offline', () => {
-    console.log('📶 Connection lost');
+    console.log('Connection lost');
     showNotification('Working offline', 'info');
 });
 
@@ -1410,7 +1410,7 @@ window.addEventListener('beforeunload', (e) => {
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    console.log('💾 PWA install prompt available');
+    console.log('PWA install prompt available');
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
     // Save the event so it can be triggered later
@@ -1421,7 +1421,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 window.addEventListener('appinstalled', () => {
-    console.log('💾 PWA was installed');
+    console.log('PWA was installed');
     showNotification('Activity Tracker installed successfully!', 'success');
     deferredPrompt = null;
 });
@@ -1430,12 +1430,12 @@ window.addEventListener('appinstalled', () => {
  * Error handling for uncaught errors
  */
 window.addEventListener('error', (e) => {
-    console.error('❌ Uncaught error:', e.error);
+    console.error('Uncaught error:', e.error);
     showNotification('An unexpected error occurred. Please refresh the page.', 'error');
 });
 
 window.addEventListener('unhandledrejection', (e) => {
-    console.error('❌ Unhandled promise rejection:', e.reason);
+    console.error('Unhandled promise rejection:', e.reason);
     showNotification('An unexpected error occurred. Please refresh the page.', 'error');
 });
 
@@ -1447,7 +1447,37 @@ window.addEventListener('load', () => {
     if (window.performance && window.performance.timing) {
         const timing = window.performance.timing;
         const loadTime = timing.loadEventEnd - timing.navigationStart;
-        console.log(`⚡ Page loaded in ${loadTime}ms`);
+        console.log(`Page loaded in ${loadTime}ms`);
+    }
+});
+
+/**
+ * Toggle burger menu dropdown
+ */
+function toggleBurgerMenu() {
+    const dropdown = document.getElementById('burgerDropdown');
+    if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+/**
+ * Close burger menu dropdown
+ */
+function closeBurgerMenu() {
+    const dropdown = document.getElementById('burgerDropdown');
+    if (dropdown) {
+        dropdown.style.display = 'none';
+    }
+}
+
+// Close burger menu when clicking outside
+document.addEventListener('click', (e) => {
+    const burgerMenu = document.querySelector('.burger-menu');
+    const dropdown = document.getElementById('burgerDropdown');
+    
+    if (burgerMenu && dropdown && !burgerMenu.contains(e.target)) {
+        dropdown.style.display = 'none';
     }
 });
 
@@ -1483,6 +1513,8 @@ if (typeof module !== 'undefined' && module.exports) {
         requestNotificationPermission,
         declineNotificationPermission,
         forceEnableNotifications,
-        copyReportToClipboard
+        copyReportToClipboard,
+        toggleBurgerMenu,
+        closeBurgerMenu
     };
 }

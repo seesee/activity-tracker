@@ -14,7 +14,7 @@
     <div class="container">
         <div class="header">
             <h1>Activity Tracker</h1>
-            <p>Track your daily activities with automatic reminders</p>
+            <p>Work diary, organiser and knowledge base</p>
             
             <!-- Global Search -->
             <div class="global-search">
@@ -30,13 +30,26 @@
                     <button class="nav-btn active" onclick="showSection('tracker', event)">Tracker</button>
                     <button class="nav-btn" onclick="showSection('todo', event)">To Do</button>
                     <button class="nav-btn" onclick="showSection('notes', event)">Notes</button>
-                    <button class="nav-btn" onclick="showSection('reports', event)">Reports</button>
-                    <button class="nav-btn" onclick="showSection('settings', event)">Settings</button>
                 </div>
                 <div class="nav-right">
                     <button id="pauseButton" class="nav-btn" onclick="togglePause()">Start Reminders</button>
                     <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">🍅 Start Pomodoro</button>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Burger Menu positioned outside header to avoid clipping -->
+        <div class="burger-menu">
+            <button class="burger-btn" onclick="toggleBurgerMenu()" title="Settings menu">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+            <div class="burger-dropdown" id="burgerDropdown" style="display: none;">
+                <button class="burger-item" onclick="showSection('reports', event); closeBurgerMenu()">Reports</button>
+                <button class="burger-item" onclick="showSection('settings', event); closeBurgerMenu()">Settings</button>
+                <button class="burger-item" onclick="showAbout(); closeBurgerMenu()">About & Diagnostics</button>
+                <button class="burger-item" onclick="showUserGuide(); closeBurgerMenu()">User Guide</button>
             </div>
         </div>
 
@@ -113,9 +126,9 @@
                 <h3>Recent Entries</h3>
                 <div id="entriesList"></div>
                 <div class="entries-pagination" id="entriesPagination" style="display: none;">
-                    <button id="entriesPrevBtn" onclick="tracker.previousEntriesPage()">‹ Previous</button>
+                    <button class="nav-btn" id="entriesPrevBtn" onclick="tracker.previousEntriesPage()">‹ Previous</button>
                     <span id="entriesPageInfo"></span>
-                    <button id="entriesNextBtn" onclick="tracker.nextEntriesPage()">Next ›</button>
+                    <button class="nav-btn" id="entriesNextBtn" onclick="tracker.nextEntriesPage()">Next ›</button>
                 </div>
             </div>
         </div>
@@ -158,9 +171,9 @@
             </div>
 
             <div class="todo-pagination" id="todoPagination" style="display: none;">
-                <button class="btn btn-secondary" id="todoPrevBtn" onclick="tracker.previousTodoPage()">← Previous</button>
+                <button class="nav-btn" id="todoPrevBtn" onclick="tracker.previousTodoPage()">← Previous</button>
                 <span id="todoPageInfo">Page 1 of 1</span>
-                <button class="btn btn-secondary" id="todoNextBtn" onclick="tracker.nextTodoPage()">Next →</button>
+                <button class="nav-btn" id="todoNextBtn" onclick="tracker.nextTodoPage()">Next →</button>
             </div>
         </div>
 
@@ -199,9 +212,9 @@
             </div>
             
             <div class="notes-pagination" id="notesPagination" style="display: none;">
-                <button class="btn btn-secondary" id="notesPrevBtn" onclick="tracker.previousNotePage()">← Previous</button>
+                <button class="nav-btn" id="notesPrevBtn" onclick="tracker.previousNotePage()">← Previous</button>
                 <span id="notesPageInfo">Page 1 of 1</span>
-                <button class="btn btn-secondary" id="notesNextBtn" onclick="tracker.nextNotePage()">Next →</button>
+                <button class="nav-btn" id="notesNextBtn" onclick="tracker.nextNotePage()">Next →</button>
             </div>
         </div>
 
@@ -251,9 +264,9 @@
             <!-- Week Navigation -->
             <div class="report-navigation-section">
                 <div class="report-navigation">
-                    <button class="btn btn-secondary" onclick="previousWeek()">← Previous Week</button>
+                    <button class="nav-btn" onclick="previousWeek()">← Previous Week</button>
                     <div class="week-display" id="weekDisplay">Week of ...</div>
-                    <button class="btn btn-secondary" onclick="nextWeek()">Next Week →</button>
+                    <button class="nav-btn" onclick="nextWeek()">Next Week →</button>
                 </div>
             </div>
 
@@ -287,8 +300,6 @@
             <div class="settings-buttons-section">
                 <div class="reminder-buttons">
                     <button class="btn btn-primary" onclick="enableNotifications()">Enable Reminders</button>
-                    <button class="btn btn-info" onclick="showAbout()" title="View app information, version details, and diagnostic tools">About & Diagnostics</button>
-                    <button class="btn btn-info" onclick="showUserGuide()" title="View user guide and shortcuts">📚 User Guide</button>
                 </div>
             </div>
 
@@ -299,7 +310,7 @@
                 <div class="settings-grid settings-grid-four-col">
                     <div class="form-group">
                         <label for="darkModePreference" title="Choose your colour theme preference">Colour Theme</label>
-                        <select id="darkModePreference">
+                        <select id="darkModePreference" onchange="saveSettings()">
                             <option value="light">Light mode</option>
                             <option value="dark">Dark mode</option>
                             <option value="system">Follow system settings</option>
@@ -307,7 +318,7 @@
                     </div>
                     <div class="form-group">
                         <label for="soundMuteMode" title="Choose which sounds to mute">Sound Settings</label>
-                        <select id="soundMuteMode">
+                        <select id="soundMuteMode" onchange="saveSettings()">
                             <option value="none">All sounds enabled</option>
                             <option value="all">Mute all sounds</option>
                             <option value="pomodoro">Mute Pomodoro sounds only</option>
@@ -316,7 +327,7 @@
                     </div>
                     <div class="form-group">
                         <label for="paginationSize" title="Number of items to show per page in lists">Items per page</label>
-                        <select id="paginationSize">
+                        <select id="paginationSize" onchange="saveSettings()">
                             <option value="10">10 items</option>
                             <option value="20" selected>20 items</option>
                             <option value="30">30 items</option>
@@ -326,7 +337,7 @@
                     </div>
                     <div class="form-group" id="systemNotificationsGroup" style="display: none;">
                         <label for="sendSystemNotifications" title="Send system notifications to your operating system">System Notifications</label>
-                        <select id="sendSystemNotifications">
+                        <select id="sendSystemNotifications" onchange="saveSettings()">
                             <option value="true" selected>Yes</option>
                             <option value="false">No</option>
                         </select>
@@ -340,7 +351,7 @@
                     <h3>Reminder Settings</h3>
                     <div class="form-group">
                         <label for="notificationInterval" title="How often you'll receive activity reminder notifications">Reminder Interval</label>
-                        <select id="notificationInterval">
+                        <select id="notificationInterval" onchange="saveSettings()">
                             <option value="1">1 minute</option>
                             <option value="2">2 minutes</option>
                             <option value="5">5 minutes</option>
@@ -355,7 +366,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pauseDuration" title="How long alerts remain paused before automatically resuming">When pausing, resume after</label>
-                        <select id="pauseDuration">
+                        <select id="pauseDuration" onchange="saveSettings()">
                             <option value="1">1 minute</option>
                             <option value="2">2 minutes</option>
                             <option value="5">5 minutes</option>
@@ -373,7 +384,7 @@
                     </div>
                     <div class="form-group">
                         <label for="autoStartAlerts" title="Automatically start reminders when the app opens">Auto start reminders upon opening app</label>
-                        <select id="autoStartAlerts">
+                        <select id="autoStartAlerts" onchange="saveSettings()">
                             <option value="false" selected>No</option>
                             <option value="true">Yes</option>
                         </select>
@@ -395,11 +406,11 @@
                         <div class="time-inputs">
                             <div class="form-group">
                                 <label for="startTime" title="When your work day starts">Start Time</label>
-                                <input type="time" id="startTime" value="08:00">
+                                <input type="time" id="startTime" value="08:00" onchange="saveSettings()">
                             </div>
                             <div class="form-group">
                                 <label for="endTime" title="When your work day ends">End Time</label>
-                                <input type="time" id="endTime" value="18:00">
+                                <input type="time" id="endTime" value="18:00" onchange="saveSettings()">
                             </div>
                         </div>
                     </div>
@@ -408,31 +419,31 @@
                         <h4>Working Days</h4>
                         <div class="working-days-grid">
                             <div class="checkbox-group">
-                                <input type="checkbox" id="monday" checked>
+                                <input type="checkbox" id="monday" checked onchange="saveSettings()">
                                 <label for="monday">Monday</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="tuesday" checked>
+                                <input type="checkbox" id="tuesday" checked onchange="saveSettings()">
                                 <label for="tuesday">Tuesday</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="wednesday" checked>
+                                <input type="checkbox" id="wednesday" checked onchange="saveSettings()">
                                 <label for="wednesday">Wednesday</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="thursday" checked>
+                                <input type="checkbox" id="thursday" checked onchange="saveSettings()">
                                 <label for="thursday">Thursday</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="friday" checked>
+                                <input type="checkbox" id="friday" checked onchange="saveSettings()">
                                 <label for="friday">Friday</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="saturday">
+                                <input type="checkbox" id="saturday" onchange="saveSettings()">
                                 <label for="saturday">Saturday</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="sunday">
+                                <input type="checkbox" id="sunday" onchange="saveSettings()">
                                 <label for="sunday">Sunday</label>
                             </div>
                         </div>
@@ -447,7 +458,7 @@
                     <p class="card-description">Structured work/break intervals with automatic notifications</p>
                     <div class="pomodoro-settings">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="pomodoroEnabled">
+                            <input type="checkbox" id="pomodoroEnabled" onchange="saveSettings()">
                             <label for="pomodoroEnabled" title="Enable Pomodoro timing mode with work and break alerts">Enable Pomodoro Mode</label>
                         </div>
                         
@@ -457,7 +468,7 @@
                             <div class="pomodoro-timers">
                                 <div class="form-group">
                                     <label for="pomodoroWorkDuration" title="Length of work periods in minutes">Work Duration (minutes)</label>
-                                    <select id="pomodoroWorkDuration">
+                                    <select id="pomodoroWorkDuration" onchange="saveSettings()">
                                         <option value="15">15 minutes</option>
                                         <option value="20">20 minutes</option>
                                         <option value="25" selected>25 minutes</option>
@@ -468,7 +479,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="pomodoroBreakDuration" title="Length of short break periods in minutes">Short Break Duration (minutes)</label>
-                                    <select id="pomodoroBreakDuration">
+                                    <select id="pomodoroBreakDuration" onchange="saveSettings()">
                                         <option value="3">3 minutes</option>
                                         <option value="5" selected>5 minutes</option>
                                         <option value="10">10 minutes</option>
@@ -477,7 +488,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="pomodoroLongBreakDuration" title="Length of long break periods in minutes">Long Break Duration (minutes)</label>
-                                    <select id="pomodoroLongBreakDuration">
+                                    <select id="pomodoroLongBreakDuration" onchange="saveSettings()">
                                         <option value="15" selected>15 minutes</option>
                                         <option value="20">20 minutes</option>
                                         <option value="30">30 minutes</option>
@@ -487,7 +498,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="pomodoroLongBreakInterval" title="Number of work sessions before taking a long break">Sessions before long break</label>
-                                    <select id="pomodoroLongBreakInterval">
+                                    <select id="pomodoroLongBreakInterval" onchange="saveSettings()">
                                         <option value="2">Every 2 sessions</option>
                                         <option value="3">Every 3 sessions</option>
                                         <option value="4" selected>Every 4 sessions</option>
@@ -502,7 +513,7 @@
                                 <h4>Tick Sounds</h4>
                                 <div class="form-group">
                                     <label for="pomodoroTickSound" title="Optional tick sound to remind you're in a work session">Tick Sound Type</label>
-                                    <select id="pomodoroTickSound">
+                                    <select id="pomodoroTickSound" onchange="saveSettings()">
                                         <option value="none" selected>No ticking</option>
                                         <option value="soft">Soft tick</option>
                                         <option value="classic">Classic tick</option>
@@ -511,7 +522,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="pomodoroTickInterval" title="How often to play the tick sound in seconds">Tick Interval (seconds)</label>
-                                    <select id="pomodoroTickInterval">
+                                    <select id="pomodoroTickInterval" onchange="saveSettings()">
                                         <option value="0" selected>Off (no ticking)</option>
                                         <option value="1">Every 1 second</option>
                                         <option value="2">Every 2 seconds</option>
@@ -531,19 +542,19 @@
                                 <h4>Announce Sounds</h4>
                                 <div class="form-group">
                                     <label for="pomodoroShortBreakSound" title="Sound to play when short break starts">Short Break Announce</label>
-                                    <select id="pomodoroShortBreakSound">
+                                    <select id="pomodoroShortBreakSound" onchange="saveSettings()">
                                         <!-- Options will be populated by JavaScript -->
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="pomodoroLongBreakSound" title="Sound to play when long break starts">Long Break Announce</label>
-                                    <select id="pomodoroLongBreakSound">
+                                    <select id="pomodoroLongBreakSound" onchange="saveSettings()">
                                         <!-- Options will be populated by JavaScript -->
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="pomodoroResumeSound" title="Sound to play when resuming work after break">Resume Work Announce</label>
-                                    <select id="pomodoroResumeSound">
+                                    <select id="pomodoroResumeSound" onchange="saveSettings()">
                                         <!-- Options will be populated by JavaScript -->
                                     </select>
                                 </div>
@@ -553,27 +564,27 @@
                             <div class="pomodoro-options">
                                 <h4>Options</h4>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="pomodoroAutoStart">
+                                    <input type="checkbox" id="pomodoroAutoStart" onchange="saveSettings()">
                                     <label for="pomodoroAutoStart" title="Automatically start the next session without requiring manual intervention">Automatically start next session</label>
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="pomodoroAutoLog" checked>
+                                    <input type="checkbox" id="pomodoroAutoLog" checked onchange="saveSettings()">
                                     <label for="pomodoroAutoLog" title="Prompt for activity description and create log entries for work sessions">Prompt for work session descriptions</label>
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="pomodoroLogBreaks">
+                                    <input type="checkbox" id="pomodoroLogBreaks" onchange="saveSettings()">
                                     <label for="pomodoroLogBreaks" title="Also log break sessions in the activity tracker">Log break sessions too</label>
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="pomodoroLongBreak" checked>
+                                    <input type="checkbox" id="pomodoroLongBreak" checked onchange="saveSettings()">
                                     <label for="pomodoroLongBreak" title="Enable long breaks after completing multiple sessions">Enable long breaks</label>
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="pomodoroPauseAllowed" checked>
+                                    <input type="checkbox" id="pomodoroPauseAllowed" checked onchange="saveSettings()">
                                     <label for="pomodoroPauseAllowed" title="Allow pausing Pomodoro sessions from the banner">Allow session pausing</label>
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="pomodoroAutoResetDaily">
+                                    <input type="checkbox" id="pomodoroAutoResetDaily" onchange="saveSettings()">
                                     <label for="pomodoroAutoResetDaily" title="Automatically reset session counter to 1 when the day changes">Auto-reset sessions daily</label>
                                 </div>
                             </div>
@@ -621,14 +632,14 @@
                         <div class="warning-settings">
                             <div class="form-group">
                                 <label for="warnOnActivityDelete" title="Show confirmation dialog when deleting activities">Warn on activity delete</label>
-                                <select id="warnOnActivityDelete">
+                                <select id="warnOnActivityDelete" onchange="saveSettings()">
                                     <option value="true" selected>Yes</option>
                                     <option value="false">No</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="warnOnSessionReset" title="Show confirmation dialog when resetting Pomodoro session counter">Warn on session reset</label>
-                                <select id="warnOnSessionReset">
+                                <select id="warnOnSessionReset" onchange="saveSettings()">
                                     <option value="true" selected>Yes</option>
                                     <option value="false">No</option>
                                 </select>
@@ -682,9 +693,9 @@
             </div>
 
             <div class="search-pagination" id="searchPagination" style="display: none;">
-                <button class="btn btn-secondary" id="searchPrevBtn" onclick="tracker.previousSearchPage()">← Previous</button>
+                <button class="nav-btn" id="searchPrevBtn" onclick="tracker.previousSearchPage()">← Previous</button>
                 <span id="searchPageInfo">Page 1 of 1</span>
-                <button class="btn btn-secondary" id="searchNextBtn" onclick="tracker.nextSearchPage()">Next →</button>
+                <button class="nav-btn" id="searchNextBtn" onclick="tracker.nextSearchPage()">Next →</button>
             </div>
         </div>
     </div>
@@ -1112,18 +1123,28 @@ Tags: {{#each tags}}#{{this}} {{/each}}
     <div id="userGuideModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>📚 User Guide</h3>
+                <h3>User Guide</h3>
                 <button class="btn-close" onclick="closeUserGuide()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="user-guide-content">
                     <div class="guide-section">
-                        <h4>🚀 Getting Started</h4>
-                        <p>Activity Tracker helps you log activities, manage todos, and generate reports with automatic reminders.</p>
+                        <h4>Getting Started</h4>
+                        <p>Activity Tracker is a personal activity tracking application with smart notifications, comprehensive reporting, and Pomodoro timer functionality.</p>
+                        
+                        <p><strong>Key Features:</strong></p>
+                        <ul>
+                            <li>Pomodoro Timer with configurable work/break cycles</li>
+                            <li>Smart notification system with customizable sounds</li>
+                            <li>Comprehensive activity reporting with custom templates</li>
+                            <li>Dark mode support</li>
+                            <li>Offline functionality with service worker</li>
+                            <li>Progressive Web App (PWA) support</li>
+                        </ul>
                     </div>
                     
                     <div class="guide-section">
-                        <h4>⌨️ Keyboard Shortcuts</h4>
+                        <h4>Keyboard Shortcuts</h4>
                         <ul>
                             <li><kbd>Shift</kbd> + <kbd>Space</kbd> - Focus activity input field</li>
                             <li><kbd>Shift</kbd> + <kbd>Enter</kbd> - Submit activity form</li>
@@ -1134,7 +1155,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>📝 Adding Activities</h4>
+                        <h4>Adding Activities</h4>
                         <ul>
                             <li>Enter what you're doing in the activity field</li>
                             <li>Add #hashtags for easy categorization</li>
@@ -1145,7 +1166,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>🔍 Search & Navigation</h4>
+                        <h4>Search & Navigation</h4>
                         <ul>
                             <li>Use the global search to find activities, todos, and hashtags</li>
                             <li>Click the 🏷️ button to browse hashtags in a visual cloud</li>
@@ -1155,7 +1176,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>✅ Managing Todos</h4>
+                        <h4>Managing Todos</h4>
                         <ul>
                             <li>View all todos in the dedicated "To Do" section</li>
                             <li>Filter by status, due date, or category</li>
@@ -1165,7 +1186,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>📊 Reports</h4>
+                        <h4>Reports</h4>
                         <ul>
                             <li>Generate weekly, custom date range, or template-based reports</li>
                             <li>Export reports in HTML, Markdown, or CSV formats</li>
@@ -1175,7 +1196,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>🍅 Pomodoro Mode (Optional)</h4>
+                        <h4>Pomodoro Mode (Optional)</h4>
                         <ul>
                             <li>Enable Pomodoro technique with customizable work/break intervals</li>
                             <li>Automatic activity logging during Pomodoro sessions</li>
@@ -1185,7 +1206,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>⚙️ Settings & Customization</h4>
+                        <h4>Settings & Customization</h4>
                         <ul>
                             <li>Customize notification intervals and working hours</li>
                             <li>Choose from multiple notification sounds</li>
@@ -1196,7 +1217,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
-                        <h4>💾 Data Management</h4>
+                        <h4>Data Management</h4>
                         <ul>
                             <li>Export your data as JSON backup</li>
                             <li>Import previously exported data</li>
@@ -1268,16 +1289,9 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 
                 <div class="about-section">
                     <h4>Version History</h4>
-                    <p>This is a personal activity tracking application with smart notifications, comprehensive reporting, and Pomodoro timer functionality.</p>
-                    <p><strong>Features:</strong></p>
-                    <ul>
-                        <li>🍅 Pomodoro Timer with configurable work/break cycles</li>
-                        <li>⏰ Smart notification system with customizable sounds</li>
-                        <li>📊 Comprehensive activity reporting with custom templates</li>
-                        <li>🌙 Dark mode support</li>
-                        <li>💾 Offline functionality with service worker</li>
-                        <li>📱 Progressive Web App (PWA) support</li>
-                    </ul>
+                    <div id="versionHistoryContainer">
+                        Loading version history...
+                    </div>
                 </div>
                 
                 <div class="about-section copyright-section">

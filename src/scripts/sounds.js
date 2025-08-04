@@ -1110,4 +1110,4 @@ if (typeof window !== 'undefined') {
     window.SoundManager = SoundManager;
 }
 
-console.log('🔊 Sound Manager module loaded');
+console.log('Sound Manager module loaded');

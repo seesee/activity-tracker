@@ -30,19 +30,19 @@ class TemplatingEngine {
                 return this.escapeHtml(value);
             }
         };
-        console.log('⚙️ Templating Engine Initialized (Tokenizer Version)');
+        console.log('Templating Engine Initialized (Tokenizer Version)');
     }
 
     /**
      * Main render method using tokenizer approach
      */
     render(template, data) {
-        console.log('🔧 Starting template render with tokenizer');
+        console.log('Starting template render with tokenizer');
         
         try {
             // Step 1: Tokenize the template
             const tokens = this.tokenize(template);
-            console.log('🔍 Tokens:', tokens);
+            console.log('Tokens:', tokens);
             
             // Step 2: Parse tokens into AST
             const ast = this.parse(tokens);
@@ -51,10 +51,10 @@ class TemplatingEngine {
             // Step 3: Evaluate AST with data
             const result = this.evaluate(ast, data);
             
-            console.log('✅ Template render complete');
+            console.log('Template render complete');
             return result;
         } catch (error) {
-            console.error('❌ Template render error:', error);
+            console.error('Template render error:', error);
             return `Template Error: ${error.message}`;
         }
     }
@@ -110,12 +110,12 @@ class TemplatingEngine {
      * Parse a single template expression into a token
      */
     parseExpression(expression) {
-        console.log('🔍 Parsing expression:', JSON.stringify(expression));
+        console.log('Parsing expression:', JSON.stringify(expression));
         
         // Handle different types of expressions
         if (expression.startsWith('#each ')) {
             const match = expression.match(/^#each\s+(\w+)\s*=\s*([\w.]+)$/);
-            console.log('🔍 Each match result:', match);
+            console.log('Each match result:', match);
             if (!match) throw new Error('Invalid each expression: ' + expression);
             return {
                 type: 'EACH_START',
@@ -125,7 +125,7 @@ class TemplatingEngine {
         }
         
         if (expression === '/each') {
-            console.log('🔍 Found /each');
+            console.log('Found /each');
             return { type: 'EACH_END' };
         }    
 
@@ -185,7 +185,7 @@ class TemplatingEngine {
         }
         
         const token = tokens[startIndex];
-        console.log(`🔧 parseNode at ${startIndex}:`, token.type);
+        console.log(`parseNode at ${startIndex}:`, token.type);
         
         switch (token.type) {
             case 'TEXT':
@@ -214,7 +214,7 @@ class TemplatingEngine {
             case 'IF_END':
             case 'ELSE':
                 // These should be handled by their respective parent parsers
-                console.warn('⚠️ Orphaned token:', token.type, 'at index', startIndex);
+                console.warn('Orphaned token:', token.type, 'at index', startIndex);
                 return null;
                 
             default:
@@ -231,14 +231,14 @@ class TemplatingEngine {
         let current = startIndex + 1;
         let depth = 1;
         
-        console.log(`🔄 Starting parseEachLoop for ${startToken.itemVar} = ${startToken.arrayPath}, startIndex: ${startIndex}`);
+        console.log(`Starting parseEachLoop for ${startToken.itemVar} = ${startToken.arrayPath}, startIndex: ${startIndex}`);
         
         while (current < tokens.length && depth > 0) {
             const token = tokens[current];
-            console.log(`🔍 Processing token at ${current}:`, token.type, token);
+            console.log(`Processing token at ${current}:`, token.type, token);
             
             if (token.type === 'EACH_START') {
-                console.log(`📈 Nested each found, depth was: ${depth}`);
+                console.log(`Nested each found, depth was: ${depth}`);
                 // Parse the nested each loop
                 const result = this.parseEachLoop(tokens, current);
                 children.push(result.node);
@@ -247,14 +247,14 @@ class TemplatingEngine {
                 // Don't increment depth here - the nested call handles its own depth
             } else if (token.type === 'EACH_END') {
                 depth--;
-                console.log(`📉 Each end found, depth now: ${depth}`);
+                console.log(`Each end found, depth now: ${depth}`);
                 if (depth === 0) {
                     // Found our matching end
-                    console.log(`✅ Found matching end for ${startToken.itemVar}`);
+                    console.log(`Found matching end for ${startToken.itemVar}`);
                     break;
                 } else {
                     // This should not happen if parsing is correct
-                    console.error(`❌ Unexpected EACH_END at depth ${depth} for ${startToken.itemVar}`);
+                    console.error(`Unexpected EACH_END at depth ${depth} for ${startToken.itemVar}`);
                     current++;
                 }
             } else {
@@ -270,12 +270,12 @@ class TemplatingEngine {
         }
         
         if (depth > 0) {
-            console.error(`❌ Unclosed each loop for ${startToken.itemVar}, depth: ${depth}, current: ${current}, tokens.length: ${tokens.length}`);
+            console.error(`Unclosed each loop for ${startToken.itemVar}, depth: ${depth}, current: ${current}, tokens.length: ${tokens.length}`);
             console.error('Remaining tokens:', tokens.slice(current).map(t => `${t.type}: ${JSON.stringify(t.value || t.path)}`));
             throw new Error(`Unclosed each loop for ${startToken.itemVar}`);
         }
         
-        console.log(`✅ Completed parseEachLoop for ${startToken.itemVar}, nextIndex: ${current + 1}`);
+        console.log(`Completed parseEachLoop for ${startToken.itemVar}, nextIndex: ${current + 1}`);
         
         return {
             node: {
@@ -349,7 +349,7 @@ class TemplatingEngine {
      */
     evaluate(ast, data, depth = 0) {
         const indent = '  '.repeat(depth);
-        console.log(`${indent}🔧 Evaluating AST with context:`, Object.keys(data));
+        console.log(`${indent}Evaluating AST with context:`, Object.keys(data));
         
         return ast.map(node => this.evaluateNode(node, data, depth)).join('');
     }
@@ -378,12 +378,12 @@ class TemplatingEngine {
                 return (value !== null && value !== undefined) ? String(value) : '';
                 
             case 'each':
-                console.log(`${indent}🔄 Evaluating each: ${node.itemVar} = ${node.arrayPath}`);
+                console.log(`${indent}Evaluating each: ${node.itemVar} = ${node.arrayPath}`);
                 const arrayData = this.getValue(data, node.arrayPath);
-                console.log(`${indent}📊 Array data:`, arrayData);
+                console.log(`${indent}Array data:`, arrayData);
                 
                 if (!Array.isArray(arrayData)) {
-                    console.warn(`${indent}⚠️ Not an array:`, arrayData);
+                    console.warn(`${indent}Not an array:`, arrayData);
                     return '';
                 }
                 
@@ -396,8 +396,8 @@ class TemplatingEngine {
                         last: index === arrayData.length - 1
                     };
                     
-                    console.log(`${indent}📝 Processing item ${index}:`, item);
-                    console.log(`${indent}🎯 Context keys:`, Object.keys(itemContext));
+                    console.log(`${indent}Processing item ${index}:`, item);
+                    console.log(`${indent}Context keys:`, Object.keys(itemContext));
                     return this.evaluate(node.children, itemContext, depth + 1);
                 }).join('');
                 
@@ -455,7 +455,7 @@ class TemplatingEngine {
         const [, formatterName, arg] = match;
         
         if (!this.formatters[formatterName]) {
-            console.warn('⚠️ Unknown formatter:', formatterName);
+            console.warn('Unknown formatter:', formatterName);
             return value;
         }
         
@@ -464,7 +464,7 @@ class TemplatingEngine {
                 ? this.formatters[formatterName](value, arg)
                 : this.formatters[formatterName](value);
         } catch (error) {
-            console.warn('❌ Formatter error:', formatterName, error);
+            console.warn('Formatter error:', formatterName, error);
             return value;
         }
     }
@@ -516,4 +516,4 @@ class TemplatingEngine {
 }
 
 window.TemplatingEngine = TemplatingEngine;
-console.log('⚙️ Templating Engine loaded (Tokenizer Version)');
+console.log('Templating Engine loaded (Tokenizer Version)');

@@ -61,16 +61,20 @@ h3 {
     justify-content: space-between;
     align-items: center;
     margin-top: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .nav-left {
     display: flex;
     gap: 15px;
+    flex-shrink: 0;
 }
 
 .nav-right {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .nav-btn {
@@ -92,6 +96,90 @@ h3 {
 .nav-btn.active {
     background: #4c51bf;
     box-shadow: 0 4px 15px rgba(76, 81, 191, 0.4);
+}
+
+/* Burger Menu */
+.burger-menu {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.burger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: #667eea;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+}
+
+.burger-btn:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+}
+
+.burger-line {
+    width: 20px;
+    height: 2px;
+    background: white;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+    border-radius: 1px;
+}
+
+.burger-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    min-width: 180px;
+    overflow: hidden;
+}
+
+.burger-item {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    color: #4a5568;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.burger-item:hover {
+    background: #f7fafc;
+    color: #2d3748;
+}
+
+/* Dark mode styles for burger menu */
+.dark-mode .burger-dropdown {
+    background: rgba(26, 32, 44, 0.95);
+    border: 1px solid #4a5568;
+}
+
+.dark-mode .burger-item {
+    color: #e2e8f0;
+}
+
+.dark-mode .burger-item:hover {
+    background: #4a5568;
+    color: #f7fafc;
 }
 
 .section {
@@ -291,6 +379,16 @@ h3 {
     padding: 20px 0;
 }
 
+/* Consistent pagination button sizing */
+.todo-pagination .nav-btn,
+.entries-pagination .nav-btn,
+.search-pagination .nav-btn,
+.notes-pagination .nav-btn,
+.report-navigation .nav-btn {
+    min-width: 120px;
+    text-align: center;
+}
+
 .empty-state {
     text-align: center;
     color: #a0aec0;
@@ -318,6 +416,7 @@ h3 {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 #globalSearch {
@@ -560,7 +659,7 @@ h3 {
     align-items: center;
 }
 
-.search-pagination {
+.search-pagination, .notes-pagination {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1285,38 +1384,42 @@ h3 {
     background: #0e7490 !important;
 }
 
-@media (max-width: 768px) {
+/* Responsive layout with natural wrapping */
+@media (max-width: 640px) {
     .container {
         padding: 10px;
     }
     
+    /* Allow natural wrapping but keep flex direction row */
     .nav {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .nav-left, .nav-right {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .nav-right {
+        justify-content: space-around;
         gap: 8px;
     }
     
-    /* Make nav buttons smaller on mobile */
+    .nav-left, .nav-right {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    /* Make nav buttons more compact but maintain readability */
     .nav-btn {
         padding: 8px 12px;
-        font-size: 14px;
+        font-size: 13px;
         min-width: auto;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     #pauseButton {
-        min-width: 120px;
+        min-width: 90px;
+        max-width: 140px;
     }
     
     .pomodoro-btn {
-        min-width: 110px;
+        min-width: 80px;
+        max-width: 120px;
     }
     
     .entry-item {
@@ -1405,14 +1508,21 @@ h3 {
         justify-content: center;
     }
     
-    /* Search improvements */
+    /* Search improvements - allow natural wrapping */
     .search-container {
-        flex-direction: column;
-        gap: 10px;
+        gap: 8px;
+        justify-content: center;
     }
     
     #globalSearch {
+        min-width: 200px;
+        max-width: 300px;
         font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .hashtag-browser-btn {
+        padding: 12px 14px;
+        flex-shrink: 0;
     }
     
     /* Filter improvements */
@@ -1478,10 +1588,61 @@ h3 {
     }
 }
 
+/* Intermediate breakpoint for medium screens */
+@media (max-width: 900px) and (min-width: 641px) {
+    /* Slightly reduce button padding while maintaining consistency */
+    .nav-btn {
+        padding: 9px 18px;
+        font-size: 14px;
+    }
+    
+    #pauseButton {
+        min-width: 120px;
+    }
+    
+    /* Optimize search container */
+    .search-container {
+        gap: 8px;
+    }
+    
+    #globalSearch {
+        min-width: 180px;
+    }
+    
+    .hashtag-browser-btn {
+        padding: 12px 14px;
+    }
+}
+
 /* Additional mobile improvements for very small screens */
 @media (max-width: 480px) {
     .container {
         padding: 8px;
+    }
+    
+    /* Very narrow screens - keep wrapping natural */
+    .search-container {
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    #globalSearch {
+        min-width: 120px;
+        max-width: 180px;
+    }
+    
+    .nav-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        max-width: 120px;
+    }
+    
+    #pauseButton {
+        max-width: 100px;
+    }
+    
+    .hashtag-browser-btn {
+        padding: 10px 12px;
     }
     
     .header,
@@ -3481,11 +3642,103 @@ body.dark-mode {
 
 /* About Modal */
 .about-modal-content {
-    max-width: 600px;
+    max-width: 800px;
+}
+
+/* User Guide Modal */
+#userGuideModal .modal-content {
+    max-width: 800px;
 }
 
 .about-section {
     margin-bottom: 25px;
+}
+
+/* Version History Styling */
+.version-current {
+    background: #f7fafc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-left: 4px solid #667eea;
+}
+
+.version-history-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.version-entry {
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.version-entry:last-child {
+    border-bottom: none;
+}
+
+.version-entry.current {
+    background: #f0fff4;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+
+.version-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.version-number {
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-weight: 600;
+    color: #4c51bf;
+    font-size: 0.9em;
+}
+
+.version-date {
+    color: #718096;
+    font-size: 0.85em;
+}
+
+.version-summary {
+    color: #4a5568;
+    line-height: 1.4;
+    font-size: 0.9em;
+}
+
+/* Dark mode version history */
+.dark-mode .version-current {
+    background: #2d3748;
+    border-left-color: #667eea;
+    color: #e2e8f0;
+}
+
+.dark-mode .version-entry {
+    border-bottom-color: #4a5568;
+}
+
+.dark-mode .version-entry.current {
+    background: #1a202c;
+    color: #e2e8f0;
+}
+
+.dark-mode .version-number {
+    color: #a78bfa;
+}
+
+.dark-mode .version-date {
+    color: #a0aec0;
+}
+
+.dark-mode .version-summary {
+    color: #cbd5e0;
+}
+
+.dark-mode .version-history-list h5 {
+    color: #e2e8f0 !important;
 }
 
 .about-section h4 {

@@ -900,7 +900,8 @@ class ActivityTracker {
      * Save settings
      */
     saveSettings() {
-        this.settings = {
+        try {
+            this.settings = {
             ...this.settings,
             notificationInterval: parseInt(document.getElementById('notificationInterval').value),
             startTime: document.getElementById('startTime').value,
@@ -935,30 +936,34 @@ class ActivityTracker {
             pomodoroPauseAllowed: document.getElementById('pomodoroPauseAllowed')?.checked !== false
         };
 
-        localStorage.setItem('activitySettings', JSON.stringify(this.settings));
-        this.applyTheme();
-        this.startNotificationTimer();
-        
-        // Update Pomodoro manager if it exists
-        if (this.pomodoroManager) {
-            this.pomodoroManager.saveSettings();
-            this.pomodoroManager.loadSettings();
+            localStorage.setItem('activitySettings', JSON.stringify(this.settings));
+            this.applyTheme();
+            this.startNotificationTimer();
+            
+            // Update Pomodoro manager if it exists
+            if (this.pomodoroManager) {
+                this.pomodoroManager.saveSettings();
+                this.pomodoroManager.loadSettings();
+            }
+            
+            // Update pause manager to reflect new working schedule
+            if (this.pauseManager) {
+                this.pauseManager.updatePauseButtonDisplay();
+            }
+            
+            // Also save any pending template changes
+            if (this.templateManagerState && this.templateManagerState.hasUnsavedChanges) {
+                this.saveTemplatesQuietly();
+            }
+            
+            // Update pagination settings and refresh displays
+            this.updatePaginationSettings();
+            
+            // Settings saved silently - only show notifications on errors
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            showNotification('Failed to save settings. Please try again.', 'error');
         }
-        
-        // Update pause manager to reflect new working schedule
-        if (this.pauseManager) {
-            this.pauseManager.updatePauseButtonDisplay();
-        }
-        
-        // Also save any pending template changes
-        if (this.templateManagerState && this.templateManagerState.hasUnsavedChanges) {
-            this.saveTemplatesQuietly();
-        }
-        
-        // Update pagination settings and refresh displays
-        this.updatePaginationSettings();
-        
-        showNotification('Settings saved successfully!', 'success');
     }
 
     /**
@@ -1398,7 +1403,7 @@ class ActivityTracker {
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 const registration = await navigator.serviceWorker.ready;
                 await registration.showNotification(title, options);
-                console.log('✅ Notification shown via Service Worker');
+                console.log('Notification shown via Service Worker');
                 return;
             }
         } catch (error) {
@@ -1424,7 +1429,7 @@ class ActivityTracker {
                 notification.close();
             };
 
-            console.log('✅ Notification shown via direct API (limited features)');
+            console.log('Notification shown via direct API (limited features)');
             
             // Auto-close after some time if not set to require interaction
             if (!options.requireInteraction) {
@@ -1820,9 +1825,28 @@ class ActivityTracker {
     }
 
     /**
-     * Update debug info specifically for the About modal
+     * Update version history display in About modal
+     */
+    updateVersionHistory() {
+        const versionContainer = document.getElementById('versionHistoryContainer');
+        if (!versionContainer) return;
+        
+        // Check if VersionHistory module is available
+        if (typeof window.VersionHistory !== 'undefined') {
+            versionContainer.innerHTML = window.VersionHistory.formatVersionHistory();
+        } else {
+            versionContainer.innerHTML = '<p>Version history not available.</p>';
+        }
+    }
+
+    /**
+     * Update debug info and version history for the About modal
      */
     async updateAboutDebugInfo() {
+        // Update version history
+        this.updateVersionHistory();
+        
+        // Continue with debug info
         const debugEl = document.getElementById('aboutDebugInfo');
         if (!debugEl) return;
         
@@ -2085,7 +2109,7 @@ class ActivityTracker {
                 this.pomodoroManager.restoreFromState(this.state.pomodoro);
             }
             
-            console.log('🍅 Pomodoro Manager initialized');
+            console.log('Pomodoro Manager initialized');
         } else {
             console.warn('PomodoroManager class not found');
         }

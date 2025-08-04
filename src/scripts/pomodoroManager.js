@@ -62,7 +62,7 @@ class PomodoroManager {
         // Load settings from activity tracker
         this.loadSettings();
         
-        console.log('🍅 Pomodoro Manager initialized with comprehensive features');
+        console.log('Pomodoro Manager initialized with comprehensive features');
     }
     
     /**
@@ -92,14 +92,14 @@ class PomodoroManager {
             if (element) {
                 const eventType = element.type === 'checkbox' ? 'change' : 'change';
                 element.addEventListener(eventType, () => {
-                    console.log(`🍅 Auto-saving Pomodoro setting: ${id}`);
+                    console.log(`Auto-saving Pomodoro setting: ${id}`);
                     this.saveSettings();
                     this.loadSettings(); // Refresh settings immediately
                 });
             }
         });
         
-        console.log('🍅 Auto-save listeners setup for Pomodoro settings');
+        console.log('Auto-save listeners setup for Pomodoro settings');
     }
     
     loadSettings() {
@@ -251,7 +251,7 @@ class PomodoroManager {
             this.activityTracker.saveSettings();
         }
         
-        console.log(`🍅 Pomodoro mode ${enabled ? 'enabled' : 'disabled'}`);
+        console.log(`Pomodoro mode ${enabled ? 'enabled' : 'disabled'}`);
     }
     
     startPomodoroMode() {
@@ -272,7 +272,7 @@ class PomodoroManager {
         // Update display to show ready state
         this.updateStatusDisplay();
         
-        showNotification('🍅 Pomodoro mode enabled! Click the 🍅 button to start your first session.', 'success');
+        showNotification('Pomodoro mode enabled! Click the button to start your first session.', 'success');
     }
     
     stopPomodoroMode() {
@@ -306,7 +306,7 @@ class PomodoroManager {
         }
         
         this.updateUI();
-        showNotification('🍅 Pomodoro mode stopped.', 'info');
+        showNotification('Pomodoro mode stopped.', 'info');
     }
     
     startWorkPeriod() {
@@ -357,7 +357,7 @@ class PomodoroManager {
         // Update UI
         this.updateUI();
         
-        console.log(`🍅 Starting ${this.settings.workDuration} minute work period (Session ${this.getCurrentSessionNumber()})`);
+        console.log(`Starting ${this.settings.workDuration} minute work period (Session ${this.getCurrentSessionNumber()})`);
     }
     
     endWorkPeriod() {
@@ -444,7 +444,7 @@ class PomodoroManager {
         this.updateUI();
         
         const breakType = isLongBreak ? 'long break' : 'break';
-        console.log(`🍅 Starting ${breakDuration} minute ${breakType} (after ${this.cycleCount} sessions)`);
+        console.log(`Starting ${breakDuration} minute ${breakType} (after ${this.cycleCount} sessions)`);
         
         // Play appropriate announce sound
         const announceSound = isLongBreak ? this.settings.longBreakSound : this.settings.shortBreakSound;
@@ -499,7 +499,7 @@ class PomodoroManager {
             }, 1000);
         } else {
             // User must manually start next session
-            showNotification('🍅 Break finished! Click the Pomodoro button to continue.', 'info', 10000);
+            showNotification('Break finished! Click the Pomodoro button to continue.', 'info', 10000);
         }
     }
     
@@ -516,7 +516,7 @@ class PomodoroManager {
         };
         
         if (this.activityTracker) {
-            this.activityTracker.showNotificationWithServiceWorker('🍅 Pomodoro - Work Complete!', options);
+            this.activityTracker.showNotificationWithServiceWorker('Pomodoro - Work Complete!', options);
         }
     }
     
@@ -529,7 +529,7 @@ class PomodoroManager {
         };
         
         if (this.activityTracker) {
-            this.activityTracker.showNotificationWithServiceWorker(`🍅 ${breakType.charAt(0).toUpperCase() + breakType.slice(1)} Time!`, options);
+            this.activityTracker.showNotificationWithServiceWorker(`${breakType.charAt(0).toUpperCase() + breakType.slice(1)} Time!`, options);
         }
     }
     
@@ -545,7 +545,7 @@ class PomodoroManager {
         };
         
         if (this.activityTracker) {
-            this.activityTracker.showNotificationWithServiceWorker('🍅 Back to Work!', options);
+            this.activityTracker.showNotificationWithServiceWorker('Back to Work!', options);
         }
     }
     
@@ -601,7 +601,7 @@ class PomodoroManager {
         
         // Check for duplicates before adding
         if (this.isDuplicateActivity(activity, description, timestamp)) {
-            console.log('🍅 Skipping duplicate Pomodoro activity:', activity);
+            console.log('Skipping duplicate Pomodoro activity:', activity);
             return;
         }
         
@@ -616,7 +616,7 @@ class PomodoroManager {
         };
         
         this.activityTracker.addEntry(entry);
-        console.log('🍅 Auto-logged Pomodoro activity:', activity);
+        console.log('Auto-logged Pomodoro activity:', activity);
     }
     
     saveSettings() {
@@ -669,7 +669,7 @@ class PomodoroManager {
         this.activityTracker.settings.pomodoroLongBreak = this.settings.longBreak;
         this.activityTracker.settings.pomodoroAutoResetDaily = this.settings.autoResetDaily;
         
-        console.log('🍅 Pomodoro settings saved');
+        console.log('Pomodoro settings saved');
     }
     
     /**
@@ -706,21 +706,21 @@ class PomodoroManager {
      * Start tick sounds during work periods
      */
     startTickSounds() {
-        console.log(`🍅 StartTickSounds called - Active: ${this.isActive}, Phase: ${this.currentPhase}, TickSound: ${this.settings.tickSound}, Interval: ${this.settings.tickInterval}`);
+        console.log(`StartTickSounds called - Active: ${this.isActive}, Phase: ${this.currentPhase}, TickSound: ${this.settings.tickSound}, Interval: ${this.settings.tickInterval}`);
         
         // Stop any existing tick timer first
         this.stopTickSounds();
         
         if (!this.isActive || this.currentPhase !== 'work' || this.settings.tickSound === 'none' || this.settings.tickInterval <= 0) {
-            console.log('🍅 Tick sounds not started - conditions not met');
+            console.log('Tick sounds not started - conditions not met');
             return;
         }
         
-        console.log(`🍅 Starting tick sounds with ${this.settings.tickInterval}s interval`);
+        console.log(`Starting tick sounds with ${this.settings.tickInterval}s interval`);
         
         const playTick = () => {
             if (!this.isActive || !this.isRunning || this.currentPhase !== 'work') {
-                console.log('🍅 Tick cancelled - session ended or not in work phase');
+                console.log('Tick cancelled - session ended or not in work phase');
                 return;
             }
             
@@ -749,7 +749,7 @@ class PomodoroManager {
      */
     playTickSound() {
         if (!this.activityTracker || !this.activityTracker.soundManager) {
-            console.warn('🍅 Tick sound: No sound manager available');
+            console.warn('Tick sound: No sound manager available');
             return;
         }
         
@@ -776,7 +776,7 @@ class PomodoroManager {
                 break;
         }
         
-        console.log(`🍅 Playing tick sound: ${soundType} (interval: ${this.settings.tickInterval}s)`);
+        console.log(`Playing tick sound: ${soundType} (interval: ${this.settings.tickInterval}s)`);
         this.activityTracker.soundManager.playSound(soundType, false);
     }
     
@@ -858,7 +858,7 @@ class PomodoroManager {
             
             if (activity) {
                 this.logActivity(activity, description || `Partial Pomodoro session ${currentSession} work`, [this.generateAbandonedTag(currentSession)]);
-                showNotification(`🍅 Partial work saved: "${activity}"`, 'success');
+                showNotification(`Partial work saved: "${activity}"`, 'success');
             }
         }
         
@@ -925,14 +925,14 @@ class PomodoroManager {
         
         // Show notification
         const message = workSaved ? 
-            `🍅 Session ${sessionNumber} abandoned with work saved. Click Start to begin next session.` :
-            `🍅 Session ${sessionNumber} abandoned. Click Start to begin next session.`;
+            `Session ${sessionNumber} abandoned with work saved. Click Start to begin next session.` :
+            `Session ${sessionNumber} abandoned. Click Start to begin next session.`;
         showNotification(message, 'warning');
         
         // Update UI
         this.updateUI();
         
-        console.log(`🍅 Session ${sessionNumber} abandoned, user must restart manually`);
+        console.log(`Session ${sessionNumber} abandoned, user must restart manually`);
     }
     
     /**
@@ -941,7 +941,7 @@ class PomodoroManager {
     restoreFromState(pomodoroState) {
         if (!pomodoroState) return;
         
-        console.log('🍅 Restoring pomodoro from state:', pomodoroState);
+        console.log('Restoring pomodoro from state:', pomodoroState);
         
         // Restore basic state
         this.cycleCount = pomodoroState.cycleCount || 0;
@@ -974,7 +974,7 @@ class PomodoroManager {
             timeLeft = state.remainingTime - elapsedTime;
         }
         
-        console.log(`🍅 Time remaining calculation: ${Math.ceil(timeLeft/1000)}s`);
+        console.log(`Time remaining calculation: ${Math.ceil(timeLeft/1000)}s`);
         
         // Check if session expired while page was closed
         if (timeLeft <= 0) {
@@ -996,7 +996,7 @@ class PomodoroManager {
             this.remainingTime = state.remainingTime;
             this.startStatusUpdates();
             
-            showNotification(`🍅 Paused session restored! ${Math.ceil(timeLeft/60000)} minutes remaining.`, 'info');
+            showNotification(`Paused session restored! ${Math.ceil(timeLeft/60000)} minutes remaining.`, 'info');
         } else {
             // Restore running session
             this.isPaused = false;
@@ -1016,7 +1016,7 @@ class PomodoroManager {
             this.startTickSounds();
             this.startStatusUpdates();
             
-            showNotification(`🍅 Session restored! ${Math.ceil(timeLeft/60000)} minutes remaining.`, 'success');
+            showNotification(`Session restored! ${Math.ceil(timeLeft/60000)} minutes remaining.`, 'success');
         }
         
         // Restore work activity
@@ -1030,11 +1030,11 @@ class PomodoroManager {
      */
     handleExpiredSession(state) {
         if (state.currentPhase === 'work') {
-            console.log('🍅 Work period expired during reload');
-            showNotification('🍅 Work session completed while page was closed. Ready for break!', 'info');
+            console.log('Work period expired during reload');
+            showNotification('Work session completed while page was closed. Ready for break!', 'info');
         } else {
-            console.log('🍅 Break period expired during reload');
-            showNotification('🍅 Break completed while page was closed. Ready for next session!', 'info');
+            console.log('Break period expired during reload');
+            showNotification('Break completed while page was closed. Ready for next session!', 'info');
         }
         
         this.isActive = true;
@@ -1203,23 +1203,23 @@ class PomodoroManager {
         pomodoroBtn.style.display = 'inline-block';
         
         if (!this.isActive) {
-            pomodoroBtn.textContent = '🍅 Start Pomodoro';
+            pomodoroBtn.textContent = 'Start Pomodoro';
             pomodoroBtn.className = 'nav-btn pomodoro-btn';
             pomodoroBtn.title = 'Start a new Pomodoro session';
         } else if (this.isRunning) {
             if (this.currentPhase === 'work') {
                 const currentSession = this.getCurrentSessionNumber();
-                pomodoroBtn.textContent = `🍅 Abandon Session ${currentSession}`;
+                pomodoroBtn.textContent = `Abandon Session ${currentSession}`;
                 pomodoroBtn.className = 'nav-btn pomodoro-btn active';
                 pomodoroBtn.title = 'Abandon current work session and restart';
             } else {
-                pomodoroBtn.textContent = '🍅 On Break';
+                pomodoroBtn.textContent = 'On Break';
                 pomodoroBtn.className = 'nav-btn pomodoro-btn breaking';
                 pomodoroBtn.title = 'Currently on break - click to abandon and restart';
             }
         } else {
             const nextSession = this.getCurrentSessionNumber();
-            pomodoroBtn.textContent = `🍅 Start Session ${nextSession}`;
+            pomodoroBtn.textContent = `Start Session ${nextSession}`;
             pomodoroBtn.className = 'nav-btn pomodoro-btn';
             pomodoroBtn.title = `Start work session ${nextSession}`;
         }
@@ -1276,7 +1276,7 @@ class PomodoroManager {
         
         // If we have a last reset date and it's different from today, reset
         if (this.lastResetDate && this.lastResetDate !== today) {
-            console.log('🍅 Daily auto-reset triggered');
+            console.log('Daily auto-reset triggered');
             this.cycleCount = 0;
             this.totalSessions = 0;
             this.lastResetDate = today;
@@ -1288,7 +1288,7 @@ class PomodoroManager {
             this.updateState();
             this.updateUI();
             
-            showNotification('🍅 Daily session reset applied', 'info');
+            showNotification('Daily session reset applied', 'info');
         } else if (!this.lastResetDate) {
             // First time, just set the date
             this.lastResetDate = today;
@@ -1310,7 +1310,7 @@ class PomodoroManager {
             this.logActivity('Pomodoro session counter reset', 'Starting fresh Pomodoro cycle');
         }
         
-        showNotification('🍅 Pomodoro session counter reset', 'info');
+        showNotification('Pomodoro session counter reset', 'info');
     }
     
     /**
@@ -1358,7 +1358,7 @@ class PomodoroManager {
             // Save the work activity to session state
             this.updateState();
             
-            console.log('🍅 Work session started with activity:', this.currentWorkActivity.name);
+            console.log('Work session started with activity:', this.currentWorkActivity.name);
         }
     }
     
@@ -1371,7 +1371,7 @@ class PomodoroManager {
         }
         
         if (!this.settings.pauseAllowed) {
-            showNotification('🍅 Session pausing is disabled in settings', 'warning');
+            showNotification('Session pausing is disabled in settings', 'warning');
             return;
         }
         
@@ -1410,8 +1410,8 @@ class PomodoroManager {
         this.updateStatusDisplay();
         this.updatePomodoroButton();
         
-        showNotification('🍅 Pomodoro session paused', 'info');
-        console.log('🍅 Session paused');
+        showNotification('Pomodoro session paused', 'info');
+        console.log('Session paused');
     }
     
     /**
@@ -1453,8 +1453,8 @@ class PomodoroManager {
         this.updateStatusDisplay();
         this.updatePomodoroButton();
         
-        showNotification('🍅 Pomodoro session resumed', 'success');
-        console.log('🍅 Session resumed');
+        showNotification('Pomodoro session resumed', 'success');
+        console.log('Session resumed');
     }
     
     /**
@@ -1496,7 +1496,7 @@ class PomodoroManager {
         this.stopStatusUpdates();
         this.isActive = false;
         this.isRunning = false;
-        console.log('🍅 Pomodoro Manager destroyed');
+        console.log('Pomodoro Manager destroyed');
     }
 }
 
@@ -1505,4 +1505,4 @@ if (typeof window !== 'undefined') {
     window.PomodoroManager = PomodoroManager;
 }
 
-console.log('🍅 Pomodoro Manager module loaded');
+console.log('Pomodoro Manager module loaded');

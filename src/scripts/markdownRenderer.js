@@ -182,4 +182,4 @@ if (typeof window !== 'undefined') {
     window.MarkdownRenderer = MarkdownRenderer;
 }
 
-console.log('📝 Markdown Renderer module loaded');
+console.log('Markdown Renderer module loaded');

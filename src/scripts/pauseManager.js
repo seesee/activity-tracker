@@ -396,4 +396,4 @@ if (typeof window !== 'undefined') {
     window.PauseManager = PauseManager;
 }
 
-console.log('⏸️ Pause Manager module loaded');
+console.log('Pause Manager module loaded');
