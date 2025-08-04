@@ -5,24 +5,29 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "b0709e0",
+        date: "2025-08-04",
+        summary: "Complete due date management system with overdue alerts, rescheduling, and smart prioritization"
+    },
+    {
+        commit: "9355fbb",
+        date: "2025-08-04",
+        summary: "Major UI overhaul with burger menu, responsive design, and enhanced entry forms"
+    },
+    {
+        commit: "85ee1a3",
+        date: "2025-08-04",
+        summary: "Navigation improvements, external link handling, version history, and user guide enhancements"
+    },
+    {
         commit: "59bb00b",
         date: "2025-08-04",
         summary: "Added comprehensive notes system with hashtag improvements and pause enhancements"
     },
     {
-        commit: "f524c58",
-        date: "2025-08-03", 
-        summary: "Build system improvements with package-lock and gitignore updates"
-    },
-    {
         commit: "3cf7365",
         date: "2025-08-03",
         summary: "Standalone web application with modular architecture and build system"
-    },
-    {
-        commit: "c52292b",
-        date: "2025-08-03",
-        summary: "Initial repository setup with core activity tracking foundation"
     }
 ];
 
