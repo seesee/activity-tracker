@@ -5,6 +5,11 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "24dacd7",
+        date: "2025-08-05",
+        summary: "Added complex schedule capabilities and renamed 'working schedule' to 'activity schedule' for generic terminology"
+    },
+    {
         commit: "5398868",
         date: "2025-08-05",
         summary: "Added comprehensive workspace system for organizing separate projects with isolated data, settings, and state"
@@ -23,11 +28,6 @@ const VERSION_HISTORY = [
         commit: "b0709e0",
         date: "2025-08-04",
         summary: "Complete due date management system with overdue alerts, rescheduling, and smart prioritization"
-    },
-    {
-        commit: "9355fbb",
-        date: "2025-08-04",
-        summary: "Major UI overhaul with burger menu, responsive design, and enhanced entry forms"
     }
 ];
 
