@@ -99,10 +99,18 @@ h3 {
 }
 
 /* Burger Menu */
+.burger-anchor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+    visibility: hidden;
+}
+
 .burger-menu {
     position: fixed;
-    top: 30px;
-    right: 30px;
     z-index: 1000;
 }
 
@@ -1181,12 +1189,13 @@ h3 {
 
 .debug-info {
     background: #f7fafc;
-    padding: 15px;
+    padding: 20px 24px;
     border-radius: 8px;
     margin-top: 15px;
     font-family: monospace;
     font-size: 14px;
     border-left: 4px solid #667eea;
+    line-height: 1.6;
 }
 
 @keyframes pulse {
@@ -2970,6 +2979,52 @@ body.dark-mode {
         grid-template-columns: 1fr !important;
         gap: 15px;
     }
+    
+    /* Fix date/time picker width on mobile */
+    input[type="date"],
+    input[type="datetime-local"],
+    input[type="time"] {
+        max-width: calc(100% - 20px);
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Increase font sizes for better mobile readability */
+    body {
+        font-size: 16px;
+    }
+    
+    .btn, button {
+        font-size: 16px;
+    }
+    
+    .nav-btn {
+        font-size: 15px;
+    }
+    
+    input, textarea, select {
+        font-size: 16px;
+    }
+    
+    .activity-list-item {
+        font-size: 15px;
+    }
+    
+    .activity-list-item .timestamp {
+        font-size: 14px;
+    }
+    
+    .settings-section h3 {
+        font-size: 20px;
+    }
+    
+    .settings-section p {
+        font-size: 15px;
+    }
+    
+    label {
+        font-size: 15px;
+    }
 }
 
 /* Settings Grid Two Column */
@@ -2983,7 +3038,7 @@ body.dark-mode {
 }
 
 .settings-grid-four-col {
-    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 20px;
 }
 
@@ -4253,113 +4308,155 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-bt
 
 /* Copyright Section Styles */
 .copyright-section {
-    border-top: 1px solid #e2e8f0;
     margin-top: 30px;
-    padding-top: 25px;
-    background: #f8fafc;
-    border-radius: 8px;
     margin-bottom: 0;
 }
 
-.copyright-content {
+.copyright-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 24px;
+    color: white;
     text-align: center;
-    color: #64748b;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.copyright-main {
-    margin-bottom: 15px;
+.copyright-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
-.copyright-text {
-    font-size: 14px;
+.copyright-header h4 {
     margin: 0;
-    line-height: 1.5;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.copyright-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+.copyright-author {
+    margin-bottom: 16px;
+}
+
+.copyright-author p {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.9;
 }
 
 .author-link {
-    color: #3b82f6;
+    color: #fbbf24;
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.4);
 }
 
 .author-link:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
+    color: #fcd34d;
+    border-bottom-color: #fcd34d;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
 }
 
-.copyright-links {
-    margin-bottom: 12px;
+.copyright-description {
+    margin-bottom: 20px;
 }
 
-.github-link {
+.copyright-description p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+.copyright-actions {
+    margin-bottom: 16px;
+}
+
+.github-button {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    color: #6b7280;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
     text-decoration: none;
-    font-size: 13px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    transition: all 0.2s ease;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
-.github-link:hover {
-    color: #374151;
-    background: #f3f4f6;
-    border-color: #9ca3af;
+.github-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     text-decoration: none;
+    color: white;
 }
 
 .github-icon {
-    font-size: 14px;
+    font-size: 16px;
 }
 
-.license-info {
-    margin-top: 8px;
+.copyright-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 16px;
 }
 
-.license-text {
-    font-size: 12px;
-    color: #94a3b8;
+.privacy-note {
     margin: 0;
+    font-size: 12px;
+    opacity: 0.7;
     font-style: italic;
 }
 
 /* Dark mode copyright styles */
-.dark-mode .copyright-section {
-    background: #1e293b;
-    border-top-color: #374151;
+.dark-mode .copyright-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark-mode .copyright-content {
-    color: #94a3b8;
+.dark-mode .copyright-badge {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .dark-mode .author-link {
-    color: #60a5fa;
+    color: #fbbf24;
+    border-bottom-color: rgba(251, 191, 36, 0.4);
 }
 
 .dark-mode .author-link:hover {
-    color: #93c5fd;
+    color: #fcd34d;
+    border-bottom-color: #fcd34d;
 }
 
-.dark-mode .github-link {
-    color: #9ca3af;
-    background: #374151;
-    border-color: #4b5563;
+.dark-mode .github-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-.dark-mode .github-link:hover {
-    color: #d1d5db;
-    background: #4b5563;
-    border-color: #6b7280;
+.dark-mode .github-button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.dark-mode .license-text {
-    color: #6b7280;
+.dark-mode .copyright-footer {
+    border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Notification Permission Modal Styles */
@@ -4718,16 +4815,13 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-bt
 }
 
 .reschedule-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
+    position: fixed;
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 10001;
     min-width: 140px;
-    margin-top: 4px;
 }
 
 .reschedule-options button {
@@ -4854,6 +4948,62 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-bt
 .dark-mode .reschedule-options button:hover {
     background: #4a5568;
     color: #f7fafc;
+}
+
+/* Hashtag completion styles */
+.hashtag-suggestions {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.hashtag-suggestion {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f7fafc;
+    font-size: 14px;
+    color: #4a5568;
+    transition: background-color 0.2s ease;
+}
+
+.hashtag-suggestion:last-child {
+    border-bottom: none;
+}
+
+.hashtag-suggestion:hover,
+.hashtag-suggestion.selected {
+    background: #f7fafc;
+    color: #2d3748;
+}
+
+.hashtag-suggestion.selected {
+    background: #ebf4ff;
+    color: #2b6cb0;
+}
+
+/* Dark mode hashtag suggestions */
+.dark-mode .hashtag-suggestions {
+    background: #2d3748;
+    border-color: #4a5568;
+}
+
+.dark-mode .hashtag-suggestion {
+    color: #cbd5e0;
+    border-bottom-color: #4a5568;
+}
+
+.dark-mode .hashtag-suggestion:hover,
+.dark-mode .hashtag-suggestion.selected {
+    background: #4a5568;
+    color: #f7fafc;
+}
+
+.dark-mode .hashtag-suggestion.selected {
+    background: #3182ce;
+    color: #e2e8f0;
 }
 
 .dark-mode .entry-due-countdown.upcoming {

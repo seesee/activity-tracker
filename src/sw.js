@@ -149,16 +149,7 @@ self.addEventListener('notificationactionclick', (event) => {
         console.log('User replied:', reply);
         
         if (reply && reply.trim()) {
-            // Create a new activity entry from the notification reply
-            const entry = {
-                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-                activity: reply.trim(),
-                description: 'Added via notification',
-                timestamp: new Date().toISOString(),
-                created: new Date().toISOString()
-            };
-            
-            // Send the entry to the main app
+            // Send the reply text to populate the activity input field
             event.waitUntil(
                 clients.matchAll({ type: 'window' }).then((clientList) => {
                     let messageSent = false;
@@ -169,21 +160,21 @@ self.addEventListener('notificationactionclick', (event) => {
                             client.url.includes('index.html') || 
                             client.url.includes('activity_tracker.html')) {
                             client.postMessage({ 
-                                type: 'add-entry', 
-                                entry: entry 
+                                type: 'populate-activity-input', 
+                                text: reply.trim()
                             });
                             messageSent = true;
                         }
                     }
                     
-                    // If no existing client, store in indexedDB or localStorage via a new window
+                    // If no existing client, open the app and send the message
                     if (!messageSent) {
-                        return clients.openWindow(getAppUrl()).then((client) => {
+                        return clients.openWindow(getAppUrl() + '#tracker').then((client) => {
                             // Wait a bit for the page to load, then send the message
                             setTimeout(() => {
                                 client.postMessage({ 
-                                    type: 'add-entry', 
-                                    entry: entry 
+                                    type: 'populate-activity-input', 
+                                    text: reply.trim()
                                 });
                             }, 2000);
                         });

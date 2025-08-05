@@ -108,6 +108,7 @@ class ActivityTracker {
         // Event listeners
         this.attachEventListeners();
         this.initSearch();
+        this.initHashtagCompletion();
         
         // Set current time by default
         this.setCurrentTime();
@@ -404,9 +405,32 @@ class ActivityTracker {
      */
     testNotificationSound() {
         if (this.soundManager) {
-            this.soundManager.playSound(this.settings.notificationSoundType, this.isNotificationSoundMuted());
+            const isMuted = this.isNotificationSoundMuted();
+            
+            if (isMuted) {
+                let muteReason = 'Sound is muted because: ';
+                const reasons = [];
+                
+                if (this.settings.muteSound) {
+                    reasons.push('Global sound is disabled in Settings');
+                }
+                if (this.isOutsideWorkingHours()) {
+                    reasons.push('Currently outside working hours');
+                }
+                if (this.pomodoroManager && this.pomodoroManager.isActive()) {
+                    reasons.push('Pomodoro mode is active');
+                }
+                
+                muteReason += reasons.join(', ');
+                alert(muteReason + '\n\nTo hear test sounds, please adjust your settings or check the time.');
+                return;
+            }
+            
+            this.soundManager.playSound(this.settings.notificationSoundType, false);
+            showNotification('Test sound played!', 'success');
+        } else {
+            alert('Sound manager is not available');
         }
-        showNotification('Test sound played!', 'success');
     }
 
     /**
@@ -3808,5 +3832,212 @@ class ActivityTracker {
         });
         
         return frequency;
+    }
+
+    /**
+     * Initialize hashtag completion system
+     */
+    initHashtagCompletion() {
+        this.hashtagState = {
+            suggestions: [],
+            selectedIndex: -1,
+            isShowing: false,
+            currentInput: null
+        };
+
+        // Add event listeners to input fields that support hashtags
+        const inputFields = ['activity', 'description', 'editActivity', 'editDescription'];
+        inputFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', (e) => this.handleHashtagInput(e));
+                field.addEventListener('keydown', (e) => this.handleHashtagKeydown(e));
+                field.addEventListener('blur', () => {
+                    // Delay hiding to allow click selection
+                    setTimeout(() => this.hideHashtagSuggestions(), 150);
+                });
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.hashtag-suggestions') && !e.target.closest('input')) {
+                this.hideHashtagSuggestions();
+            }
+        });
+    }
+
+    /**
+     * Handle input changes for hashtag completion
+     */
+    handleHashtagInput(event) {
+        const input = event.target;
+        const cursorPos = input.selectionStart;
+        const text = input.value.substring(0, cursorPos);
+        
+        // Find the last hashtag being typed
+        const hashtagMatch = text.match(/#(\w*)$/);
+        
+        if (hashtagMatch) {
+            const partialTag = hashtagMatch[1];
+            this.showHashtagSuggestions(input, partialTag, hashtagMatch.index);
+        } else {
+            this.hideHashtagSuggestions();
+        }
+    }
+
+    /**
+     * Handle keyboard navigation for hashtag completion
+     */
+    handleHashtagKeydown(event) {
+        if (!this.hashtagState.isShowing) return;
+
+        const suggestions = this.hashtagState.suggestions;
+        
+        switch (event.key) {
+            case 'ArrowDown':
+                event.preventDefault();
+                this.hashtagState.selectedIndex = Math.min(
+                    this.hashtagState.selectedIndex + 1,
+                    suggestions.length - 1
+                );
+                this.updateHashtagSelection();
+                break;
+                
+            case 'ArrowUp':
+                event.preventDefault();
+                this.hashtagState.selectedIndex = Math.max(
+                    this.hashtagState.selectedIndex - 1,
+                    0
+                );
+                this.updateHashtagSelection();
+                break;
+                
+            case 'Tab':
+            case 'Enter':
+                if (this.hashtagState.selectedIndex >= 0) {
+                    event.preventDefault();
+                    this.selectHashtagSuggestion(this.hashtagState.selectedIndex);
+                }
+                break;
+                
+            case 'Escape':
+                this.hideHashtagSuggestions();
+                break;
+        }
+    }
+
+    /**
+     * Get all existing hashtags from entries
+     */
+    getAllHashtags() {
+        const allTags = new Set();
+        this.entries.forEach(entry => {
+            if (entry.tags && Array.isArray(entry.tags)) {
+                entry.tags.forEach(tag => allTags.add(tag));
+            }
+        });
+        return Array.from(allTags).sort();
+    }
+
+    /**
+     * Show hashtag suggestions dropdown
+     */
+    showHashtagSuggestions(input, partialTag, hashtagStartPos) {
+        this.hashtagState.currentInput = input;
+        this.hashtagState.hashtagStartPos = hashtagStartPos;
+        
+        const allTags = this.getAllHashtags();
+        const suggestions = partialTag 
+            ? allTags.filter(tag => tag.toLowerCase().startsWith(partialTag.toLowerCase()))
+            : allTags.slice(0, 10); // Show top 10 if no partial match
+        
+        this.hashtagState.suggestions = suggestions;
+        this.hashtagState.selectedIndex = suggestions.length > 0 ? 0 : -1;
+        
+        if (suggestions.length === 0) {
+            this.hideHashtagSuggestions();
+            return;
+        }
+
+        // Create or update suggestions dropdown
+        let dropdown = document.getElementById('hashtagSuggestions');
+        if (!dropdown) {
+            dropdown = document.createElement('div');
+            dropdown.id = 'hashtagSuggestions';
+            dropdown.className = 'hashtag-suggestions';
+            document.body.appendChild(dropdown);
+        }
+
+        // Position dropdown below input
+        const rect = input.getBoundingClientRect();
+        dropdown.style.position = 'absolute';
+        dropdown.style.left = `${rect.left}px`;
+        dropdown.style.top = `${rect.bottom + 5}px`;
+        dropdown.style.width = `${Math.max(200, rect.width)}px`;
+        dropdown.style.zIndex = '10002';
+
+        // Generate dropdown content
+        dropdown.innerHTML = suggestions.map((tag, index) => 
+            `<div class="hashtag-suggestion ${index === this.hashtagState.selectedIndex ? 'selected' : ''}" 
+                  data-index="${index}" onclick="tracker.selectHashtagSuggestion(${index})">
+                #${escapeHtml(tag)}
+            </div>`
+        ).join('');
+
+        this.hashtagState.isShowing = true;
+    }
+
+    /**
+     * Hide hashtag suggestions
+     */
+    hideHashtagSuggestions() {
+        const dropdown = document.getElementById('hashtagSuggestions');
+        if (dropdown) {
+            dropdown.remove();
+        }
+        this.hashtagState.isShowing = false;
+        this.hashtagState.selectedIndex = -1;
+    }
+
+    /**
+     * Update hashtag suggestion selection visual state
+     */
+    updateHashtagSelection() {
+        const suggestions = document.querySelectorAll('.hashtag-suggestion');
+        suggestions.forEach((suggestion, index) => {
+            if (index === this.hashtagState.selectedIndex) {
+                suggestion.classList.add('selected');
+            } else {
+                suggestion.classList.remove('selected');
+            }
+        });
+    }
+
+    /**
+     * Select a hashtag suggestion and insert it into the input
+     */
+    selectHashtagSuggestion(index) {
+        const suggestion = this.hashtagState.suggestions[index];
+        if (!suggestion || !this.hashtagState.currentInput) return;
+
+        const input = this.hashtagState.currentInput;
+        const cursorPos = input.selectionStart;
+        const currentValue = input.value;
+        
+        // Find the hashtag being replaced
+        const beforeHashtag = currentValue.substring(0, this.hashtagState.hashtagStartPos);
+        const afterCursor = currentValue.substring(cursorPos);
+        
+        // Replace with selected suggestion
+        const newValue = beforeHashtag + '#' + suggestion + ' ' + afterCursor;
+        input.value = newValue;
+        
+        // Position cursor after the inserted hashtag
+        const newCursorPos = beforeHashtag.length + suggestion.length + 2; // +2 for # and space
+        input.setSelectionRange(newCursorPos, newCursorPos);
+        
+        this.hideHashtagSuggestions();
+        input.focus();
     }
 }

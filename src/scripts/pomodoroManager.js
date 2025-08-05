@@ -1219,7 +1219,7 @@ class PomodoroManager {
             }
         } else {
             const nextSession = this.getCurrentSessionNumber();
-            pomodoroBtn.textContent = `Start Session ${nextSession}`;
+            pomodoroBtn.textContent = `🍅 Start Session ${nextSession}`;
             pomodoroBtn.className = 'nav-btn pomodoro-btn';
             pomodoroBtn.title = `Start work session ${nextSession}`;
         }

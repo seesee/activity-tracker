@@ -250,20 +250,45 @@ function showAbout() {
  * Update the copyright year display with dynamic range
  */
 function updateCopyrightYear() {
+    const startYear = 2025;
+    const currentYear = new Date().getFullYear();
+    
+    let yearText;
+    if (currentYear === startYear) {
+        yearText = startYear.toString();
+    } else if (currentYear > startYear) {
+        yearText = `${startYear}-${currentYear}`;
+    } else {
+        // Fallback for years before 2025 (shouldn't happen in practice)
+        yearText = startYear.toString();
+    }
+    
+    // Update both copyright year elements
     const copyrightYearElement = document.getElementById('copyrightYear');
     if (copyrightYearElement) {
-        const startYear = 2025;
-        const currentYear = new Date().getFullYear();
-        
-        if (currentYear === startYear) {
-            copyrightYearElement.textContent = startYear.toString();
-        } else if (currentYear > startYear) {
-            copyrightYearElement.textContent = `${startYear}-${currentYear}`;
-        } else {
-            // Fallback for years before 2025 (shouldn't happen in practice)
-            copyrightYearElement.textContent = startYear.toString();
-        }
+        copyrightYearElement.textContent = yearText;
     }
+    
+    const copyrightYearRangeElement = document.getElementById('copyrightYearRange');
+    if (copyrightYearRangeElement) {
+        copyrightYearRangeElement.textContent = yearText;
+    }
+}
+
+/**
+ * Position burger menu relative to anchor element
+ */
+function positionBurgerMenu() {
+    const burgerMenu = document.querySelector('.burger-menu');
+    const burgerAnchor = document.getElementById('burgerAnchor');
+    
+    if (!burgerMenu || !burgerAnchor) return;
+    
+    const anchorRect = burgerAnchor.getBoundingClientRect();
+    
+    // Position burger menu relative to the anchor with some offset
+    burgerMenu.style.top = `${anchorRect.top + 10}px`;
+    burgerMenu.style.right = `${window.innerWidth - anchorRect.right + 10}px`;
 }
 
 /**
@@ -1066,8 +1091,30 @@ function toggleRescheduleOptions(itemId) {
         }
     });
     
-    // Toggle this dropdown
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    // Toggle this dropdown with proper positioning
+    if (dropdown.style.display === 'none' || !dropdown.style.display) {
+        // Find the reschedule button that triggered this
+        const rescheduleButton = document.querySelector(`[onclick*="toggleRescheduleOptions('${itemId}')"]`);
+        if (rescheduleButton) {
+            const rect = rescheduleButton.getBoundingClientRect();
+            
+            // Position dropdown relative to viewport
+            dropdown.style.left = `${rect.left}px`;
+            dropdown.style.top = `${rect.bottom + 5}px`;
+            
+            // Ensure dropdown doesn't go off-screen
+            const dropdownRect = dropdown.getBoundingClientRect();
+            if (rect.left + dropdownRect.width > window.innerWidth) {
+                dropdown.style.left = `${window.innerWidth - dropdownRect.width - 10}px`;
+            }
+            if (rect.bottom + dropdownRect.height > window.innerHeight) {
+                dropdown.style.top = `${rect.top - dropdownRect.height - 5}px`;
+            }
+        }
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
 }
 
 /**
@@ -1225,8 +1272,8 @@ function sendDueItemNotification(item) {
     if (!tracker.settings.notificationsEnabled) return;
     
     // Play sound if enabled
-    if (!tracker.settings.muteSound && tracker.soundManager) {
-        tracker.soundManager.playNotificationSound();
+    if (tracker.soundManager && !tracker.isNotificationSoundMuted()) {
+        tracker.soundManager.playSound(tracker.settings.notificationSoundType, false);
     }
     
     // Send browser notification
@@ -2147,6 +2194,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.data && event.data.type === 'navigate-to-tracker') {
                 showSection('tracker');
             }
+            
+            if (event.data && event.data.type === 'populate-activity-input') {
+                // Navigate to tracker section first
+                showSection('tracker');
+                
+                // Populate the activity input field with the notification reply text
+                const activityInput = document.getElementById('activity');
+                if (activityInput && event.data.text) {
+                    activityInput.value = event.data.text;
+                    activityInput.focus();
+                    activityInput.select(); // Select the text so user can easily modify it
+                    showNotification('Activity text populated from notification!', 'success');
+                }
+            }
         });
 
         // Listen for service worker control changes
@@ -2169,7 +2230,15 @@ document.addEventListener('DOMContentLoaded', () => {
         history.replaceState(null, document.title, window.location.pathname + window.location.search);
     }
 
+    // Position burger menu initially
+    positionBurgerMenu();
+    
     console.log('Activity Tracker initialized successfully');
+});
+
+// Handle window resize to reposition burger menu
+window.addEventListener('resize', () => {
+    positionBurgerMenu();
 });
 
 /**

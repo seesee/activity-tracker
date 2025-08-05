@@ -35,6 +35,7 @@
                     <button id="overdueAlertButton" class="nav-btn alert-btn" onclick="showOverdueAlert()" style="display: none;" title="View overdue items">⚠️ Alert</button>
                     <button id="pauseButton" class="nav-btn" onclick="togglePause()">Start Reminders</button>
                     <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">🍅 Start Pomodoro</button>
+                    <div id="burgerAnchor" class="burger-anchor"></div>
                 </div>
             </div>
         </div>
@@ -1486,20 +1487,27 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 </div>
                 
                 <div class="about-section copyright-section">
-                    <div class="copyright-content">
-                        <div class="copyright-main">
-                            <p class="copyright-text">
-                                Activity Tracker &copy; <span id="copyrightYear">2025</span> 
-                                <a href="https://github.com/seesee" target="_blank" rel="noopener noreferrer" class="author-link">Chris Carline</a>
-                            </p>
+                    <div class="copyright-card">
+                        <div class="copyright-header">
+                            <h4>Activity Tracker</h4>
+                            <div class="copyright-badge">
+                                &copy; <span id="copyrightYear">2025</span>
+                            </div>
                         </div>
-                        <div class="copyright-links">
-                            <a href="https://github.com/seesee" target="_blank" rel="noopener noreferrer" class="github-link">
-                                <span class="github-icon">⚡</span> View on GitHub
+                        
+                        <div class="copyright-author">
+                            <p>&copy; <span id="copyrightYearRange">2025</span> <a href="https://github.com/seesee" target="_blank" rel="noopener noreferrer" class="author-link">Chris Carline</a></p>
+                        </div>
+
+                        <div class="copyright-description">
+                            <p>Personal activity tracking application built as a Progressive Web App. All data is stored locally on your device and remains completely private. No cookies, analytics, or tracking technologies used.</p>
+                        </div>
+
+                        <div class="copyright-actions">
+                            <a href="https://github.com/seesee/activity-tracker" target="_blank" rel="noopener noreferrer" class="github-button">
+                                <span class="github-icon">⚡</span>
+                                <span>View on GitHub</span>
                             </a>
-                        </div>
-                        <div class="license-info">
-                            <p class="license-text">Personal activity tracking application built as a Progressive Web App. All data is stored locally on your device and remains completely private. No cookies, analytics, or tracking technologies are used.</p>
                         </div>
                     </div>
                 </div>
