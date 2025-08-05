@@ -5,6 +5,16 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "eccb96b",
+        date: "2025-08-05",
+        summary: "UI refactor with split Add/Reset buttons, flexible due date controls, system theme default, and reorganized settings"
+    },
+    {
+        commit: "eb3cd3b",
+        date: "2025-08-05",
+        summary: "Enhanced mobile UI with hashtag autocompletion, improved form layouts, and better notification integration"
+    },
+    {
         commit: "b0709e0",
         date: "2025-08-04",
         summary: "Complete due date management system with overdue alerts, rescheduling, and smart prioritization"
@@ -18,16 +28,6 @@ const VERSION_HISTORY = [
         commit: "85ee1a3",
         date: "2025-08-04",
         summary: "Navigation improvements, external link handling, version history, and user guide enhancements"
-    },
-    {
-        commit: "59bb00b",
-        date: "2025-08-04",
-        summary: "Added comprehensive notes system with hashtag improvements and pause enhancements"
-    },
-    {
-        commit: "3cf7365",
-        date: "2025-08-03",
-        summary: "Standalone web application with modular architecture and build system"
     }
 ];
 
