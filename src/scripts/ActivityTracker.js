@@ -51,6 +51,17 @@ class ActivityTracker {
                 saturday: false,
                 sunday: false
             },
+            // New complex schedule structure - each day can have multiple time ranges
+            complexSchedule: {
+                monday: [{ start: '09:00', end: '17:00' }],
+                tuesday: [{ start: '09:00', end: '17:00' }],
+                wednesday: [{ start: '09:00', end: '17:00' }],
+                thursday: [{ start: '09:00', end: '17:00' }],
+                friday: [{ start: '09:00', end: '17:00' }],
+                saturday: [],
+                sunday: []
+            },
+            useComplexSchedule: false, // Flag to use complex schedule instead of simple startTime/endTime
             pauseDuration: 60,
             notificationsPausedUntil: null,
             notificationsEnabled: true,
@@ -425,7 +436,7 @@ class ActivityTracker {
                     reasons.push('Global sound is disabled in Settings');
                 }
                 if (this.isOutsideWorkingHours()) {
-                    reasons.push('Currently outside working hours');
+                    reasons.push('Currently outside activity hours');
                 }
                 if (this.pomodoroManager && this.pomodoroManager.isActive()) {
                     reasons.push('Pomodoro mode is active');
@@ -1015,7 +1026,7 @@ class ActivityTracker {
                 this.pomodoroManager.loadSettings();
             }
             
-            // Update pause manager to reflect new working schedule
+            // Update pause manager to reflect new activity schedule
             if (this.pauseManager) {
                 this.pauseManager.updatePauseButtonDisplay();
             }
@@ -1327,6 +1338,28 @@ class ActivityTracker {
             document.getElementById(day).checked = checked;
         });
         
+        // Initialize complex schedule toggle and UI
+        const useComplexScheduleEl = document.getElementById('useComplexSchedule');
+        if (useComplexScheduleEl) {
+            useComplexScheduleEl.checked = this.settings.useComplexSchedule || false;
+            // Initialize the schedule mode display
+            if (typeof toggleScheduleMode === 'function') {
+                const simpleSchedule = document.getElementById('simpleSchedule');
+                const complexSchedule = document.getElementById('complexSchedule');
+                if (this.settings.useComplexSchedule) {
+                    if (simpleSchedule) simpleSchedule.style.display = 'none';
+                    if (complexSchedule) complexSchedule.style.display = 'block';
+                    // Populate complex schedule if function is available
+                    if (typeof populateComplexSchedule === 'function') {
+                        populateComplexSchedule();
+                    }
+                } else {
+                    if (simpleSchedule) simpleSchedule.style.display = 'block';
+                    if (complexSchedule) complexSchedule.style.display = 'none';
+                }
+            }
+        }
+        
         // Update system notifications visibility
         this.updateSystemNotificationsVisibility();
 
@@ -1628,7 +1661,7 @@ class ActivityTracker {
             return;
         }
 
-        // Check if we should show the banner based on working hours/days
+        // Check if we should show the banner based on activity hours/days
         if (this.shouldShowReminderCountdown()) {
             banner.style.display = 'block';
             reminderSection.style.display = 'flex';
@@ -1640,6 +1673,108 @@ class ActivityTracker {
             if (pomodoroSection && pomodoroSection.style.display === 'none') {
                 banner.style.display = 'none';
             }
+        }
+    }
+
+    /**
+     * Get the next working time from a given date
+     * @param {Date} fromTime - Starting time to search from
+     * @returns {Date|null} Next activity time or null if no activity days scheduled
+     */
+    getNextWorkingTime(fromTime) {
+        const workDayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const currentTime = fromTime.getHours() * 60 + fromTime.getMinutes();
+        const currentDayName = workDayNames[fromTime.getDay()];
+        
+        // Check if there's a working period later today
+        if (this.settings.workingDays[currentDayName]) {
+            if (this.settings.useComplexSchedule && this.settings.complexSchedule && this.settings.complexSchedule[currentDayName]) {
+                const ranges = this.settings.complexSchedule[currentDayName];
+                // Find the next range that starts after current time
+                for (const range of ranges) {
+                    const [startHour, startMin] = range.start.split(':').map(Number);
+                    const startTime = startHour * 60 + startMin;
+                    if (startTime > currentTime) {
+                        const nextTime = new Date(fromTime);
+                        nextTime.setHours(startHour, startMin, 0, 0);
+                        return nextTime;
+                    }
+                }
+            } else {
+                // Simple schedule
+                const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
+                const startTime = startHour * 60 + startMin;
+                if (startTime > currentTime) {
+                    const nextTime = new Date(fromTime);
+                    nextTime.setHours(startHour, startMin, 0, 0);
+                    return nextTime;
+                }
+            }
+        }
+        
+        // Check future days (up to 7 days ahead)
+        for (let daysAhead = 1; daysAhead <= 7; daysAhead++) {
+            const futureDate = new Date(fromTime);
+            futureDate.setDate(futureDate.getDate() + daysAhead);
+            futureDate.setHours(0, 0, 0, 0);
+            
+            const futureDayName = workDayNames[futureDate.getDay()];
+            if (this.settings.workingDays[futureDayName]) {
+                if (this.settings.useComplexSchedule && this.settings.complexSchedule && this.settings.complexSchedule[futureDayName]) {
+                    const ranges = this.settings.complexSchedule[futureDayName];
+                    if (ranges.length > 0) {
+                        const [startHour, startMin] = ranges[0].start.split(':').map(Number);
+                        futureDate.setHours(startHour, startMin, 0, 0);
+                        return futureDate;
+                    }
+                } else {
+                    // Simple schedule
+                    const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
+                    futureDate.setHours(startHour, startMin, 0, 0);
+                    return futureDate;
+                }
+            }
+        }
+        
+        return null; // No working periods found
+    }
+
+    /**
+     * Check if current time is within activity hours
+     * @param {Date} [time] - Optional time to check, defaults to current time
+     * @returns {boolean} True if within activity hours
+     */
+    isWithinWorkingHours(time = new Date()) {
+        const currentTime = time.getHours() * 60 + time.getMinutes();
+        const dayName = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][time.getDay()];
+
+        // Check if it's a working day (always check this first)
+        if (!this.settings.workingDays[dayName]) {
+            return false;
+        }
+
+        // Use complex schedule if enabled
+        if (this.settings.useComplexSchedule && this.settings.complexSchedule && this.settings.complexSchedule[dayName]) {
+            const ranges = this.settings.complexSchedule[dayName];
+            if (!ranges || ranges.length === 0) {
+                return false; // No activity hours defined for this day
+            }
+
+            // Check if current time falls within any of the defined ranges
+            return ranges.some(range => {
+                const [startHour, startMin] = range.start.split(':').map(Number);
+                const [endHour, endMin] = range.end.split(':').map(Number);
+                const startTime = startHour * 60 + startMin;
+                const endTime = endHour * 60 + endMin;
+                return currentTime >= startTime && currentTime <= endTime;
+            });
+        } else {
+            // Fall back to simple start/end time
+            const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
+            const [endHour, endMin] = this.settings.endTime.split(':').map(Number);
+            const startTime = startHour * 60 + startMin;
+            const endTime = endHour * 60 + endMin;
+            return currentTime >= startTime && currentTime <= endTime;
         }
     }
 
@@ -1668,15 +1803,19 @@ class ActivityTracker {
             return false;
         }
 
-        // Check if it's within working hours
-        const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
-        const [endHour, endMin] = this.settings.endTime.split(':').map(Number);
-        const startTime = startHour * 60 + startMin;
-        const endTime = endHour * 60 + endMin;
+        // Check if currently within activity hours
+        if (this.isWithinWorkingHours(now)) {
+            return true;
+        }
 
-        // Show countdown if we're within working hours or close to start time (within 2 hours)
-        return (currentTime >= startTime && currentTime <= endTime) || 
-               (currentTime < startTime && (startTime - currentTime) <= 120);
+        // Also show if close to start time (within 2 hours) - for simple schedule only
+        if (!this.settings.useComplexSchedule) {
+            const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
+            const startTime = startHour * 60 + startMin;
+            return currentTime < startTime && (startTime - currentTime) <= 120;
+        }
+
+        return false;
     }
 
     /**
@@ -1714,7 +1853,7 @@ class ActivityTracker {
         this.notificationCountdownTimer = setInterval(() => {
             this.showReminderBanner(); // Check banner visibility every second
             this.updateNotificationCountdown();
-            // Update pause button state to reflect working schedule changes
+            // Update pause button state to reflect activity schedule changes
             if (this.pauseManager) {
                 this.pauseManager.updatePauseButtonDisplay();
             }
@@ -1749,49 +1888,39 @@ class ActivityTracker {
             return;
         }
 
-        // Check if it's within working hours
-        const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
-        const [endHour, endMin] = this.settings.endTime.split(':').map(Number);
-        const startTime = startHour * 60 + startMin;
-        const endTime = endHour * 60 + endMin;
-
-        if (currentTime < startTime || currentTime > endTime) {
-            // Calculate time until work starts tomorrow or today
-            let timeUntilWork;
-            if (currentTime < startTime) {
-                // Work starts later today
-                timeUntilWork = startTime - currentTime;
-                timeRemainingEl.textContent = `Work starts in ${Math.floor(timeUntilWork / 60)}h ${timeUntilWork % 60}m`;
+        // Check if currently within activity hours
+        if (this.isWithinWorkingHours(now)) {
+            // Calculate time until next break or end of work
+            if (this.notificationTimer) {
+                const nextReminder = new Date(this.state.nextReminderTime || Date.now() + this.settings.notificationInterval * 60000);
+                const minutesUntil = Math.max(0, Math.ceil((nextReminder - now) / 60000));
+                timeRemainingEl.textContent = `Next reminder in ${minutesUntil}m`;
             } else {
-                // Work starts tomorrow (find next working day)
-                let daysToAdd = 1;
-                let nextWorkDay = (now.getDay() + daysToAdd) % 7;
-                const workDayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                
-                while (!this.settings.workingDays[workDayNames[nextWorkDay]] && daysToAdd < 7) {
-                    daysToAdd++;
-                    nextWorkDay = (now.getDay() + daysToAdd) % 7;
-                }
-                
-                if (daysToAdd >= 7) {
-                    timeRemainingEl.textContent = 'No working days';
-                    return;
-                }
-                
-                const minutesUntilMidnight = (24 * 60) - currentTime;
-                const minutesFromMidnightToWork = startTime;
-                const totalMinutes = minutesUntilMidnight + minutesFromMidnightToWork + ((daysToAdd - 1) * 24 * 60);
-                
-                if (daysToAdd === 1) {
-                    timeRemainingEl.textContent = `Work starts tomorrow in ${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`;
-                } else {
-                    timeRemainingEl.textContent = `Next work day in ${daysToAdd} days`;
-                }
+                timeRemainingEl.textContent = 'Ready to start';
             }
             return;
         }
 
-        // We're in working hours - calculate time until next reminder based on actual last reminder time
+        // Not currently in activity hours - find next activity period
+        const nextWorkTime = this.getNextWorkingTime(now);
+        if (nextWorkTime) {
+            const minutesUntil = Math.ceil((nextWorkTime - now) / 60000);
+            const hoursUntil = Math.floor(minutesUntil / 60);
+            const minutesRemaining = minutesUntil % 60;
+            
+            if (minutesUntil < 60) {
+                timeRemainingEl.textContent = `Work starts in ${minutesUntil}m`;
+            } else if (hoursUntil < 24) {
+                timeRemainingEl.textContent = `Work starts in ${hoursUntil}h ${minutesRemaining}m`;
+            } else {
+                const daysUntil = Math.floor(hoursUntil / 24);
+                timeRemainingEl.textContent = `Next work day in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`;
+            }
+        } else {
+            timeRemainingEl.textContent = 'No activity days scheduled';
+        }
+
+        // We're in activity hours - calculate time until next reminder based on actual last reminder time
         const lastReminderTime = localStorage.getItem('lastNotificationTime');
         const intervalMs = this.settings.notificationInterval * 60 * 1000;
         
@@ -2101,14 +2230,9 @@ class ActivityTracker {
             return;
         }
 
-        // Check if it's within working hours
-        const [startHour, startMin] = this.settings.startTime.split(':').map(Number);
-        const [endHour, endMin] = this.settings.endTime.split(':').map(Number);
-        const startTime = startHour * 60 + startMin;
-        const endTime = endHour * 60 + endMin;
-
-        if (currentTime < startTime || currentTime > endTime) {
-            console.log('Skipping reminder - outside working hours');
+        // Check if it's within activity hours using new method
+        if (!this.isWithinWorkingHours(now)) {
+            console.log('Skipping reminder - outside activity hours');
             return;
         }
 

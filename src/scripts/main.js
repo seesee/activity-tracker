@@ -1731,9 +1731,9 @@ function togglePause() {
     if (tracker) {
         const pauseButton = document.getElementById('pauseButton');
         
-        // Check if button shows "Outside working hours" and show info modal
-        if (pauseButton && pauseButton.textContent === 'Outside working hours') {
-            showWorkingHoursInfo();
+        // Check if button shows "Outside activity hours" and show info modal
+        if (pauseButton && pauseButton.textContent === 'Outside activity hours') {
+            showActivityHoursInfo();
             return;
         }
         
@@ -1758,43 +1758,43 @@ function togglePause() {
 }
 
 /**
- * Show working hours information modal
+ * Show activity hours information modal
  */
-function showWorkingHoursInfo() {
-    const modal = document.getElementById('workingHoursInfoModal');
+function showActivityHoursInfo() {
+    const modal = document.getElementById('activityHoursInfoModal');
     if (modal) {
         modal.style.display = 'block';
     }
 }
 
 /**
- * Close working hours information modal
+ * Close activity hours information modal
  */
-function closeWorkingHoursInfo() {
-    const modal = document.getElementById('workingHoursInfoModal');
+function closeActivityHoursInfo() {
+    const modal = document.getElementById('activityHoursInfoModal');
     if (modal) {
         modal.style.display = 'none';
     }
 }
 
 /**
- * Navigate to working hours settings
+ * Navigate to activity hours settings
  */
-function goToWorkingHoursSettings() {
+function goToActivityHoursSettings() {
     // Close the modal first
-    closeWorkingHoursInfo();
+    closeActivityHoursInfo();
     
     // Switch to settings section
     showSection('settings');
     
-    // Scroll to the working hours settings
+    // Scroll to the activity hours settings
     setTimeout(() => {
-        const workingHoursSection = document.querySelector('.settings-section h3');
-        if (workingHoursSection) {
-            // Look for the Working Schedule section
+        const activityHoursSection = document.querySelector('.settings-section h3');
+        if (activityHoursSection) {
+            // Look for the Activity Schedule section
             const sections = document.querySelectorAll('.settings-section h3');
             for (let section of sections) {
-                if (section.textContent.includes('Working Schedule') || section.textContent.includes('Schedule')) {
+                if (section.textContent.includes('Activity Schedule') || section.textContent.includes('Schedule')) {
                     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     // Add a subtle highlight effect
                     section.parentElement.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
@@ -2536,7 +2536,7 @@ document.addEventListener('keydown', (e) => {
         const confirmationModal = document.getElementById('confirmationModal');
         const hashtagBrowserModal = document.getElementById('hashtagBrowserModal');
         const userGuideModal = document.getElementById('userGuideModal');
-        const workingHoursInfoModal = document.getElementById('workingHoursInfoModal');
+        const activityHoursInfoModal = document.getElementById('activityHoursInfoModal');
         
         if (templateGuideModal && templateGuideModal.style.display === 'block') {
             closeTemplateGuide();
@@ -2552,8 +2552,8 @@ document.addEventListener('keydown', (e) => {
             closeHashtagBrowser();
         } else if (userGuideModal && userGuideModal.style.display === 'block') {
             closeUserGuide();
-        } else if (workingHoursInfoModal && workingHoursInfoModal.style.display === 'block') {
-            closeWorkingHoursInfo();
+        } else if (activityHoursInfoModal && activityHoursInfoModal.style.display === 'block') {
+            closeActivityHoursInfo();
         } else if (document.getElementById('overdueAlertModal') && document.getElementById('overdueAlertModal').style.display === 'block') {
             closeOverdueAlert();
         } else if (editModal && editModal.style.display === 'block') {
@@ -2795,6 +2795,129 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// ==================== COMPLEX SCHEDULE MANAGEMENT ====================
+
+/**
+ * Toggle between simple and complex schedule modes
+ */
+function toggleScheduleMode() {
+    const useComplex = document.getElementById('useComplexSchedule').checked;
+    const simpleSchedule = document.getElementById('simpleSchedule');
+    const complexSchedule = document.getElementById('complexSchedule');
+    
+    if (useComplex) {
+        simpleSchedule.style.display = 'none';
+        complexSchedule.style.display = 'block';
+        // Populate complex schedule with current data
+        populateComplexSchedule();
+    } else {
+        simpleSchedule.style.display = 'block';
+        complexSchedule.style.display = 'none';
+    }
+    
+    // Update the setting
+    tracker.settings.useComplexSchedule = useComplex;
+    saveSettings();
+}
+
+/**
+ * Populate complex schedule UI with current data
+ */
+function populateComplexSchedule() {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    
+    days.forEach(day => {
+        const container = document.getElementById(`${day}-ranges`);
+        const ranges = tracker.settings.complexSchedule[day] || [];
+        
+        // Clear existing ranges
+        container.innerHTML = '';
+        
+        if (ranges.length === 0) {
+            container.innerHTML = '<div class="empty-schedule">No activity hours set for this day</div>';
+        } else {
+            ranges.forEach((range, index) => {
+                addTimeRangeElement(day, range.start, range.end, index);
+            });
+        }
+    });
+}
+
+/**
+ * Add a new time range for a specific day
+ */
+function addTimeRange(day) {
+    const ranges = tracker.settings.complexSchedule[day] || [];
+    const newRange = { start: '09:00', end: '17:00' };
+    ranges.push(newRange);
+    
+    // Update the tracker settings
+    tracker.settings.complexSchedule[day] = ranges;
+    saveSettings();
+    
+    // Update UI
+    const container = document.getElementById(`${day}-ranges`);
+    if (container.querySelector('.empty-schedule')) {
+        container.innerHTML = '';
+    }
+    
+    addTimeRangeElement(day, newRange.start, newRange.end, ranges.length - 1);
+}
+
+/**
+ * Add a time range element to the UI
+ */
+function addTimeRangeElement(day, startTime, endTime, index) {
+    const container = document.getElementById(`${day}-ranges`);
+    
+    const rangeDiv = document.createElement('div');
+    rangeDiv.className = 'time-range';
+    rangeDiv.dataset.index = index;
+    
+    rangeDiv.innerHTML = `
+        <input type="time" value="${startTime}" onchange="updateTimeRange('${day}', ${index}, 'start', this.value)">
+        <span class="range-separator">to</span>
+        <input type="time" value="${endTime}" onchange="updateTimeRange('${day}', ${index}, 'end', this.value)">
+        <button type="button" class="remove-range" onclick="removeTimeRange('${day}', ${index})" title="Remove this time range">×</button>
+    `;
+    
+    container.appendChild(rangeDiv);
+}
+
+/**
+ * Update a time range when inputs change
+ */
+function updateTimeRange(day, index, field, value) {
+    const ranges = tracker.settings.complexSchedule[day] || [];
+    if (ranges[index]) {
+        ranges[index][field] = value;
+        tracker.settings.complexSchedule[day] = ranges;
+        saveSettings();
+    }
+}
+
+/**
+ * Remove a time range
+ */
+function removeTimeRange(day, index) {
+    const ranges = tracker.settings.complexSchedule[day] || [];
+    ranges.splice(index, 1);
+    tracker.settings.complexSchedule[day] = ranges;
+    saveSettings();
+    
+    // Refresh the UI for this day
+    const container = document.getElementById(`${day}-ranges`);
+    container.innerHTML = '';
+    
+    if (ranges.length === 0) {
+        container.innerHTML = '<div class="empty-schedule">No activity hours set for this day</div>';
+    } else {
+        ranges.forEach((range, newIndex) => {
+            addTimeRangeElement(day, range.start, range.end, newIndex);
+        });
+    }
+}
+
 // ==================== WORKSPACE MANAGEMENT UI ====================
 
 /**
@@ -2998,7 +3121,11 @@ if (typeof module !== 'undefined' && module.exports) {
         createNewWorkspace,
         switchToWorkspace,
         renameWorkspacePrompt,
-        deleteWorkspacePrompt
+        deleteWorkspacePrompt,
+        toggleScheduleMode,
+        addTimeRange,
+        updateTimeRange,
+        removeTimeRange
     };
 }
 
@@ -3015,4 +3142,8 @@ if (typeof window !== 'undefined') {
     window.switchToWorkspace = switchToWorkspace;
     window.renameWorkspacePrompt = renameWorkspacePrompt;
     window.deleteWorkspacePrompt = deleteWorkspacePrompt;
+    window.toggleScheduleMode = toggleScheduleMode;
+    window.addTimeRange = addTimeRange;
+    window.updateTimeRange = updateTimeRange;
+    window.removeTimeRange = removeTimeRange;
 }

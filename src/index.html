@@ -557,26 +557,80 @@
                 </div>
 
                 <div class="settings-section">
-                    <h3>Working Schedule</h3>
-                    <p class="settings-description">Set your active working hours and days for notifications</p>
+                    <h3>Activity Schedule</h3>
+                    <p class="settings-description">Set your active activity hours and days for notifications</p>
                     
                     <div class="schedule-section">
-                        <h4>Working Hours</h4>
-                        <div class="time-inputs">
-                            <div class="form-group">
-                                <label for="startTime" title="When your work day starts">Start Time</label>
-                                <input type="time" id="startTime" value="08:00" onchange="saveSettings()">
+                        <div class="schedule-header">
+                            <h4>Activity Hours</h4>
+                            <div class="schedule-mode-toggle">
+                                <div class="checkbox-group inline">
+                                    <input type="checkbox" id="useComplexSchedule" onchange="toggleScheduleMode()">
+                                    <label for="useComplexSchedule" title="Enable complex scheduling with multiple time ranges per day">Complex Schedule</label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="endTime" title="When your work day ends">End Time</label>
-                                <input type="time" id="endTime" value="18:00" onchange="saveSettings()">
+                        </div>
+                        
+                        <!-- Simple Schedule (default) -->
+                        <div id="simpleSchedule" class="schedule-mode">
+                            <div class="time-inputs">
+                                <div class="form-group">
+                                    <label for="startTime" title="When your activity period starts">Start Time</label>
+                                    <input type="time" id="startTime" value="08:00" onchange="saveSettings()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="endTime" title="When your activity period ends">End Time</label>
+                                    <input type="time" id="endTime" value="18:00" onchange="saveSettings()">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Complex Schedule -->
+                        <div id="complexSchedule" class="schedule-mode" style="display: none;">
+                            <p class="settings-description">Set multiple time ranges for each day to accommodate complex schedules.</p>
+                            <div class="complex-schedule-container">
+                                <div class="day-schedule" data-day="monday">
+                                    <h5>Monday</h5>
+                                    <div class="time-ranges" id="monday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('monday')">+ Add Range</button>
+                                </div>
+                                <div class="day-schedule" data-day="tuesday">
+                                    <h5>Tuesday</h5>
+                                    <div class="time-ranges" id="tuesday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('tuesday')">+ Add Range</button>
+                                </div>
+                                <div class="day-schedule" data-day="wednesday">
+                                    <h5>Wednesday</h5>
+                                    <div class="time-ranges" id="wednesday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('wednesday')">+ Add Range</button>
+                                </div>
+                                <div class="day-schedule" data-day="thursday">
+                                    <h5>Thursday</h5>
+                                    <div class="time-ranges" id="thursday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('thursday')">+ Add Range</button>
+                                </div>
+                                <div class="day-schedule" data-day="friday">
+                                    <h5>Friday</h5>
+                                    <div class="time-ranges" id="friday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('friday')">+ Add Range</button>
+                                </div>
+                                <div class="day-schedule" data-day="saturday">
+                                    <h5>Saturday</h5>
+                                    <div class="time-ranges" id="saturday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('saturday')">+ Add Range</button>
+                                </div>
+                                <div class="day-schedule" data-day="sunday">
+                                    <h5>Sunday</h5>
+                                    <div class="time-ranges" id="sunday-ranges"></div>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('sunday')">+ Add Range</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="schedule-section">
-                        <h4>Working Days</h4>
-                        <div class="working-days-grid">
+                        <h4>Activity Days</h4>
+                        <div class="activity-days-grid">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="monday" checked onchange="saveSettings()">
                                 <label for="monday">Monday</label>
@@ -1308,30 +1362,30 @@ Tags: {{#each tags}}#{{this}} {{/each}}
         </div>
     </div>
 
-    <!-- Working Hours Info Modal -->
-    <div id="workingHoursInfoModal" class="modal">
+    <!-- Activity Hours Info Modal -->
+    <div id="activityHoursInfoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>⏰ Working Hours Information</h3>
-                <button class="btn-close" onclick="closeWorkingHoursInfo()">&times;</button>
+                <h3>⏰ Activity Hours Information</h3>
+                <button class="btn-close" onclick="closeActivityHoursInfo()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="working-hours-info">
-                    <p><strong>Reminder alerts are switched off outside of working hours.</strong></p>
-                    <p>To receive activity reminders, please update your work schedule in the settings section. You can customize:</p>
+                <div class="activity-hours-info">
+                    <p><strong>Reminder alerts are switched off outside of activity hours.</strong></p>
+                    <p>To receive activity reminders, please update your activity schedule in the settings section. You can customize:</p>
                     <ul>
-                        <li>Working days (Monday through Sunday)</li>
+                        <li>Activity days (Monday through Sunday)</li>
                         <li>Start and end times for each day</li>
                         <li>Different schedules for different days</li>
                     </ul>
-                    <p>When you're outside your configured working hours, reminders are automatically paused to avoid disrupting your personal time.</p>
+                    <p>When you're outside your configured activity hours, reminders are automatically paused to avoid disrupting your personal time.</p>
                 </div>
                 
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-primary" onclick="goToWorkingHoursSettings()">
-                        ⚙️ Configure Working Hours
+                    <button type="button" class="btn btn-primary" onclick="goToActivityHoursSettings()">
+                        ⚙️ Configure Activity Hours
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeWorkingHoursInfo()">Got It</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeActivityHoursInfo()">Got It</button>
                 </div>
             </div>
         </div>
@@ -1467,7 +1521,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     <div class="guide-section">
                         <h4>Settings & Customization</h4>
                         <ul>
-                            <li>Customize notification intervals and working hours</li>
+                            <li>Customize notification intervals and activity hours</li>
                             <li>Choose from multiple notification sounds</li>
                             <li>Switch between light/dark themes</li>
                             <li>Set pagination size for better navigation</li>

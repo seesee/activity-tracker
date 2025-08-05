@@ -264,7 +264,7 @@ class PauseManager {
     }
 
     /**
-     * Check if current time is within working schedule
+     * Check if current time is within activity schedule
      */
     isWithinWorkingSchedule() {
         const now = new Date();
@@ -276,13 +276,8 @@ class PauseManager {
             return false;
         }
 
-        // Check if it's within working hours
-        const [startHour, startMin] = this.tracker.settings.startTime.split(':').map(Number);
-        const [endHour, endMin] = this.tracker.settings.endTime.split(':').map(Number);
-        const startTime = startHour * 60 + startMin;
-        const endTime = endHour * 60 + endMin;
-
-        return currentTime >= startTime && currentTime <= endTime;
+        // Use the tracker's method for checking activity hours (supports complex schedules)
+        return this.tracker.isWithinWorkingHours(now);
     }
 
     /**
@@ -301,9 +296,9 @@ class PauseManager {
                 this.pauseButton.style.opacity = '';
                 this.pauseButton.style.cursor = '';
             } else {
-                // Notifications are on but outside working hours
-                this.pauseButton.textContent = 'Outside working hours';
-                this.pauseButton.title = 'Click to learn about working hours settings. Reminders are only available during your configured working schedule.';
+                // Notifications are on but outside activity hours
+                this.pauseButton.textContent = 'Outside activity hours';
+                this.pauseButton.title = 'Click to learn about activity hours settings. Reminders are only available during your configured activity schedule.';
                 this.pauseButton.disabled = false; // Keep enabled so events fire
                 this.pauseButton.style.background = '#9ca3af';
                 this.pauseButton.style.opacity = '0.6';
