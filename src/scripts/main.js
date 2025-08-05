@@ -520,9 +520,17 @@ function showHashtagBrowser() {
     // Generate hashtag cloud
     const hashtagFrequency = tracker.getHashtagFrequency();
     const cloudContainer = modal.querySelector('.hashtag-cloud');
+    const countElement = modal.querySelector('#hashtagCount');
     
-    if (Object.keys(hashtagFrequency).length === 0) {
-        cloudContainer.innerHTML = '<p>No hashtags found in your entries.</p>';
+    const hashtagCount = Object.keys(hashtagFrequency).length;
+    
+    // Update count display
+    if (countElement) {
+        countElement.textContent = `${hashtagCount} hashtag${hashtagCount !== 1 ? 's' : ''} found`;
+    }
+    
+    if (hashtagCount === 0) {
+        cloudContainer.innerHTML = '<p class="empty-state">No hashtags found. Add activities with #hashtags to see them here!</p>';
     } else {
         const maxFreq = Math.max(...Object.values(hashtagFrequency));
         const minFreq = Math.min(...Object.values(hashtagFrequency));
@@ -2787,6 +2795,164 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// ==================== WORKSPACE MANAGEMENT UI ====================
+
+/**
+ * Open workspace manager modal
+ */
+function openWorkspaceManager() {
+    const modal = document.getElementById('workspaceManagerModal');
+    if (modal && tracker) {
+        // Update current workspace name
+        const currentNameSpan = document.getElementById('currentWorkspaceName');
+        if (currentNameSpan) {
+            currentNameSpan.textContent = tracker.currentWorkspace;
+        }
+        
+        // Populate workspace list
+        populateWorkspaceList();
+        
+        modal.style.display = 'block';
+    }
+}
+
+/**
+ * Close workspace manager modal
+ */
+function closeWorkspaceManager() {
+    const modal = document.getElementById('workspaceManagerModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Clear input
+    const input = document.getElementById('newWorkspaceName');
+    if (input) {
+        input.value = '';
+    }
+}
+
+/**
+ * Populate the workspace list
+ */
+function populateWorkspaceList() {
+    const listContainer = document.getElementById('workspaceList');
+    if (!listContainer || !tracker) return;
+    
+    const workspaceNames = tracker.getWorkspaceNames();
+    
+    if (workspaceNames.length === 0) {
+        listContainer.innerHTML = '<p class="empty-state">No workspaces found.</p>';
+        return;
+    }
+    
+    let html = '';
+    workspaceNames.forEach(name => {
+        const isCurrent = name === tracker.currentWorkspace;
+        const isDefault = name === 'Default';
+        
+        html += `<div class="workspace-item ${isCurrent ? 'current' : ''}">
+            <div class="workspace-info">
+                <span class="workspace-name">${name}</span>
+                ${isCurrent ? '<span class="current-badge">Current</span>' : ''}
+            </div>
+            <div class="workspace-actions">
+                ${!isCurrent ? `<button class="btn btn-small btn-primary" onclick="switchToWorkspace('${name}')">Switch</button>` : ''}
+                ${!isDefault && !isCurrent ? `<button class="btn btn-small btn-secondary" onclick="renameWorkspacePrompt('${name}')">Rename</button>` : ''}
+                ${!isDefault && !isCurrent ? `<button class="btn btn-small btn-danger" onclick="deleteWorkspacePrompt('${name}')">Delete</button>` : ''}
+            </div>
+        </div>`;
+    });
+    
+    listContainer.innerHTML = html;
+}
+
+/**
+ * Create a new workspace
+ */
+function createNewWorkspace() {
+    const input = document.getElementById('newWorkspaceName');
+    if (!input || !tracker) return;
+    
+    const workspaceName = input.value.trim();
+    if (!workspaceName) {
+        alert('Please enter a workspace name');
+        return;
+    }
+    
+    if (tracker.createWorkspace(workspaceName)) {
+        input.value = '';
+        populateWorkspaceList();
+        console.log(`Created workspace: ${workspaceName}`);
+    }
+}
+
+/**
+ * Switch to a different workspace
+ */
+function switchToWorkspace(workspaceName) {
+    if (!tracker) return;
+    
+    tracker.switchWorkspace(workspaceName);
+    
+    // Update current workspace display
+    const currentNameSpan = document.getElementById('currentWorkspaceName');
+    if (currentNameSpan) {
+        currentNameSpan.textContent = workspaceName;
+    }
+    
+    // Refresh workspace list
+    populateWorkspaceList();
+    
+    console.log(`Switched to workspace: ${workspaceName}`);
+}
+
+/**
+ * Prompt to rename a workspace
+ */
+function renameWorkspacePrompt(oldName) {
+    const newName = prompt(`Rename workspace "${oldName}" to:`, oldName);
+    if (newName && newName.trim() && newName.trim() !== oldName) {
+        if (tracker && tracker.renameWorkspace(oldName, newName.trim())) {
+            populateWorkspaceList();
+            
+            // Update current workspace display if needed
+            const currentNameSpan = document.getElementById('currentWorkspaceName');
+            if (currentNameSpan && tracker.currentWorkspace === newName.trim()) {
+                currentNameSpan.textContent = newName.trim();
+            }
+            
+            console.log(`Renamed workspace ${oldName} to ${newName.trim()}`);
+        }
+    }
+}
+
+/**
+ * Prompt to delete a workspace
+ */
+function deleteWorkspacePrompt(workspaceName) {
+    if (confirm(`Are you sure you want to delete workspace "${workspaceName}"?\n\nThis action cannot be undone and will permanently delete all activities and settings in this workspace.`)) {
+        if (tracker && tracker.deleteWorkspace(workspaceName)) {
+            populateWorkspaceList();
+            console.log(`Deleted workspace: ${workspaceName}`);
+        }
+    }
+}
+
+/**
+ * Handle Enter key in workspace name input
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('newWorkspaceName');
+    if (input) {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                createNewWorkspace();
+            }
+        });
+    }
+});
+
 // Export for testing purposes
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -2826,7 +2992,13 @@ if (typeof module !== 'undefined' && module.exports) {
         resetTodoForm,
         resetNotesForm,
         adjustDueDate,
-        updateDueDateSectionVisibility
+        updateDueDateSectionVisibility,
+        openWorkspaceManager,
+        closeWorkspaceManager,
+        createNewWorkspace,
+        switchToWorkspace,
+        renameWorkspacePrompt,
+        deleteWorkspacePrompt
     };
 }
 
@@ -2837,4 +3009,10 @@ if (typeof window !== 'undefined') {
     window.resetNotesForm = resetNotesForm;
     window.adjustDueDate = adjustDueDate;
     window.updateDueDateSectionVisibility = updateDueDateSectionVisibility;
+    window.openWorkspaceManager = openWorkspaceManager;
+    window.closeWorkspaceManager = closeWorkspaceManager;
+    window.createNewWorkspace = createNewWorkspace;
+    window.switchToWorkspace = switchToWorkspace;
+    window.renameWorkspacePrompt = renameWorkspacePrompt;
+    window.deleteWorkspacePrompt = deleteWorkspacePrompt;
 }

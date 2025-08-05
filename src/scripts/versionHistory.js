@@ -5,6 +5,11 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "TBD",
+        date: "2025-08-05",
+        summary: "Added comprehensive workspace system for organizing separate projects with isolated data, settings, and state"
+    },
+    {
         commit: "eccb96b",
         date: "2025-08-05",
         summary: "UI refactor with split Add/Reset buttons, flexible due date controls, system theme default, and reorganized settings"
@@ -23,11 +28,6 @@ const VERSION_HISTORY = [
         commit: "9355fbb",
         date: "2025-08-04",
         summary: "Major UI overhaul with burger menu, responsive design, and enhanced entry forms"
-    },
-    {
-        commit: "85ee1a3",
-        date: "2025-08-04",
-        summary: "Navigation improvements, external link handling, version history, and user guide enhancements"
     }
 ];
 

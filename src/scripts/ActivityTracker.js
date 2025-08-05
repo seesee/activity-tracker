@@ -37,8 +37,8 @@ class ActivityTracker {
         }
         this.entries = entries;
 
-        // Initialize settings with defaults
-        this.settings = {
+        // Define default settings
+        this.defaultSettings = {
             notificationInterval: 60,
             startTime: '08:00',
             endTime: '18:00',
@@ -62,7 +62,12 @@ class ActivityTracker {
             darkModePreference: 'system', // 'light', 'dark', 'system'
             paginationSize: 20,
             warnOnActivityDelete: true,
-            warnOnSessionReset: true,
+            warnOnSessionReset: true
+        };
+
+        // Initialize settings with defaults
+        this.settings = {
+            ...this.defaultSettings,
             ...JSON.parse(localStorage.getItem('activitySettings') || '{}')
         };
 
@@ -75,6 +80,10 @@ class ActivityTracker {
         
         // Initialize application state
         this.state = this.loadState();
+        
+        // Initialize workspace system
+        this.currentWorkspace = localStorage.getItem('currentWorkspace') || 'Default';
+        this.initializeWorkspaces();
 
         this.init();
     }
@@ -95,6 +104,7 @@ class ActivityTracker {
         this.updateNotificationStatus();
         this.updateDebugInfo();
         this.updatePauseButtonState();
+        this.updateHeaderWorkspaceName();
         
         // Only start notifications if auto-start is enabled
         if (this.settings.autoStartAlerts) {
@@ -2255,27 +2265,9 @@ class ActivityTracker {
      */
     exportDatabase() {
         try {
-            const backupData = {
-                version: '1.0',
-                timestamp: new Date().toISOString(),
-                entries: this.entries,
-                settings: this.settings,
-                state: this.state
-            };
-
-            const jsonData = JSON.stringify(backupData, null, 2);
-            const blob = new Blob([jsonData], { type: 'application/json' });
-            
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `activity-tracker-backup-${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showNotification('Database exported successfully!', 'success');
+            // Export all workspaces instead of just current data
+            this.exportAllWorkspaces();
+            showNotification('All workspaces exported successfully!', 'success');
         } catch (error) {
             console.error('Error exporting database:', error);
             showNotification('Error exporting database: ' + error.message, 'error');
@@ -4039,5 +4031,259 @@ class ActivityTracker {
         
         this.hideHashtagSuggestions();
         input.focus();
+    }
+
+    // ==================== WORKSPACE MANAGEMENT ====================
+
+    /**
+     * Initialize workspace system
+     */
+    initializeWorkspaces() {
+        // Ensure workspaces object exists in localStorage
+        if (!localStorage.getItem('workspaces')) {
+            localStorage.setItem('workspaces', JSON.stringify({}));
+        }
+        
+        // If this is first time using workspaces, save current data as "Default"
+        const workspaces = JSON.parse(localStorage.getItem('workspaces'));
+        if (!workspaces.Default) {
+            this.saveCurrentWorkspaceData('Default');
+        }
+        
+        console.log(`Workspace system initialized. Current workspace: ${this.currentWorkspace}`);
+    }
+
+    /**
+     * Get list of all workspace names
+     */
+    getWorkspaceNames() {
+        const workspaces = JSON.parse(localStorage.getItem('workspaces') || '{}');
+        return Object.keys(workspaces).sort();
+    }
+
+    /**
+     * Save current application data to a workspace
+     */
+    saveCurrentWorkspaceData(workspaceName) {
+        const workspaces = JSON.parse(localStorage.getItem('workspaces') || '{}');
+        
+        // Save current data structure
+        workspaces[workspaceName] = {
+            data: {
+                activityEntries: JSON.parse(localStorage.getItem('activityEntries') || '[]'),
+                activitySettings: JSON.parse(localStorage.getItem('activitySettings') || '{}'),
+                activityState: JSON.parse(localStorage.getItem('activityState') || '{}')
+            },
+            lastModified: new Date().toISOString()
+        };
+        
+        localStorage.setItem('workspaces', JSON.stringify(workspaces));
+        console.log(`Saved current data to workspace: ${workspaceName}`);
+    }
+
+    /**
+     * Load workspace data into current application
+     */
+    loadWorkspaceData(workspaceName) {
+        const workspaces = JSON.parse(localStorage.getItem('workspaces') || '{}');
+        const workspace = workspaces[workspaceName];
+        
+        if (!workspace) {
+            console.error(`Workspace ${workspaceName} not found`);
+            return false;
+        }
+        
+        // Load workspace data into current storage
+        localStorage.setItem('activityEntries', JSON.stringify(workspace.data.activityEntries || []));
+        localStorage.setItem('activitySettings', JSON.stringify(workspace.data.activitySettings || {}));
+        localStorage.setItem('activityState', JSON.stringify(workspace.data.activityState || {}));
+        
+        console.log(`Loaded workspace: ${workspaceName}`);
+        return true;
+    }
+
+    /**
+     * Switch to a different workspace
+     */
+    switchWorkspace(targetWorkspaceName) {
+        if (targetWorkspaceName === this.currentWorkspace) {
+            console.log(`Already in workspace: ${targetWorkspaceName}`);
+            return;
+        }
+        
+        // Save current workspace data before switching
+        this.saveCurrentWorkspaceData(this.currentWorkspace);
+        
+        // Load target workspace data
+        if (this.loadWorkspaceData(targetWorkspaceName)) {
+            this.currentWorkspace = targetWorkspaceName;
+            localStorage.setItem('currentWorkspace', targetWorkspaceName);
+            
+            // Reload application data
+            this.entries = JSON.parse(localStorage.getItem('activityEntries') || '[]');
+            this.settings = {
+                ...this.defaultSettings,
+                ...JSON.parse(localStorage.getItem('activitySettings') || '{}')
+            };
+            this.state = this.loadState();
+            
+            // Re-initialize managers with new settings
+            if (this.pauseManager) {
+                this.pauseManager.updatePauseButtonDisplay();
+            }
+            if (this.pomodoroManager) {
+                this.pomodoroManager.updateUI();
+            }
+            
+            // Refresh UI
+            this.displayEntries();
+            this.displayTodos();
+            this.displayNotes();
+            this.loadSettings();
+            this.updateHeaderWorkspaceName();
+            
+            console.log(`Switched to workspace: ${targetWorkspaceName}`);
+        }
+    }
+
+    /**
+     * Create a new workspace
+     */
+    createWorkspace(workspaceName) {
+        if (!workspaceName || workspaceName.trim() === '') {
+            return false;
+        }
+        
+        const trimmedName = workspaceName.trim();
+        const workspaces = JSON.parse(localStorage.getItem('workspaces') || '{}');
+        
+        if (workspaces[trimmedName]) {
+            alert(`Workspace "${trimmedName}" already exists`);
+            return false;
+        }
+        
+        // Create new workspace with default settings structure
+        workspaces[trimmedName] = {
+            data: {
+                activityEntries: [],
+                activitySettings: { ...this.defaultSettings }, // Use default settings instead of empty object
+                activityState: {}
+            },
+            lastModified: new Date().toISOString()
+        };
+        
+        localStorage.setItem('workspaces', JSON.stringify(workspaces));
+        console.log(`Created new workspace: ${trimmedName}`);
+        return true;
+    }
+
+    /**
+     * Delete a workspace
+     */
+    deleteWorkspace(workspaceName) {
+        if (workspaceName === 'Default') {
+            alert('Cannot delete the Default workspace');
+            return false;
+        }
+        
+        if (workspaceName === this.currentWorkspace) {
+            alert('Cannot delete the currently active workspace');
+            return false;
+        }
+        
+        const workspaces = JSON.parse(localStorage.getItem('workspaces') || '{}');
+        if (!workspaces[workspaceName]) {
+            console.error(`Workspace ${workspaceName} not found`);
+            return false;
+        }
+        
+        delete workspaces[workspaceName];
+        localStorage.setItem('workspaces', JSON.stringify(workspaces));
+        console.log(`Deleted workspace: ${workspaceName}`);
+        return true;
+    }
+
+    /**
+     * Rename a workspace
+     */
+    renameWorkspace(oldName, newName) {
+        if (!newName || newName.trim() === '') {
+            return false;
+        }
+        
+        const trimmedNewName = newName.trim();
+        const workspaces = JSON.parse(localStorage.getItem('workspaces') || '{}');
+        
+        if (!workspaces[oldName]) {
+            console.error(`Workspace ${oldName} not found`);
+            return false;
+        }
+        
+        if (workspaces[trimmedNewName]) {
+            alert(`Workspace "${trimmedNewName}" already exists`);
+            return false;
+        }
+        
+        // Copy workspace data to new name
+        workspaces[trimmedNewName] = workspaces[oldName];
+        workspaces[trimmedNewName].lastModified = new Date().toISOString();
+        
+        // Remove old workspace
+        delete workspaces[oldName];
+        
+        // Update current workspace if it was renamed
+        if (this.currentWorkspace === oldName) {
+            this.currentWorkspace = trimmedNewName;
+            localStorage.setItem('currentWorkspace', trimmedNewName);
+            this.updateHeaderWorkspaceName();
+        }
+        
+        localStorage.setItem('workspaces', JSON.stringify(workspaces));
+        console.log(`Renamed workspace ${oldName} to ${trimmedNewName}`);
+        return true;
+    }
+
+    /**
+     * Export all workspaces data
+     */
+    exportAllWorkspaces() {
+        // Save current workspace before export
+        this.saveCurrentWorkspaceData(this.currentWorkspace);
+        
+        const allData = {
+            workspaces: JSON.parse(localStorage.getItem('workspaces') || '{}'),
+            currentWorkspace: this.currentWorkspace,
+            exportDate: new Date().toISOString(),
+            version: typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'Development'
+        };
+        
+        const dataStr = JSON.stringify(allData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `activity-tracker-all-workspaces-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        console.log('Exported all workspaces');
+    }
+
+    /**
+     * Update header to show workspace name
+     */
+    updateHeaderWorkspaceName() {
+        const header = document.querySelector('.header h1');
+        if (header) {
+            const baseTitle = 'Activity Tracker';
+            if (this.currentWorkspace && this.currentWorkspace !== 'Default') {
+                header.textContent = `${baseTitle} - ${this.currentWorkspace}`;
+            } else {
+                header.textContent = baseTitle;
+            }
+        }
     }
 }

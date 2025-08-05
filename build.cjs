@@ -225,7 +225,8 @@ class ActivityTrackerBuilder {
                         'openTemplateManager', 'closeTemplateManager', 'addNewTemplate', 'resetToDefaults',
                         'saveCurrentTemplate', 'deleteCurrentTemplate', 'duplicateCurrentTemplate',
                         'refreshTemplatePreview', 'saveAllTemplates', 'switchPreviewTab', 'switchReportPreviewTab', 'switchTemplateTab',
-                        'adjustDueDate', 'resetActivityForm', 'resetTodoForm', 'resetNotesForm', 'updateDueDateSectionVisibility'
+                        'adjustDueDate', 'resetActivityForm', 'resetTodoForm', 'resetNotesForm', 'updateDueDateSectionVisibility',
+                        'openWorkspaceManager', 'closeWorkspaceManager', 'createNewWorkspace', 'switchToWorkspace', 'renameWorkspacePrompt', 'deleteWorkspacePrompt'
                     ]
                 },
                 format: {

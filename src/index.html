@@ -53,6 +53,8 @@
                 <button class="burger-item" onclick="showSection('todo', event); closeBurgerMenu()"><span class="burger-emoji">✅</span><span class="burger-text">To Do</span></button>
                 <div class="burger-separator"></div>
                 <button class="burger-item" onclick="showSection('reports', event); closeBurgerMenu()"><span class="burger-emoji">📊</span><span class="burger-text">Reports</span></button>
+                <div class="burger-separator"></div>  
+                <button class="burger-item" onclick="openWorkspaceManager(); closeBurgerMenu()"><span class="burger-emoji">🏢</span><span class="burger-text">Workspaces</span></button>
                 <div class="burger-separator"></div>
                 <button class="burger-item" onclick="showSection('settings', event); closeBurgerMenu()"><span class="burger-emoji">⚙️</span><span class="burger-text">Settings...</span></button>
                 <button class="burger-item" onclick="showSection('diagnostics', event); closeBurgerMenu()"><span class="burger-emoji">🔧</span><span class="burger-text">Diagnostics</span></button>
@@ -1564,6 +1566,42 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                             </a>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workspace Manager Modal -->
+    <div id="workspaceManagerModal" class="modal">
+        <div class="modal-content workspace-manager-content">
+            <div class="modal-header">
+                <h3>🏢 Workspace Manager</h3>
+                <button class="btn-close" onclick="closeWorkspaceManager()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="workspace-info">
+                    <div class="current-workspace">
+                        <h4>Current Workspace: <span id="currentWorkspaceName">Default</span></h4>
+                        <p class="workspace-description">Each workspace maintains separate activities, settings, and state. Switch between workspaces to organize different projects or contexts.</p>
+                    </div>
+                </div>
+                
+                <div class="workspace-list-section">
+                    <h4>Available Workspaces</h4>
+                    <div class="workspace-list" id="workspaceList">
+                        <!-- Workspaces will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="workspace-actions">
+                    <div class="create-workspace">
+                        <input type="text" id="newWorkspaceName" placeholder="Enter workspace name..." maxlength="50">
+                        <button class="btn btn-primary" onclick="createNewWorkspace()">Create Workspace</button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeWorkspaceManager()">Close</button>
                 </div>
             </div>
         </div>
