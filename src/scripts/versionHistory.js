@@ -5,7 +5,7 @@
 
 const VERSION_HISTORY = [
     {
-        commit: "TBD",
+        commit: "5398868",
         date: "2025-08-05",
         summary: "Added comprehensive workspace system for organizing separate projects with isolated data, settings, and state"
     },
