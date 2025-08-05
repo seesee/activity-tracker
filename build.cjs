@@ -224,7 +224,8 @@ class ActivityTrackerBuilder {
                         'exportDatabase', 'importDatabase', 'handleImportFile', 'runServiceWorkerTest',
                         'openTemplateManager', 'closeTemplateManager', 'addNewTemplate', 'resetToDefaults',
                         'saveCurrentTemplate', 'deleteCurrentTemplate', 'duplicateCurrentTemplate',
-                        'refreshTemplatePreview', 'saveAllTemplates', 'switchPreviewTab', 'switchReportPreviewTab', 'switchTemplateTab'
+                        'refreshTemplatePreview', 'saveAllTemplates', 'switchPreviewTab', 'switchReportPreviewTab', 'switchTemplateTab',
+                        'adjustDueDate', 'resetActivityForm', 'resetTodoForm', 'resetNotesForm', 'updateDueDateSectionVisibility'
                     ]
                 },
                 format: {

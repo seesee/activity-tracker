@@ -59,7 +59,7 @@ class ActivityTracker {
             sendSystemNotifications: true, // Whether to send system notifications (only applies if hasRequestedNotificationPermission is true)
             soundMuteMode: 'none', // 'none', 'all', 'pomodoro', 'notifications'
             notificationSoundType: "classic",
-            darkModePreference: 'light', // 'light', 'dark', 'system'
+            darkModePreference: 'system', // 'light', 'dark', 'system'
             paginationSize: 20,
             warnOnActivityDelete: true,
             warnOnSessionReset: true,

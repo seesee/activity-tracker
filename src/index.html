@@ -127,14 +127,25 @@
                             <label for="dueDate">Due Date (optional)</label>
                             <input type="datetime-local" id="dueDate">
                             <div class="due-date-quick-sets">
-                                <button type="button" class="btn-quick-set" onclick="setDueDate('tomorrow')">Tomorrow</button>
-                                <button type="button" class="btn-quick-set" onclick="setDueDate('nextWeek')">Next Week</button>
-                                <button type="button" class="btn-quick-set" onclick="setDueDate('nextMonth')">Next Month</button>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'day')">-1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'day')">+1d</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'week')">-1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'week')">+1w</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'month')">-1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'month')">+1m</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="addEntryBtn">Add Entry</button>
-                    <button type="button" class="btn btn-secondary" onclick="addCurrentTime()">Use Current Time</button>
+                    <div class="form-actions-split">
+                        <button type="submit" class="btn btn-primary" id="addEntryBtn">Add Entry</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetActivityForm()">Reset</button>
+                    </div>
                 </form>
                 
                 <div class="section-separator"></div>
@@ -183,14 +194,25 @@
                             <label for="todoDueDate">Due Date (optional)</label>
                             <input type="datetime-local" id="todoDueDate">
                             <div class="due-date-quick-sets">
-                                <button type="button" class="btn-quick-set" onclick="setDueDateForTodo('tomorrow')">Tomorrow</button>
-                                <button type="button" class="btn-quick-set" onclick="setDueDateForTodo('nextWeek')">Next Week</button>
-                                <button type="button" class="btn-quick-set" onclick="setDueDateForTodo('nextMonth')">Next Month</button>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'day')">-1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'day')">+1d</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'week')">-1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'week')">+1w</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'month')">-1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'month')">+1m</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="todoAddEntryBtn">Add Todo</button>
-                    <button type="button" class="btn btn-secondary" onclick="addCurrentTimeForTodo()">Use Current Time</button>
+                    <div class="form-actions-split">
+                        <button type="submit" class="btn btn-primary" id="todoAddEntryBtn">Add Todo</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetTodoForm()">Reset</button>
+                    </div>
                 </form>
                 
                 <div class="section-separator"></div>
@@ -269,14 +291,25 @@
                             <label for="notesDueDate">Due Date (optional)</label>
                             <input type="datetime-local" id="notesDueDate">
                             <div class="due-date-quick-sets">
-                                <button type="button" class="btn-quick-set" onclick="setDueDateForNotes('tomorrow')">Tomorrow</button>
-                                <button type="button" class="btn-quick-set" onclick="setDueDateForNotes('nextWeek')">Next Week</button>
-                                <button type="button" class="btn-quick-set" onclick="setDueDateForNotes('nextMonth')">Next Month</button>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'day')">-1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'day')">+1d</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'week')">-1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'week')">+1w</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'month')">-1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'month')">+1m</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="notesAddEntryBtn">Add Note</button>
-                    <button type="button" class="btn btn-secondary" onclick="addCurrentTimeForNotes()">Use Current Time</button>
+                    <div class="form-actions-split">
+                        <button type="submit" class="btn btn-primary" id="notesAddEntryBtn">Add Note</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetNotesForm()">Reset</button>
+                    </div>
                 </form>
                 
                 <div class="section-separator"></div>
@@ -351,10 +384,19 @@
                         <select id="reportTemplate" onchange="tracker.previewReport()"></select>
                     </div>
                     <div class="form-group">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="includeIncompleteTodos" onchange="tracker.generateReport()">
-                            <label for="includeIncompleteTodos" title="Include uncompleted todo items in the report">Include incomplete todos</label>
-                        </div>
+                        <label for="includeTodos">Todo Items:</label>
+                        <select id="includeTodos" onchange="tracker.generateReport()">
+                            <option value="exclude">Exclude all todos</option>
+                            <option value="incomplete">Include incomplete todos only</option>
+                            <option value="all">Include all todos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="includeNotes">Notes:</label>
+                        <select id="includeNotes" onchange="tracker.generateReport()">
+                            <option value="exclude">Exclude notes</option>
+                            <option value="include">Include notes</option>
+                        </select>
                     </div>
                     <div class="download-actions">
                         <button class="btn btn-success" onclick="downloadReport()" title="Download the generated report">Download Report</button>
@@ -387,6 +429,19 @@
                     Select a date range and generate a report to see a preview.
                 </div>
             </div>
+            
+            <!-- Report Templates Management -->
+            <div class="report-templates-section">
+                <div class="settings-card">
+                    <h3>Report Templates</h3>
+                    <p class="card-description">Manage templates for report generation</p>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="openTemplateManager()" title="Open the template editor to create and modify report templates">Manage Templates</button>
+                        <button class="btn btn-secondary" onclick="resetReportTemplates()" title="Restore all templates to their original default versions">Reset to Default</button>
+                        <button class="btn btn-info" onclick="showTemplateGuide()" title="View help documentation for template syntax and available data">📋 Template Guide</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Settings Section -->
@@ -413,9 +468,9 @@
                     <div class="form-group">
                         <label for="darkModePreference" title="Choose your colour theme preference">Colour Theme</label>
                         <select id="darkModePreference" onchange="saveSettings()">
+                            <option value="system">Follow system settings</option>
                             <option value="light">Light mode</option>
                             <option value="dark">Dark mode</option>
-                            <option value="system">Follow system settings</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -709,16 +764,6 @@
             <div class="data-management-section">
                 <div class="data-management-grid">
                     <div class="settings-card">
-                        <h3>Report Templates</h3>
-                        <p class="card-description">Manage templates for report generation</p>
-                        <div class="card-actions">
-                            <button class="btn btn-primary" onclick="openTemplateManager()" title="Open the template editor to create and modify report templates">Manage Templates</button>
-                            <button class="btn btn-secondary" onclick="resetReportTemplates()" title="Restore all templates to their original default versions">Reset to Default</button>
-                            <button class="btn btn-info" onclick="showTemplateGuide()" title="View help documentation for template syntax and available data">📋 Template Guide</button>
-                        </div>
-                    </div>
-
-                    <div class="settings-card">
                         <h3>Database Backup</h3>
                         <p class="card-description">Export or import your activity data</p>
                         <div class="card-actions">
@@ -889,9 +934,18 @@
                             <label for="editDueDate">Due Date (optional)</label>
                             <input type="datetime-local" id="editDueDate">
                             <div class="due-date-quick-sets">
-                                <button type="button" class="btn-quick-set" onclick="setEditDueDate('tomorrow')">Tomorrow</button>
-                                <button type="button" class="btn-quick-set" onclick="setEditDueDate('nextWeek')">Next Week</button>
-                                <button type="button" class="btn-quick-set" onclick="setEditDueDate('nextMonth')">Next Month</button>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('editDueDate', -1, 'day')">-1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('editDueDate', 1, 'day')">+1d</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('editDueDate', -1, 'week')">-1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('editDueDate', 1, 'week')">+1w</button>
+                                </div>
+                                <div class="due-date-group">
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('editDueDate', -1, 'month')">-1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('editDueDate', 1, 'month')">+1m</button>
+                                </div>
                             </div>
                         </div>
                     </div>

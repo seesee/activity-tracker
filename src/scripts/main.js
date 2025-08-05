@@ -284,11 +284,28 @@ function positionBurgerMenu() {
     
     if (!burgerMenu || !burgerAnchor) return;
     
+    // Ensure the anchor is visible and has layout
+    if (!burgerAnchor.offsetParent && burgerAnchor.style.display !== 'block') {
+        return;
+    }
+    
     const anchorRect = burgerAnchor.getBoundingClientRect();
     
+    // Check if anchor has valid dimensions
+    if (anchorRect.width === 0 && anchorRect.height === 0) {
+        return;
+    }
+    
     // Position burger menu relative to the anchor with some offset
-    burgerMenu.style.top = `${anchorRect.top + 10}px`;
-    burgerMenu.style.right = `${window.innerWidth - anchorRect.right + 10}px`;
+    const topPosition = Math.max(0, anchorRect.top + 10);
+    const rightPosition = Math.max(10, window.innerWidth - anchorRect.right + 10);
+    
+    burgerMenu.style.top = `${topPosition}px`;
+    burgerMenu.style.right = `${rightPosition}px`;
+    
+    // Ensure burger menu is visible after positioning
+    burgerMenu.style.visibility = 'visible';
+    burgerMenu.style.opacity = '1';
 }
 
 /**
@@ -772,6 +789,44 @@ function toggleNoteModeForNotes() {
 // === Helper Functions for New Forms ===
 
 /**
+ * Adjust due date by adding or subtracting time periods
+ * @param {string} inputId - ID of the datetime input field
+ * @param {number} amount - Amount to adjust (positive or negative)
+ * @param {string} unit - 'day', 'week', or 'month'
+ */
+function adjustDueDate(inputId, amount, unit) {
+    const dueDateInput = document.getElementById(inputId);
+    if (!dueDateInput) return;
+
+    // Use current date from input field, or current time if empty
+    let baseDate;
+    if (dueDateInput.value) {
+        baseDate = new Date(dueDateInput.value);
+    } else {
+        baseDate = new Date();
+        baseDate.setHours(9, 0, 0, 0); // Default to 9 AM for new dates
+    }
+
+    let newDate = new Date(baseDate);
+
+    switch (unit) {
+        case 'day':
+            newDate.setDate(baseDate.getDate() + amount);
+            break;
+        case 'week':
+            newDate.setDate(baseDate.getDate() + (amount * 7));
+            break;
+        case 'month':
+            newDate.setMonth(baseDate.getMonth() + amount);
+            break;
+        default:
+            return;
+    }
+
+    dueDateInput.value = newDate.toISOString().slice(0, 16);
+}
+
+/**
  * Set due date for todo form
  */
 function setDueDateForTodo(preset) {
@@ -797,6 +852,154 @@ function addCurrentTimeForTodo() {
  */
 function addCurrentTimeForNotes() {
     setCurrentDateTime('notesTimestamp');
+}
+
+/**
+ * Update due date section visibility for main activity form
+ */
+function updateDueDateSectionVisibility() {
+    const todoBtn = document.getElementById('todoToggleBtn');
+    const dueDateSection = document.getElementById('dueDateSection');
+    
+    if (dueDateSection) {
+        // Show due date section only if todo mode is active
+        if (todoBtn && todoBtn.classList.contains('active')) {
+            dueDateSection.style.display = 'block';
+        } else {
+            dueDateSection.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * Reset activity form to defaults
+ */
+function resetActivityForm() {
+    const form = document.getElementById('activityForm');
+    if (form) {
+        // Clear due date first (before form.reset() which might not clear datetime-local properly)
+        const dueDateInput = document.getElementById('dueDate');
+        if (dueDateInput) {
+            dueDateInput.value = '';
+        }
+        
+        form.reset();
+        
+        // Set timestamp to current time
+        setCurrentDateTime('timestamp');
+        
+        // Explicitly clear due date again to ensure it's null
+        if (dueDateInput) {
+            dueDateInput.value = '';
+        }
+        
+        // Reset todo/note buttons
+        const todoBtn = document.getElementById('todoToggleBtn');
+        const noteBtn = document.getElementById('noteToggleBtn');
+        if (todoBtn) {
+            todoBtn.classList.remove('active');
+            todoBtn.textContent = 'Mark as Todo';
+        }
+        if (noteBtn) {
+            noteBtn.classList.remove('active');
+            noteBtn.textContent = 'Mark as Note';
+        }
+        // Reset due date section visibility
+        updateDueDateSectionVisibility();
+    }
+}
+
+/**
+ * Reset todo form to defaults
+ */
+function resetTodoForm() {
+    const form = document.getElementById('todoActivityForm');
+    if (form) {
+        // Clear due date first (before form.reset() which might not clear datetime-local properly)
+        const dueDateInput = document.getElementById('todoDueDate');
+        if (dueDateInput) {
+            dueDateInput.value = '';
+        }
+        
+        form.reset();
+        
+        // Set timestamp to current time
+        setCurrentDateTime('todoTimestamp');
+        
+        // Explicitly clear due date again to ensure it's null
+        if (dueDateInput) {
+            dueDateInput.value = '';
+        }
+        
+        // Reset todo/note buttons but keep todo active (this is the todo section)
+        const todoBtn = document.getElementById('todoTodoToggleBtn');
+        const noteBtn = document.getElementById('todoNoteToggleBtn');
+        if (todoBtn) {
+            todoBtn.classList.add('active');
+            todoBtn.textContent = 'Mark as Todo ✓';
+        }
+        if (noteBtn) {
+            noteBtn.classList.remove('active');
+            noteBtn.textContent = 'Mark as Note';
+        }
+        // Keep due date section visible since todo mode is active
+        const dueDateSection = document.getElementById('todoDueDateSection');
+        if (dueDateSection) {
+            dueDateSection.style.display = 'block';
+        }
+    }
+}
+
+/**
+ * Reset notes form to defaults
+ */
+function resetNotesForm() {
+    const form = document.getElementById('notesActivityForm');
+    if (form) {
+        // Clear due date first (before form.reset() which might not clear datetime-local properly)
+        const dueDateInput = document.getElementById('notesDueDate');
+        if (dueDateInput) {
+            dueDateInput.value = '';
+        }
+        
+        form.reset();
+        
+        // Set timestamp to current time
+        setCurrentDateTime('notesTimestamp');
+        
+        // Explicitly clear due date again to ensure it's null
+        if (dueDateInput) {
+            dueDateInput.value = '';
+        }
+        
+        // Reset todo/note buttons but keep note active (this is the notes section)
+        const todoBtn = document.getElementById('notesTodToggleBtn');
+        const noteBtn = document.getElementById('notesNoteToggleBtn');
+        if (todoBtn) {
+            todoBtn.classList.remove('active');
+            todoBtn.textContent = 'Mark as Todo';
+        }
+        if (noteBtn) {
+            noteBtn.classList.add('active');
+            noteBtn.textContent = 'Mark as Note ✓';
+        }
+        // Hide due date section since notes don't use due dates by default
+        const dueDateSection = document.getElementById('notesDueDateSection');
+        if (dueDateSection) {
+            dueDateSection.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * Initialize all form timestamps to current time on page load
+ */
+function initializeFormTimestamps() {
+    // Set all timestamp fields to current time
+    const timestampFields = ['timestamp', 'todoTimestamp', 'notesTimestamp'];
+    timestampFields.forEach(fieldId => {
+        setCurrentDateTime(fieldId);
+    });
 }
 
 /**
@@ -2133,6 +2336,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create tracker instance
     tracker = new ActivityTracker();
     
+    // Initialize form timestamps to current time
+    initializeFormTimestamps();
+    
     // Register service worker if supported
     if ('serviceWorker' in navigator) {
         // Check if we're on a supported protocol
@@ -2236,10 +2442,43 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Activity Tracker initialized successfully');
 });
 
-// Handle window resize to reposition burger menu
+// Handle window resize and state changes to reposition burger menu
 window.addEventListener('resize', () => {
     positionBurgerMenu();
 });
+
+// Handle window state changes (maximize, restore, etc.)
+window.addEventListener('focus', () => {
+    // Small delay to ensure layout is complete after focus
+    setTimeout(positionBurgerMenu, 10);
+});
+
+// Additional fallback for various window state changes
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        setTimeout(positionBurgerMenu, 10);
+    }
+});
+
+// Force repositioning on orientation change (mobile)
+window.addEventListener('orientationchange', () => {
+    setTimeout(positionBurgerMenu, 100);
+});
+
+// Use requestAnimationFrame for smooth repositioning during animations
+function scheduleRepositioning() {
+    requestAnimationFrame(positionBurgerMenu);
+}
+
+// Monitor for layout changes using ResizeObserver if available
+if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => {
+        scheduleRepositioning();
+    });
+    
+    // Observe the document body for layout changes
+    resizeObserver.observe(document.body);
+}
 
 /**
  * Handle modal clicks (close when clicking outside)
@@ -2332,8 +2571,8 @@ document.addEventListener('keydown', (e) => {
     // Shift + Space focuses the activity input field and unfurls form if hidden
     if (e.shiftKey && e.key === ' ') {
         const activeElement = document.activeElement;
-        // Don't trigger if currently focused on description textarea
-        if (activeElement && activeElement.id === 'description') {
+        // Don't trigger if currently focused on any description textarea
+        if (activeElement && (activeElement.id === 'description' || activeElement.id === 'editDescription')) {
             return;
         }
         e.preventDefault();
@@ -2582,6 +2821,20 @@ if (typeof module !== 'undefined' && module.exports) {
         forceEnableNotifications,
         copyReportToClipboard,
         toggleBurgerMenu,
-        closeBurgerMenu
+        closeBurgerMenu,
+        resetActivityForm,
+        resetTodoForm,
+        resetNotesForm,
+        adjustDueDate,
+        updateDueDateSectionVisibility
     };
+}
+
+// Ensure critical functions are available globally for onclick handlers
+if (typeof window !== 'undefined') {
+    window.resetActivityForm = resetActivityForm;
+    window.resetTodoForm = resetTodoForm;
+    window.resetNotesForm = resetNotesForm;
+    window.adjustDueDate = adjustDueDate;
+    window.updateDueDateSectionVisibility = updateDueDateSectionVisibility;
 }

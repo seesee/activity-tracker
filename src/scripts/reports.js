@@ -125,20 +125,31 @@ Object.assign(ActivityTracker.prototype, {
         const end = new Date(endDateInput);
         end.setHours(23, 59, 59, 999);
 
-        const includeIncompleteTodos = document.getElementById('includeIncompleteTodos')?.checked || false;
+        const includeTodos = document.getElementById('includeTodos')?.value || 'exclude';
+        const includeNotes = document.getElementById('includeNotes')?.value || 'exclude';
         
         const filteredEntries = this.entries.filter(entry => {
             const entryDate = new Date(entry.timestamp);
             const isInDateRange = entryDate >= start && entryDate <= end;
             
-            // Exclude notes from reports
+            // Handle notes filtering
             if (entry.isNote) {
-                return false;
+                return includeNotes === 'include' && isInDateRange;
             }
             
-            // Exclude incomplete todos unless checkbox is checked
-            if (entry.isTodo && !includeIncompleteTodos) {
-                return false;
+            // Handle todos filtering
+            if (entry.isTodo) {
+                switch (includeTodos) {
+                    case 'exclude':
+                        return false;
+                    case 'incomplete':
+                        // Include incomplete todos (all todos are considered incomplete for now)
+                        return isInDateRange;
+                    case 'all':
+                        return isInDateRange;
+                    default:
+                        return false;
+                }
             }
             
             return isInDateRange;
