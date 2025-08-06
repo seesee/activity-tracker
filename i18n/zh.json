@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "简体中文",
+    "languageCode": "zh",
+    "locale": "zh-CN",
+    "filename": "index.zh.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "yyyy/MM/dd",
+      "long": "yyyy年M月d日",
+      "weekday": "EEEE",
+      "monthYear": "yyyy年M月"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ".",
+      "thousands": ",",
+      "currency": "¥"
+    }
+  },
+  "app": {
+    "title": "活动跟踪器",
+    "tagline": "任务日记、组织器和知识库",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "offline": "应用离线"
+  },
+  "navigation": {
+    "tracker": "📝 跟踪器",
+    "todo": "✅ 待办事项",
+    "notes": "📔 笔记",
+    "alert": "⚠️ 提醒",
+    "alertTitle": "查看逾期项目",
+    "startReminders": "开始提醒",
+    "startPomodoro": "🍅 开始番茄钟",
+    "settingsMenu": "设置菜单",
+    "burgerMenu": {
+      "tracker": "跟踪器",
+      "notes": "笔记",
+      "todo": "待办事项",
+      "reports": "报告",
+      "workspaces": "工作空间",
+      "settings": "设置...",
+      "diagnostics": "诊断",
+      "language": "语言",
+      "userGuide": "用户指南",
+      "about": "关于"
+    },
+    "pauseMenu": {
+      "minutes5": "5分钟",
+      "minutes15": "15分钟",
+      "minutes30": "30分钟",
+      "hour1": "1小时",
+      "hours2": "2小时",
+      "untilManualResume": "直到手动恢复"
+    }
+  },
+  "search": {
+    "placeholder": "搜索活动、任务和标签...",
+    "browseHashtags": "浏览标签",
+    "results": "搜索结果",
+    "noResults": "使用上方搜索栏查找活动、任务和标签。",
+    "resultCount": "{count}个结果",
+    "sortBy": "排序：",
+    "show": "显示：",
+    "filters": {
+      "relevance": "相关性",
+      "newestFirst": "最新优先",
+      "oldestFirst": "最旧优先",
+      "activityAZ": "活动A-Z",
+      "activityZA": "活动Z-A",
+      "allItems": "所有项目",
+      "activitiesOnly": "仅活动",
+      "todosOnly": "仅任务",
+      "completedOnly": "仅已完成"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "番茄钟模式已禁用",
+    "pause": "暂停",
+    "nextReminder": "下次活动提醒时间：",
+    "checkingNotifications": "检查通知状态...",
+    "remindersActiveWithSystem": "活动提醒已启用系统通知",
+    "remindersActiveWithSound": "活动提醒已启用声音提醒",
+    "turnOffReminders": "关闭活动提醒",
+    "remindersDisabled": "活动提醒已禁用",
+    "turnOnReminders": "开启活动提醒",
+    "paused": "已暂停",
+    "readyToStart": "准备开始"
+  },
+  "tracker": {
+    "title": "活动录入",
+    "hideShowForm": "隐藏/显示表单",
+    "activityLabel": "你在做什么？",
+    "activityPlaceholder": "例如：写报告、团队会议 #工作",
+    "descriptionLabel": "描述（可选）",
+    "descriptionPlaceholder": "关于此活动的其他详细信息",
+    "timeLabel": "时间",
+    "markTodoTitle": "标记为待办任务（Ctrl+T 切换）",
+    "markTodo": "标记为任务",
+    "markNoteTitle": "标记为笔记（Ctrl+N 切换）",
+    "markNote": "标记为笔记",
+    "removeFromTodos": "从任务中移除",
+    "removeFromNotes": "从笔记中移除",
+    "todoActive": "✓ 任务",
+    "noteActive": "✓ 笔记",
+    "dueDateLabel": "截止日期（可选）",
+    "dueDateQuickButtons": {
+      "minus1d": "-1天",
+      "plus1d": "+1天",
+      "minus1w": "-1周",
+      "plus1w": "+1周",
+      "minus1m": "-1月",
+      "plus1m": "+1月"
+    },
+    "addEntry": "添加条目",
+    "reset": "重置",
+    "recentEntries": "最近条目",
+    "previous": "‹ 上一页",
+    "next": "下一页 ›",
+    "placeholders": {
+      "trackerActivity": "例如：编写报告，团队会议 #工作",
+      "trackerDescription": "此活动的附加详情..."
+    }
+  },
+  "todo": {
+    "newTodo": "新任务",
+    "todoLabel": "你需要做什么？",
+    "todoPlaceholder": "例如：致电客户讨论项目、审查预算 #工作",
+    "descriptionLabel": "描述（可选）",
+    "descriptionPlaceholder": "关于此任务的其他详细信息",
+    "markTodoTitle": "标记为待办任务",
+    "markNoteTitle": "标记为笔记",
+    "addTodo": "添加任务",
+    "newTodoNote": "新任务笔记",
+    "todoNoteLabel": "你需要记录和做什么？",
+    "todoNoteDescription": "笔记详情和任务描述",
+    "addTodoNote": "添加任务笔记",
+    "todoList": "任务列表",
+    "filter": "筛选：",
+    "sortBy": "排序：",
+    "filters": {
+      "allTodos": "所有任务",
+      "dueToday": "今日到期",
+      "overdue": "已逾期",
+      "noDueDate": "无截止日期"
+    },
+    "sorting": {
+      "newestFirst": "最新优先",
+      "oldestFirst": "最旧优先",
+      "dueDateEarliest": "截止日期（最早）",
+      "dueDateLatest": "截止日期（最晚）",
+      "activityAZ": "活动A-Z",
+      "activityZA": "活动Z-A"
+    },
+    "todoCount": "{count}个任务",
+    "noTodos": "未找到任务。将活动添加为任务以在此处查看！",
+    "pagination": {
+      "previous": "← 上一页",
+      "next": "下一页 →",
+      "pageInfo": "第{current}页，共{total}页"
+    },
+    "markCompleteHelp": "点击\"标记为完成\"来完成任务",
+    "placeholders": {
+      "todoActivity": "例如：研究预算选项，审查会议议程 #工作",
+      "todoDescription": "记录您的笔记并描述需要完成的事情..."
+    }
+  },
+  "notes": {
+    "newNote": "新笔记",
+    "titleLabel": "笔记标题或主题",
+    "titlePlaceholder": "例如：会议笔记、项目想法 #头脑风暴",
+    "contentLabel": "笔记内容",
+    "contentPlaceholder": "在此处写下你的笔记内容...",
+    "addNote": "添加笔记",
+    "notesTitle": "笔记",
+    "filters": {
+      "allNotes": "所有笔记",
+      "today": "今天",
+      "thisWeek": "本周",
+      "thisMonth": "本月"
+    },
+    "sort": "排序：",
+    "sorting": {
+      "newestFirst": "最新优先",
+      "oldestFirst": "最旧优先",
+      "activityName": "活动名称"
+    },
+    "searchPlaceholder": "搜索笔记...",
+    "clear": "清除",
+    "noNotes": "未找到笔记。",
+    "placeholders": {
+      "noteActivity": "例如：会议笔记，项目想法 #头脑风暴",
+      "noteDescription": "在此处写下您的笔记内容、想法、观察或思考..."
+    }
+  },
+  "reports": {
+    "title": "活动报告",
+    "dateRange": "日期范围",
+    "dateRangeDescription": "选择报告的时间段",
+    "startDateTitle": "选择报告的开始日期",
+    "startDateLabel": "开始日期",
+    "endDateTitle": "选择报告的结束日期",
+    "endDateLabel": "结束日期",
+    "generateReportTitle": "为选定日期范围生成报告",
+    "generateReport": "生成报告",
+    "thisWeekTitle": "将日期范围设置为当前周",
+    "thisWeek": "本周",
+    "templateOptions": "模板和选项",
+    "templateOptionsDescription": "选择格式、选项并下载你的报告",
+    "reportTemplateTitle": "选择报告格式",
+    "reportTemplateLabel": "报告模板",
+    "todoItems": "任务项目：",
+    "todoOptions": {
+      "excludeAll": "排除所有任务",
+      "incompleteOnly": "仅包含未完成任务",
+      "includeAll": "包含所有任务"
+    },
+    "notes": "笔记：",
+    "noteOptions": {
+      "exclude": "排除笔记",
+      "include": "包含笔记"
+    },
+    "downloadReportTitle": "下载生成的报告",
+    "downloadReport": "下载报告",
+    "openNewTabTitle": "在新标签页中打开生成的报告",
+    "openNewTab": "在新标签页中打开",
+    "weekNavigation": {
+      "previous": "← 上一周",
+      "next": "下一周 →",
+      "weekOf": "{date}这一周"
+    },
+    "reportPreview": "报告预览",
+    "viewFormattedTitle": "查看报告的格式化输出",
+    "rendered": "已渲染",
+    "viewSourceTitle": "查看报告的原始源代码",
+    "source": "源码",
+    "copyReportTitle": "将报告内容复制到剪贴板",
+    "copyReport": "复制报告",
+    "selectDateRange": "选择日期范围并生成报告以查看预览。",
+    "reportTemplates": "报告模板",
+    "templatesDescription": "管理报告生成模板",
+    "manageTemplatesTitle": "打开模板编辑器创建和修改报告模板",
+    "manageTemplates": "管理模板",
+    "resetDefaultTitle": "将所有模板恢复到原始默认版本",
+    "resetDefault": "重置为默认",
+    "templateGuideTitle": "查看模板语法和可用数据的帮助文档",
+    "templateGuide": "📋 模板指南"
+  },
+  "settings": {
+    "title": "设置",
+    "enableReminders": "启用提醒",
+    "generalSettings": "常规设置",
+    "generalDescription": "适用于所有操作模式的设置",
+    "colourThemeTitle": "选择你的颜色主题首选项",
+    "colourTheme": "颜色主题",
+    "themeOptions": {
+      "system": "跟随系统设置",
+      "light": "浅色模式",
+      "dark": "深色模式"
+    },
+    "soundSettingsTitle": "选择要静音的声音",
+    "soundSettings": "声音设置",
+    "soundOptions": {
+      "allEnabled": "启用所有声音",
+      "muteAll": "静音所有声音",
+      "mutePomodoroOnly": "仅静音番茄钟声音",
+      "muteNotificationOnly": "仅静音通知声音"
+    },
+    "itemsPerPageTitle": "列表中每页显示的项目数",
+    "itemsPerPage": "每页项目数",
+    "itemsPerPageOptions": {
+      "10": "10个项目",
+      "20": "20个项目",
+      "30": "30个项目",
+      "50": "50个项目",
+      "100": "100个项目"
+    },
+    "systemNotificationsTitle": "向操作系统发送系统通知",
+    "systemNotifications": "系统通知",
+    "dateFormatTitle": "选择您偏好的日期显示格式",
+    "dateFormat": "日期格式",
+    "dateFormatOptions": {
+      "default": "默认（基于区域设置）",
+      "iso": "ISO 8601（YYYY-MM-DD）",
+      "us": "美国格式（MM/DD/YYYY）",
+      "european": "欧洲（DD/MM/YYYY）",
+      "short": "简短格式",
+      "long": "详细格式"
+    },
+    "yesNo": {
+      "yes": "是",
+      "no": "否"
+    },
+    "reminderSettings": "提醒设置",
+    "reminderIntervalTitle": "你接收活动提醒通知的频率",
+    "reminderInterval": "提醒间隔",
+    "intervals": {
+      "1min": "1分钟",
+      "2min": "2分钟",
+      "5min": "5分钟",
+      "15min": "15分钟",
+      "30min": "30分钟",
+      "1hour": "1小时",
+      "1.5hour": "1.5小时",
+      "2hour": "2小时",
+      "3hour": "3小时",
+      "4hour": "4小时"
+    },
+    "pauseResumeTitle": "警报暂停多长时间后自动恢复",
+    "pauseResume": "暂停时，恢复时间",
+    "never": "从不",
+    "autoStartTitle": "应用打开时自动启动提醒",
+    "autoStart": "应用打开时自动启动提醒",
+    "reminderSoundTitle": "选择提醒播放的声音",
+    "reminderSound": "提醒声音"
+  },
+  "schedule": {
+    "title": "活动安排",
+    "description": "设置你的活跃活动时间和天数用于通知",
+    "activityHours": "活动时间",
+    "complexScheduleTitle": "启用复杂调度，每天有多个时间段",
+    "complexSchedule": "复杂调度",
+    "startTimeTitle": "你的活动时间开始时间",
+    "startTime": "开始时间",
+    "endTimeTitle": "你的活动时间结束时间",
+    "endTime": "结束时间",
+    "complexDescription": "为每天设置多个时间段以适应复杂的时间表。",
+    "days": {
+      "monday": "周一",
+      "tuesday": "周二",
+      "wednesday": "周三",
+      "thursday": "周四",
+      "friday": "周五",
+      "saturday": "周六",
+      "sunday": "周日"
+    },
+    "addRange": "+ 添加时间段",
+    "activityDays": "活动日",
+    "datePreview": {
+      "prefix": "预览："
+    }
+  },
+  "pomodoro": {
+    "title": "番茄钟模式",
+    "description": "带自动通知的结构化工作/休息间隔",
+    "enableTitle": "启用番茄钟计时模式，带工作和休息提醒",
+    "enable": "启用番茄钟模式",
+    "workDurationTitle": "工作时段的分钟长度",
+    "workDuration": "工作时长（分钟）",
+    "workDurations": {
+      "15": "15分钟",
+      "20": "20分钟",
+      "25": "25分钟",
+      "30": "30分钟",
+      "45": "45分钟",
+      "60": "60分钟"
+    },
+    "shortBreakTitle": "短休息时段的分钟长度",
+    "shortBreak": "短休息时长（分钟）",
+    "shortBreakDurations": {
+      "3": "3分钟",
+      "5": "5分钟",
+      "10": "10分钟",
+      "15": "15分钟"
+    },
+    "longBreakTitle": "长休息时段的分钟长度",
+    "longBreak": "长休息时长（分钟）",
+    "sessionsBeforeLongTitle": "长休息前的工作会话数",
+    "sessionsBeforeLong": "长休息前的会话",
+    "sessionOptions": {
+      "2": "每2个会话",
+      "3": "每3个会话",
+      "4": "每4个会话",
+      "5": "每5个会话",
+      "6": "每6个会话"
+    },
+    "tickSounds": "滴答声",
+    "tickSoundTitle": "可选的滴答声，提醒你正在工作会话中",
+    "tickSoundType": "滴答声类型",
+    "tickOptions": {
+      "none": "无滴答声",
+      "soft": "柔和滴答声",
+      "classic": "经典滴答声",
+      "digital": "数字滴答声"
+    },
+    "tickIntervalTitle": "播放滴答声的间隔秒数",
+    "tickInterval": "滴答声间隔（秒）",
+    "tickIntervals": {
+      "off": "关闭（无滴答声）",
+      "1": "每1秒",
+      "2": "每2秒",
+      "3": "每3秒",
+      "5": "每5秒",
+      "10": "每10秒",
+      "15": "每15秒",
+      "30": "每30秒",
+      "60": "每60秒"
+    },
+    "announceSounds": "提示音",
+    "shortBreakAnnounceTitle": "短休息开始时播放的声音",
+    "shortBreakAnnounce": "短休息提示",
+    "longBreakAnnounceTitle": "长休息开始时播放的声音",
+    "longBreakAnnounce": "长休息提示",
+    "resumeWorkAnnounceTitle": "休息后恢复工作时播放的声音",
+    "resumeWorkAnnounce": "恢复工作提示",
+    "options": "选项",
+    "autoStartTitle": "自动开始下一个会话，无需手动干预",
+    "autoStart": "自动开始下一个会话",
+    "promptDescriptionsTitle": "提示输入活动描述并为工作会话创建日志条目",
+    "promptDescriptions": "提示输入工作会话描述",
+    "logBreaksTitle": "同时在活动跟踪器中记录休息会话",
+    "logBreaks": "同时记录休息会话",
+    "enableLongBreaksTitle": "完成多个会话后启用长休息",
+    "enableLongBreaks": "启用长休息",
+    "allowPausingTitle": "允许从横幅暂停番茄钟会话",
+    "allowPausing": "允许会话暂停",
+    "autoResetDailyTitle": "天数变化时自动将会话计数器重置为1",
+    "autoResetDaily": "每日自动重置会话",
+    "sessionManagement": "会话管理",
+    "resetCounterTitle": "将会话计数器重置为1",
+    "resetCounter": "重置会话计数器"
+  },
+  "dataManagement": {
+    "backup": "数据库备份",
+    "backupDescription": "导出或导入你的活动数据",
+    "exportDatabase": "导出数据库",
+    "importDatabase": "导入数据库",
+    "warningSettings": "警告设置",
+    "warningDescription": "为破坏性操作配置确认对话框",
+    "warnDeleteTitle": "删除活动时显示确认对话框",
+    "warnDelete": "删除活动时警告",
+    "warnResetTitle": "重置番茄钟会话计数器时显示确认对话框",
+    "warnReset": "重置会话时警告",
+    "forceManualSave": "强制手动保存"
+  },
+  "diagnostics": {
+    "title": "🔧 诊断",
+    "systemTests": "系统测试",
+    "systemTestsDescription": "测试各种系统组件和功能",
+    "notifications": "🔔 通知",
+    "testReminderTitle": "发送测试提醒",
+    "testReminder": "🧪 测试提醒",
+    "testSoundTitle": "播放测试提醒声音",
+    "testSound": "🔊 测试声音",
+    "refreshStatusTitle": "刷新提醒权限状态显示",
+    "refreshStatus": "🔄 刷新状态",
+    "forceEnableTitle": "强制显示通知权限对话框",
+    "forceEnable": "⚡ 强制启用",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "运行全面的Service Worker诊断",
+    "runDiagnostics": "🔍 运行诊断",
+    "dataManagement": "⚠️ 数据管理",
+    "dataWarning": "这些操作无法撤销",
+    "clearAllData": "🗑️ 清除所有数据"
+  },
+  "modals": {
+    "edit": {
+      "title": "编辑条目",
+      "activity": "活动",
+      "description": "描述",
+      "time": "时间",
+      "markTodo": "标记为任务",
+      "markNote": "标记为笔记",
+      "dueDate": "截止日期（可选）",
+      "update": "更新条目",
+      "cancel": "取消"
+    },
+    "templateManager": {
+      "title": "模板管理器",
+      "saveAll": "保存所有更改",
+      "close": "关闭",
+      "templates": "模板",
+      "addTemplate": "添加模板",
+      "resetAll": "全部重置",
+      "selectTemplate": "选择要编辑的模板",
+      "save": "保存",
+      "delete": "删除",
+      "duplicate": "复制",
+      "editor": "编辑器",
+      "preview": "预览",
+      "templateName": "模板名称",
+      "templateNamePlaceholder": "例如：我的自定义模板",
+      "description": "描述",
+      "descriptionPlaceholder": "模板的简要描述",
+      "outputType": "输出类型",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "纯文本"
+      },
+      "templateContent": "模板内容",
+      "templateContentPlaceholder": "在此输入你的模板内容...",
+      "setDefault": "设为默认模板",
+      "previewTitle": "预览",
+      "rendered": "已渲染",
+      "source": "源码",
+      "refresh": "刷新",
+      "selectTemplatePreview": "选择模板以查看预览"
+    },
+    "templateGuide": {
+      "title": "模板指南",
+      "activityDescription": "活动描述"
+    },
+    "pomodoroActivity": {
+      "title": "工作会话活动",
+      "activityLabel": "你将要做什么工作？",
+      "activityPlaceholder": "例如：写报告、会议准备",
+      "usePrevious": "使用上一个活动",
+      "descriptionLabel": "描述（可选）",
+      "descriptionPlaceholder": "关于此工作会话的其他详细信息",
+      "startSession": "开始工作会话",
+      "cancel": "取消"
+    },
+    "pomodoroAbandon": {
+      "title": "会话放弃",
+      "workedFor": "你工作了{minutes}分钟",
+      "saveQuestion": "你想保存这个部分会话中完成的工作吗？",
+      "activityLabel": "完成的活动",
+      "activityPlaceholder": "在这段时间里你做了什么工作？",
+      "descriptionLabel": "描述（可选）",
+      "descriptionPlaceholder": "关于你完成工作的其他详细信息",
+      "saveAbandon": "保存工作并放弃",
+      "justAbandon": "只是放弃"
+    },
+    "confirmation": {
+      "title": "确认操作",
+      "defaultMessage": "你确定要执行此操作吗？",
+      "dontAskAgain": "不再询问此类操作",
+      "confirm": "确认",
+      "cancel": "取消"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ 活动时间信息",
+      "alertsOff": "在活动时间之外，提醒警报被关闭。",
+      "configure": "⚙️ 配置活动时间",
+      "gotIt": "知道了"
+    },
+    "overdueAlert": {
+      "title": "⚠️ 逾期项目",
+      "message": "以下项目已超过截止日期：",
+      "gotIt": "知道了"
+    },
+    "hashtagBrowser": {
+      "title": "标签浏览器",
+      "count": "找到{count}个标签",
+      "noHashtags": "未找到标签。添加带有#标签的活动以在此处查看！"
+    },
+    "userGuide": {
+      "title": "用户指南",
+      "settingsCustomization": "设置和自定义"
+    },
+    "notificationSetup": {
+      "title": "启用系统通知？",
+      "appName": "活动跟踪器",
+      "enableOption": "✅ 启用系统通知",
+      "soundOption": "🔊 仅声音",
+      "enableButton": "启用系统通知",
+      "soundButton": "仅声音"
+    },
+    "about": {
+      "title": "关于活动跟踪器",
+      "appInfo": "应用信息",
+      "versionHistory": "版本历史",
+      "loadingVersion": "正在加载版本历史...",
+      "appName": "活动跟踪器",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ 在GitHub上查看"
+    },
+    "workspaceManager": {
+      "title": "🏢 工作空间管理器",
+      "currentWorkspace": "当前工作空间：{name}",
+      "description": "每个工作空间维护独立的活动、设置和状态...",
+      "availableWorkspaces": "可用工作空间",
+      "enterName": "输入工作空间名称...",
+      "createWorkspace": "创建工作空间",
+      "close": "关闭"
+    },
+    "languagePicker": {
+      "title": "🌐 选择语言"
+    }
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "yes": "是",
+    "no": "否",
+    "ok": "确定",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息",
+    "none": "无",
+    "all": "全部",
+    "today": "今天",
+    "yesterday": "昨天",
+    "tomorrow": "明天",
+    "thisWeek": "本周",
+    "thisMonth": "本月",
+    "minutes": "{count}分钟",
+    "hours": "{count}小时",
+    "days": "{count}天",
+    "weeks": "{count}周",
+    "months": "{count}个月",
+    "daysOfWeek": {
+      "monday": "星期一",
+      "tuesday": "星期二",
+      "wednesday": "星期三",
+      "thursday": "星期四",
+      "friday": "星期五",
+      "saturday": "星期六",
+      "sunday": "星期日"
+    },
+    "markComplete": "标记为完成",
+    "outsideActivityHours": "活动时间之外",
+    "todoTag": "待办",
+    "noteTag": "笔记"
+  }
+}

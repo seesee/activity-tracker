@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Начало работы</h4>
+        <p>Шаблоны используют простой синтаксис подстановки переменных с двойными фигурными скобками для создания динамических отчётов.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Базовый синтаксис</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Простая подстановка переменной</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Цикл по массивам</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Условный контент</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Синтаксис пайпов и цепочка функций</h4>
+        <p>Преобразуйте данные, используя синтаксис пайпов (<code>|</code>) для связывания нескольких функций вместе:</p>
+        
+        <h5>Базовый синтаксис пайпов</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Применить одно преобразование</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Связать несколько преобразований</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Передать параметры функциям</li>
+        </ul>
+
+        <h5>Доступные функции преобразования</h5>
+        <ul>
+            <li><code>date('format')</code> - Форматировать временные метки как даты
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Извлечь время из временных меток
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Экранировать специальные символы CSV
+                <ul>
+                    <li>Оборачивает текст в кавычки, если он содержит запятые, кавычки или переносы строк</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Удалить переносы строк из текста
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>Пример CSV-шаблона с цепочкой</h5>
+        <p>Как CSV-шаблон использует цепочку для создания чистого, правильно экранированного вывода:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Как это работает:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Преобразует временную метку в формат YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Извлекает часть времени</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Сначала удаляет переносы строк, затем экранирует для CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Тот же процесс для описаний</li>
+        </ul>
+
+        <h5>Порядок важен в цепочке!</h5>
+        <p>Функции применяются слева направо, поэтому порядок важен:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Сначала удалить переносы, затем экранировать</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Экранирование вначале может помешать удалению переносов</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Доступные данные</h4>
+        <p>Следующие данные доступны в ваших шаблонах:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - Заголовок отчёта</li>
+            <li><code>{{startDate}}</code> - Дата начала отчёта (отформатированная)</li>
+            <li><code>{{endDate}}</code> - Дата окончания отчёта (отформатированная)</li>
+            <li><code>{{totalEntries}}</code> - Общее количество записей активности</li>
+            <li><code>{{entries}}</code> - Массив всех записей активности</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Свойства записей</h4>
+        <p>Каждая запись в цикле <code>{{#each entries}}</code> имеет:</p>
+        <ul>
+            <li><code>{{activity}}</code> - Название активности</li>
+            <li><code>{{description}}</code> - Описание активности</li>
+            <li><code>{{timestamp}}</code> - Исходная временная метка ISO</li>
+            <li><code>{{formattedTime}}</code> - Красиво отформатированное время (напр. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Красиво отформатированная дата (напр. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Булево: true, если это элемент списка дел</li>
+            <li><code>{{tags}}</code> - Массив хештегов для данной записи</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Общие преобразования</h4>
+        <p>Преобразование временных меток и форматирование данных:</p>
+        <ul>
+            <li><strong>Форматы дат</strong>: Используйте <code>{{formattedDate}}</code> и <code>{{formattedTime}}</code> для удобочитаемых форматов</li>
+            <li><strong>Условный контент</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - показывать только если описание существует</li>
+            <li><strong>Цикл по тегам</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - отобразить все хештеги</li>
+            <li><strong>Фильтрация дел</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - отметить элементы списка дел</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Форматирование Markdown</h4>
+        <p>Используйте синтаксис Markdown для удобочитаемого форматирования:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Большой заголовок</li>
+            <li><code>## {{activity}}</code> - Средний заголовок</li>
+            <li><code>**{{activity}}**</code> - Жирный текст</li>
+            <li><code>*{{description}}*</code> - Курсивный текст</li>
+            <li><code>- {{activity}}</code> - Маркер списка</li>
+            <li><code>`{{formattedTime}}`</code> - Форматирование кода</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Пример шаблона</h4>
+        <pre><code># {{reportTitle}}
+С {{startDate}} по {{endDate}}
+
+Всего активностей: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Теги: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**ЭЛЕМЕНТ TODO**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Профессиональные советы</h4>
+        <ul>
+            <li><strong>HTML-шаблоны</strong>: Используйте для богатого форматирования со стилями CSS и сложными макетами</li>
+            <li><strong>Markdown-шаблоны</strong>: Идеально подходят для простой, читаемой документации</li>
+            <li><strong>CSV-шаблоны</strong>: Идеальны для анализа данных в электронных таблицах</li>
+            <li><strong>Функция предварительного просмотра</strong>: Всегда тестируйте свои шаблоны перед сохранением</li>
+            <li><strong>Пользовательские форматы</strong>: Комбинируйте несколько переменных для уникальных макетов</li>
+        </ul>
+    </div>
+</div>

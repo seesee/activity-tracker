@@ -13,7 +13,7 @@ class TemplatingEngine {
                 if (isNaN(date.getTime())) return '--:--';
                 return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
             },
-            datetime: (value) => new Date(value).toLocaleString('en-GB'),
+            datetime: (value) => formatDateTime(value),
             uppercase: (value) => String(value).toUpperCase(),
             lowercase: (value) => String(value).toLowerCase(),
             capitalize: (value) => String(value).charAt(0).toUpperCase() + String(value).slice(1),

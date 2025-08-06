@@ -297,7 +297,7 @@ class PauseManager {
                 this.pauseButton.style.cursor = '';
             } else {
                 // Notifications are on but outside activity hours
-                this.pauseButton.textContent = 'Outside activity hours';
+                this.pauseButton.textContent = "t('common.outsideActivityHours')";
                 this.pauseButton.title = 'Click to learn about activity hours settings. Reminders are only available during your configured activity schedule.';
                 this.pauseButton.disabled = false; // Keep enabled so events fire
                 this.pauseButton.style.background = '#9ca3af';

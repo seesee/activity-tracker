@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>入门指南</h4>
+        <p>模板使用简单的变量替换语法（双花括号）来创建动态报告。</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>基本语法</h4>
+        <ul>
+            <li><code>{{variable}}</code> - 简单变量替换</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - 循环遍历数组</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - 条件内容</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>管道语法和函数链</h4>
+        <p>使用管道语法（<code>|</code>）来连接多个函数以转换数据：</p>
+        
+        <h5>基本管道语法</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - 应用单个转换</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - 连接多个转换</li>
+            <li><code>{{ variable | function('parameter') }}</code> - 向函数传递参数</li>
+        </ul>
+
+        <h5>可用的转换函数</h5>
+        <ul>
+            <li><code>date('format')</code> - 将时间戳格式化为日期
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - 从时间戳中提取时间
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - 转义CSV特殊字符
+                <ul>
+                    <li>如果文本包含逗号、引号或换行符，则用引号包裹文本</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - 从文本中删除换行符
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>带有链式调用的CSV模板示例</h5>
+        <p>CSV模板如何使用链式调用来创建清洁、正确转义的输出：</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>工作原理：</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - 将时间戳转换为YYYY-MM-DD格式</li>
+            <li><code>entry.timestamp | time</code> - 提取时间部分</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - 首先删除换行符，然后转义CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - 描述使用相同流程</li>
+        </ul>
+
+        <h5>链式调用中顺序很重要！</h5>
+        <p>函数从左到右应用，因此顺序很重要：</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - 先删除换行，再转义</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - 先转义可能会干扰换行删除</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>可用数据</h4>
+        <p>在您的模板中可用的数据：</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - 报告标题</li>
+            <li><code>{{startDate}}</code> - 报告开始日期（已格式化）</li>
+            <li><code>{{endDate}}</code> - 报告结束日期（已格式化）</li>
+            <li><code>{{totalEntries}}</code> - 活动条目总数</li>
+            <li><code>{{entries}}</code> - 所有活动条目的数组</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>条目属性</h4>
+        <p><code>{{#each entries}}</code>循环中的每个条目都有：</p>
+        <ul>
+            <li><code>{{activity}}</code> - 活动名称</li>
+            <li><code>{{description}}</code> - 活动描述</li>
+            <li><code>{{timestamp}}</code> - 原始ISO时间戳</li>
+            <li><code>{{formattedTime}}</code> - 格式良好的时间（例如"2:30 PM"）</li>
+            <li><code>{{formattedDate}}</code> - 格式良好的日期（例如"Jan 15, 2025"）</li>
+            <li><code>{{isTodo}}</code> - 布尔值：如果这是待办事项则为true</li>
+            <li><code>{{tags}}</code> - 此条目的标签数组</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>常用转换</h4>
+        <p>转换时间戳和格式化数据：</p>
+        <ul>
+            <li><strong>日期格式</strong>：使用<code>{{formattedDate}}</code>和<code>{{formattedTime}}</code>获得易读格式</li>
+            <li><strong>条件内容</strong>：<code>{{#if description}}{{description}}{{/if}}</code> - 仅在描述存在时显示</li>
+            <li><strong>循环标签</strong>：<code>{{#each tags}}#{{this}} {{/each}}</code> - 显示所有标签</li>
+            <li><strong>待办事项过滤</strong>：<code>{{#if isTodo}}TODO: {{/if}}</code> - 标记待办事项</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Markdown格式</h4>
+        <p>使用Markdown语法进行可读格式化：</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - 大标题</li>
+            <li><code>## {{activity}}</code> - 中等标题</li>
+            <li><code>**{{activity}}**</code> - 粗体文本</li>
+            <li><code>*{{description}}*</code> - 斜体文本</li>
+            <li><code>- {{activity}}</code> - 项目符号</li>
+            <li><code>`{{formattedTime}}`</code> - 代码格式</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>示例模板</h4>
+        <pre><code># {{reportTitle}}
+从{{startDate}}到{{endDate}}
+
+活动总数：{{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+标签：{{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**待办事项**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>专业提示</h4>
+        <ul>
+            <li><strong>HTML模板</strong>：用于具有CSS样式和复杂布局的丰富格式</li>
+            <li><strong>Markdown模板</strong>：适合简单、可读的文档</li>
+            <li><strong>CSV模板</strong>：非常适合在电子表格中进行数据分析</li>
+            <li><strong>预览功能</strong>：保存前总是先测试您的模板</li>
+            <li><strong>自定义格式</strong>：组合多个变量以创建独特布局</li>
+        </ul>
+    </div>
+</div>

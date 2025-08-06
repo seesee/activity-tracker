@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Começando</h4>
+        <p>Os modelos usam uma sintaxe simples de substituição de variáveis com chaves duplas para criar relatórios dinâmicos.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Sintaxe básica</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Substituição de variável simples</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Loop através de arrays</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Conteúdo condicional</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Sintaxe de pipes e encadeamento de funções</h4>
+        <p>Transforme dados usando a sintaxe de pipe (<code>|</code>) para encadear múltiplas funções juntas:</p>
+        
+        <h5>Sintaxe básica de pipe</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Aplica uma única transformação</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Encadeia múltiplas transformações</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Passa parâmetros para as funções</li>
+        </ul>
+
+        <h5>Funções de transformação disponíveis</h5>
+        <ul>
+            <li><code>date('format')</code> - Formata timestamps como datas
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Extrai tempo dos timestamps
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Escapa caracteres especiais de CSV
+                <ul>
+                    <li>Envolve texto em aspas se contém vírgulas, aspas ou quebras de linha</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Remove quebras de linha do texto
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>Exemplo de modelo CSV com encadeamento</h5>
+        <p>Aqui está como o modelo CSV usa o encadeamento para criar saída limpa e corretamente escapada:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Como isto funciona:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Converte o timestamp para o formato YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Extrai a porção do tempo</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Primeiro remove quebras de linha, depois escapa para CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Mesmo processo para descrições</li>
+        </ul>
+
+        <h5>A ordem importa no encadeamento!</h5>
+        <p>As funções são aplicadas da esquerda para a direita, então a ordem é importante:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Remove quebras primeiro, depois escapa</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Escapar primeiro pode interferir com a remoção de quebras</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Dados disponíveis</h4>
+        <p>Os seguintes dados estão disponíveis em seus modelos:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - O título do relatório</li>
+            <li><code>{{startDate}}</code> - Data de início do relatório (formatada)</li>
+            <li><code>{{endDate}}</code> - Data de fim do relatório (formatada)</li>
+            <li><code>{{totalEntries}}</code> - Número total de entradas de atividade</li>
+            <li><code>{{entries}}</code> - Array de todas as entradas de atividade</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Propriedades das entradas</h4>
+        <p>Cada entrada no loop <code>{{#each entries}}</code> tem:</p>
+        <ul>
+            <li><code>{{activity}}</code> - O nome da atividade</li>
+            <li><code>{{description}}</code> - Descrição da atividade</li>
+            <li><code>{{timestamp}}</code> - Timestamp ISO bruto</li>
+            <li><code>{{formattedTime}}</code> - Tempo formatado elegantemente (ex. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Data formatada elegantemente (ex. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean: true se isso é um item todo</li>
+            <li><code>{{tags}}</code> - Array de hashtags para esta entrada</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Transformações comuns</h4>
+        <p>Transforme timestamps e formate dados:</p>
+        <ul>
+            <li><strong>Formatos de data</strong>: Use <code>{{formattedDate}}</code> e <code>{{formattedTime}}</code> para formatos legíveis por humanos</li>
+            <li><strong>Conteúdo condicional</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - só mostra se a descrição existe</li>
+            <li><strong>Loop através de tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - exibe todas as hashtags</li>
+            <li><strong>Filtragem de todo</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - marca itens todo</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Formatação Markdown</h4>
+        <p>Use sintaxe Markdown para formatação legível:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Cabeçalho grande</li>
+            <li><code>## {{activity}}</code> - Cabeçalho médio</li>
+            <li><code>**{{activity}}**</code> - Texto em negrito</li>
+            <li><code>*{{description}}*</code> - Texto em itálico</li>
+            <li><code>- {{activity}}</code> - Ponto de marcador</li>
+            <li><code>`{{formattedTime}}`</code> - Formatação de código</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Modelo de exemplo</h4>
+        <pre><code># {{reportTitle}}
+De {{startDate}} até {{endDate}}
+
+Atividades totais: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**ITEM TODO**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Dicas profissionais</h4>
+        <ul>
+            <li><strong>Modelos HTML</strong>: Use para formatação rica com estilos CSS e layouts complexos</li>
+            <li><strong>Modelos Markdown</strong>: Perfeitos para documentação simples e legível</li>
+            <li><strong>Modelos CSV</strong>: Ideais para análise de dados em planilhas</li>
+            <li><strong>Recurso de pré-visualização</strong>: Sempre teste seus modelos antes de salvar</li>
+            <li><strong>Formatos personalizados</strong>: Combine múltiplas variáveis para layouts únicos</li>
+        </ul>
+    </div>
+</div>

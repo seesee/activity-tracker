@@ -1,0 +1,622 @@
+{
+  "meta": {
+    "language": "Ελληνικά",
+    "languageCode": "el",
+    "locale": "el-GR",
+    "filename": "index.el.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "dd/MM/yyyy",
+      "long": "d MMMM yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM yyyy"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ",",
+      "thousands": ".",
+      "currency": "€"
+    }
+  },
+  "app": {
+    "title": "Παρακολούθηση Δραστηριοτήτων",
+    "tagline": "Ημερολόγιο εργασιών, οργανωτής και βάση γνώσεων",
+    "loading": "Φόρτωση...",
+    "error": "Παρουσιάστηκε σφάλμα",
+    "offline": "Εφαρμογή εκτός σύνδεσης"
+  },
+  "navigation": {
+    "tracker": "📝 Παρακολούθηση",
+    "todo": "✅ Προς εκτέλεση",
+    "notes": "📔 Σημειώσεις",
+    "alert": "⚠️ Ειδοποίηση",
+    "alertTitle": "Προβολή ληγμένων στοιχείων",
+    "startReminders": "Έναρξη Υπενθυμίσεων",
+    "startPomodoro": "🍅 Έναρξη Pomodoro",
+    "settingsMenu": "Μενού ρυθμίσεων",
+    "burgerMenu": {
+      "tracker": "Παρακολούθηση",
+      "notes": "Σημειώσεις",
+      "todo": "Προς εκτέλεση",
+      "reports": "Αναφορές",
+      "workspaces": "Χώροι Εργασίας",
+      "settings": "Ρυθμίσεις...",
+      "diagnostics": "Διαγνωστικά",
+      "language": "Γλώσσα",
+      "userGuide": "Οδηγός Χρήστη",
+      "about": "Σχετικά"
+    }
+  },
+  "search": {
+    "placeholder": "Αναζήτηση δραστηριοτήτων, εργασιών και hashtags...",
+    "browseHashtags": "Περιήγηση hashtags",
+    "results": "Αποτελέσματα Αναζήτησης",
+    "noResults": "Χρησιμοποιήστε το πλαίσιο αναζήτησης παραπάνω για να βρείτε δραστηριότητες, εργασίες και hashtags.",
+    "resultCount": "{count} αποτελέσματα",
+    "sortBy": "Ταξινόμηση κατά:",
+    "show": "Εμφάνιση:",
+    "filters": {
+      "relevance": "Σχετικότητα",
+      "newestFirst": "Νεότερα Πρώτα",
+      "oldestFirst": "Παλαιότερα Πρώτα",
+      "activityAZ": "Δραστηριότητα Α-Ω",
+      "activityZA": "Δραστηριότητα Ω-Α",
+      "allItems": "Όλα τα Στοιχεία",
+      "activitiesOnly": "Μόνο Δραστηριότητες",
+      "todosOnly": "Μόνο Εργασίες",
+      "completedOnly": "Μόνο Ολοκληρωμένα"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Λειτουργία Pomodoro απενεργοποιημένη",
+    "pause": "Παύση",
+    "nextReminder": "Επόμενη υπενθύμιση δραστηριότητας σε:",
+    "checkingNotifications": "Έλεγχος κατάστασης ειδοποιήσεων...",
+    "remindersActiveWithSystem": "Reminders active with system notifications",
+    "remindersActiveWithSound": "Reminders active with sound alerts",
+    "turnOffReminders": "Turn off reminders",
+    "remindersDisabled": "Reminders are disabled",
+    "turnOnReminders": "Turn on reminders",
+    "paused": "Paused",
+    "readyToStart": "Ready to start"
+  },
+  "tracker": {
+    "title": "Εισαγωγή Δραστηριότητας",
+    "hideShowForm": "Απόκρυψη/Εμφάνιση φόρμας",
+    "activityLabel": "Τι κάνετε;",
+    "activityPlaceholder": "π.χ. Γράψιμο αναφοράς, Συνάντηση ομάδας #εργασία",
+    "descriptionLabel": "Περιγραφή (προαιρετική)",
+    "descriptionPlaceholder": "Πρόσθετες λεπτομέρειες για αυτή τη δραστηριότητα",
+    "timeLabel": "Ώρα",
+    "markTodoTitle": "Σήμανση ως εργασία (Ctrl+T για εναλλαγή)",
+    "markTodo": "Σήμανση ως Εργασία",
+    "markNoteTitle": "Σήμανση ως σημείωση (Ctrl+N για εναλλαγή)",
+    "markNote": "Σήμανση ως Σημείωση",
+    "removeFromTodos": "Αφαίρεση από Εργασίες",
+    "removeFromNotes": "Αφαίρεση από Σημειώσεις",
+    "todoActive": "✓ Εργασία",
+    "noteActive": "✓ Σημείωση",
+    "dueDateLabel": "Ημερομηνία Λήξης (προαιρετική)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1η",
+      "plus1d": "+1η",
+      "minus1w": "-1ε",
+      "plus1w": "+1ε",
+      "minus1m": "-1μ",
+      "plus1m": "+1μ"
+    },
+    "addEntry": "Προσθήκη Καταχώρισης",
+    "reset": "Επαναφορά",
+    "recentEntries": "Πρόσφατες Καταχωρίσεις",
+    "previous": "‹ Προηγούμενο",
+    "next": "Επόμενο ›",
+    "placeholders": {
+      "trackerActivity": "Activity placeholder",
+      "trackerDescription": "Description placeholder"
+    }
+  },
+  "todo": {
+    "newTodo": "Νέα Εργασία",
+    "todoLabel": "Τι πρέπει να κάνετε;",
+    "todoPlaceholder": "π.χ. Κλήση πελάτη για έργο, Επανεξέταση προϋπολογισμού #εργασία",
+    "descriptionLabel": "Περιγραφή (προαιρετική)",
+    "descriptionPlaceholder": "Πρόσθετες λεπτομέρειες για αυτό το στοιχείο εργασίας",
+    "markTodoTitle": "Σήμανση ως εργασία",
+    "markNoteTitle": "Σήμανση ως σημείωση",
+    "addTodo": "Προσθήκη Εργασίας",
+    "newTodoNote": "Νέα Σημείωση Εργασίας",
+    "todoNoteLabel": "Τι χρειάζεται να σημειώσετε και να κάνετε;",
+    "todoNoteDescription": "Λεπτομέρειες σημείωσης και περιγραφή εργασίας",
+    "addTodoNote": "Προσθήκη Σημείωσης Εργασίας",
+    "todoList": "Λίστα Εργασιών",
+    "filter": "Φίλτρο:",
+    "sortBy": "Ταξινόμηση κατά:",
+    "filters": {
+      "allTodos": "Όλες οι Εργασίες",
+      "dueToday": "Λήγουν Σήμερα",
+      "overdue": "Ληγμένες",
+      "noDueDate": "Χωρίς Ημερομηνία Λήξης"
+    },
+    "sorting": {
+      "newestFirst": "Νεότερα Πρώτα",
+      "oldestFirst": "Παλαιότερα Πρώτα",
+      "dueDateEarliest": "Ημερομηνία Λήξης (Προηγούμενες)",
+      "dueDateLatest": "Ημερομηνία Λήξης (Τελευταίες)",
+      "activityAZ": "Δραστηριότητα Α-Ω",
+      "activityZA": "Δραστηριότητα Ω-Α"
+    },
+    "todoCount": "{count} εργασίες",
+    "noTodos": "Δεν βρέθηκαν εργασίες. Προσθέστε δραστηριότητες ως εργασίες για να τις δείτε εδώ!",
+    "pagination": {
+      "previous": "← Προηγούμενο",
+      "next": "Επόμενο →",
+      "pageInfo": "Σελίδα {current} από {total}"
+    },
+    "markCompleteHelp": "Κάντε κλικ στο \"Σήμανση ως Ολοκληρωμένη\" για να ολοκληρώσετε τις εργασίες",
+    "placeholders": {
+      "todoActivity": "Todo activity placeholder",
+      "todoDescription": "Todo description placeholder"
+    }
+  },
+  "notes": {
+    "newNote": "Νέα Σημείωση",
+    "titleLabel": "Τίτλος ή θέμα σημείωσης",
+    "titlePlaceholder": "π.χ. Σημειώσεις συνάντησης, Ιδέες έργου #brainstorm",
+    "contentLabel": "Περιεχόμενο σημείωσης",
+    "contentPlaceholder": "Γράψτε το περιεχόμενο της σημείωσής σας εδώ...",
+    "addNote": "Προσθήκη Σημείωσης",
+    "notesTitle": "Σημειώσεις",
+    "filters": {
+      "allNotes": "Όλες οι Σημειώσεις",
+      "today": "Σήμερα",
+      "thisWeek": "Αυτή την Εβδομάδα",
+      "thisMonth": "Αυτόν τον Μήνα"
+    },
+    "sort": "Ταξινόμηση:",
+    "sorting": {
+      "newestFirst": "Νεότερα Πρώτα",
+      "oldestFirst": "Παλαιότερα Πρώτα",
+      "activityName": "Όνομα Δραστηριότητας"
+    },
+    "searchPlaceholder": "Αναζήτηση στις σημειώσεις...",
+    "clear": "Εκκαθάριση",
+    "noNotes": "Δεν βρέθηκαν σημειώσεις.",
+    "placeholders": {
+      "noteActivity": "Note activity placeholder",
+      "noteDescription": "Note description placeholder"
+    }
+  },
+  "reports": {
+    "title": "Αναφορές Δραστηριότητας",
+    "dateRange": "Περιοχή Ημερομηνιών",
+    "dateRangeDescription": "Επιλέξτε την χρονική περίοδο για την αναφορά σας",
+    "startDateTitle": "Επιλέξτε την ημερομηνία έναρξης για την αναφορά σας",
+    "startDateLabel": "Ημερομηνία Έναρξης",
+    "endDateTitle": "Επιλέξτε την ημερομηνία λήξης για την αναφορά σας",
+    "endDateLabel": "Ημερομηνία Λήξης",
+    "generateReportTitle": "Δημιουργία αναφοράς για την επιλεγμένη περιοχή ημερομηνιών",
+    "generateReport": "Δημιουργία Αναφοράς",
+    "thisWeekTitle": "Ορισμός περιοχής ημερομηνιών στην τρέχουσα εβδομάδα",
+    "thisWeek": "Αυτή την Εβδομάδα",
+    "templateOptions": "Πρότυπο & Επιλογές",
+    "templateOptionsDescription": "Επιλέξτε μορφή, επιλογές και κατεβάστε την αναφορά σας",
+    "reportTemplateTitle": "Επιλέξτε τη μορφή για την αναφορά σας",
+    "reportTemplateLabel": "Πρότυπο Αναφοράς",
+    "todoItems": "Στοιχεία Εργασιών:",
+    "todoOptions": {
+      "excludeAll": "Εξαίρεση όλων των εργασιών",
+      "incompleteOnly": "Συμπερίληψη μόνο ημιτελών εργασιών",
+      "includeAll": "Συμπερίληψη όλων των εργασιών"
+    },
+    "notes": "Σημειώσεις:",
+    "noteOptions": {
+      "exclude": "Εξαίρεση σημειώσεων",
+      "include": "Συμπερίληψη σημειώσεων"
+    },
+    "downloadReportTitle": "Λήψη της δημιουργημένης αναφοράς",
+    "downloadReport": "Λήψη Αναφοράς",
+    "openNewTabTitle": "Άνοιγμα της δημιουργημένης αναφοράς σε νέα καρτέλα",
+    "openNewTab": "Άνοιγμα σε Νέα Καρτέλα",
+    "weekNavigation": {
+      "previous": "← Προηγούμενη Εβδομάδα",
+      "next": "Επόμενη Εβδομάδα →",
+      "weekOf": "Εβδομάδα {date}"
+    },
+    "reportPreview": "Προεπισκόπηση Αναφοράς",
+    "viewFormattedTitle": "Προβολή της μορφοποιημένης εξόδου της αναφοράς",
+    "rendered": "Αποδοθείσα",
+    "viewSourceTitle": "Προβολή του ακατέργαστου κώδικα της αναφοράς",
+    "source": "Πηγή",
+    "copyReportTitle": "Αντιγραφή περιεχομένου αναφοράς στο πρόχειρο",
+    "copyReport": "Αντιγραφή Αναφοράς",
+    "selectDateRange": "Επιλέξτε μια περιοχή ημερομηνιών και δημιουργήστε μια αναφορά για να δείτε την προεπισκόπηση.",
+    "reportTemplates": "Πρότυπα Αναφορών",
+    "templatesDescription": "Διαχείριση προτύπων για δημιουργία αναφορών",
+    "manageTemplatesTitle": "Άνοιγμα του επεξεργαστή προτύπων για δημιουργία και τροποποίηση προτύπων αναφορών",
+    "manageTemplates": "Διαχείριση Προτύπων",
+    "resetDefaultTitle": "Επαναφορά όλων των προτύπων στις αρχικές προεπιλεγμένες εκδόσεις τους",
+    "resetDefault": "Επαναφορά σε Προεπιλογή",
+    "templateGuideTitle": "Προβολή τεκμηρίωσης βοήθειας για σύνταξη προτύπων και διαθέσιμα δεδομένα",
+    "templateGuide": "📋 Οδηγός Προτύπων"
+  },
+  "settings": {
+    "title": "Ρυθμίσεις",
+    "enableReminders": "Ενεργοποίηση Υπενθυμίσεων",
+    "generalSettings": "Γενικές Ρυθμίσεις",
+    "generalDescription": "Ρυθμίσεις που ισχύουν για όλες τις λειτουργίες",
+    "colourThemeTitle": "Επιλέξτε την προτίμηση χρωματικού θέματος",
+    "colourTheme": "Χρωματικό Θέμα",
+    "themeOptions": {
+      "system": "Ακολούθηση ρυθμίσεων συστήματος",
+      "light": "Φωτεινή λειτουργία",
+      "dark": "Σκοτεινή λειτουργία"
+    },
+    "soundSettingsTitle": "Επιλέξτε ποιους ήχους να σιγάσετε",
+    "soundSettings": "Ρυθμίσεις Ήχου",
+    "soundOptions": {
+      "allEnabled": "Όλοι οι ήχοι ενεργοποιημένοι",
+      "muteAll": "Σίγαση όλων των ήχων",
+      "mutePomodoroOnly": "Σίγαση μόνο ήχων Pomodoro",
+      "muteNotificationOnly": "Σίγαση μόνο ήχων ειδοποιήσεων"
+    },
+    "itemsPerPageTitle": "Αριθμός στοιχείων προς εμφάνιση ανά σελίδα σε λίστες",
+    "itemsPerPage": "Στοιχεία ανά σελίδα",
+    "itemsPerPageOptions": {
+      "10": "10 στοιχεία",
+      "20": "20 στοιχεία",
+      "30": "30 στοιχεία",
+      "50": "50 στοιχεία",
+      "100": "100 στοιχεία"
+    },
+    "systemNotificationsTitle": "Αποστολή ειδοποιήσεων συστήματος στο λειτουργικό σας σύστημα",
+    "systemNotifications": "Ειδοποιήσεις Συστήματος",
+    "dateFormatTitle": "Επιλέξτε τη μορφή εμφάνισης ημερομηνίας που προτιμάτε",
+    "dateFormat": "Μορφή Ημερομηνίας",
+    "dateFormatOptions": {
+      "default": "Προεπιλογή (βασισμένη στις τοπικές ρυθμίσεις)",
+      "iso": "ISO 8601 (ΕΕΕΕ-ΜΜ-ΗΗ)",
+      "us": "Μορφή ΗΠΑ (ΜΜ/ΗΗ/ΕΕΕΕ)",
+      "european": "Ευρωπαϊκή (ΗΗ/ΜΜ/ΕΕΕΕ)",
+      "short": "Σύντομη Μορφή",
+      "long": "Μεγάλη Μορφή"
+    },
+    "yesNo": {
+      "yes": "Ναι",
+      "no": "Όχι"
+    },
+    "reminderSettings": "Ρυθμίσεις Υπενθυμίσεων",
+    "reminderIntervalTitle": "Πόσο συχνά θα λαμβάνετε ειδοποιήσεις υπενθυμίσεων δραστηριότητας",
+    "reminderInterval": "Διάστημα Υπενθυμίσεων",
+    "intervals": {
+      "1min": "1 λεπτό",
+      "2min": "2 λεπτά",
+      "5min": "5 λεπτά",
+      "15min": "15 λεπτά",
+      "30min": "30 λεπτά",
+      "1hour": "1 ώρα",
+      "1.5hour": "1,5 ώρες",
+      "2hour": "2 ώρες",
+      "3hour": "3 ώρες",
+      "4hour": "4 ώρες"
+    },
+    "pauseResumeTitle": "Πόσο παραμένουν οι ειδοποιήσεις σε παύση πριν συνεχίσουν αυτόματα",
+    "pauseResume": "Κατά την παύση, συνέχεια μετά από",
+    "never": "Ποτέ",
+    "autoStartTitle": "Αυτόματη έναρξη υπενθυμίσεων όταν ανοίγει η εφαρμογή",
+    "autoStart": "Αυτόματη έναρξη υπενθυμίσεων κατά το άνοιγμα της εφαρμογής",
+    "reminderSoundTitle": "Επιλέξτε τον ήχο που αναπαράγεται με τις υπενθυμίσεις",
+    "reminderSound": "Ήχος Υπενθύμισης"
+  },
+  "schedule": {
+    "title": "Πρόγραμμα Δραστηριότητας",
+    "description": "Ορίστε τις ενεργές ώρες και ημέρες δραστηριότητάς σας για ειδοποιήσεις",
+    "activityHours": "Ώρες Δραστηριότητας",
+    "complexScheduleTitle": "Ενεργοποίηση σύνθετου προγραμματισμού με πολλαπλά χρονικά διαστήματα ανά ημέρα",
+    "complexSchedule": "Σύνθετο Πρόγραμμα",
+    "startTimeTitle": "Πότε αρχίζει η περίοδος δραστηριότητάς σας",
+    "startTime": "Ώρα Έναρξης",
+    "endTimeTitle": "Πότε τελειώνει η περίοδος δραστηριότητάς σας",
+    "endTime": "Ώρα Λήξης",
+    "complexDescription": "Ορίστε πολλαπλά χρονικά διαστήματα για κάθε ημέρα για να εξυπηρετήσετε σύνθετα προγράμματα.",
+    "days": {
+      "monday": "Δευτέρα",
+      "tuesday": "Τρίτη",
+      "wednesday": "Τετάρτη",
+      "thursday": "Πέμπτη",
+      "friday": "Παρασκευή",
+      "saturday": "Σάββατο",
+      "sunday": "Κυριακή"
+    },
+    "addRange": "+ Προσθήκη Διαστήματος",
+    "activityDays": "Ημέρες Δραστηριότητας",
+    "datePreview": {
+      "prefix": "Preview: "
+    }
+  },
+  "pomodoro": {
+    "title": "Λειτουργία Pomodoro",
+    "description": "Δομημένα διαστήματα εργασίας/διαλείμματος με αυτόματες ειδοποιήσεις",
+    "enableTitle": "Ενεργοποίηση λειτουργίας χρονισμού Pomodoro με ειδοποιήσεις εργασίας και διαλειμμάτων",
+    "enable": "Ενεργοποίηση Λειτουργίας Pomodoro",
+    "workDurationTitle": "Διάρκεια περιόδων εργασίας σε λεπτά",
+    "workDuration": "Διάρκεια Εργασίας (λεπτά)",
+    "workDurations": {
+      "15": "15 λεπτά",
+      "20": "20 λεπτά",
+      "25": "25 λεπτά",
+      "30": "30 λεπτά",
+      "45": "45 λεπτά",
+      "60": "60 λεπτά"
+    },
+    "shortBreakTitle": "Διάρκεια σύντομων περιόδων διαλείμματος σε λεπτά",
+    "shortBreak": "Διάρκεια Σύντομου Διαλείμματος (λεπτά)",
+    "shortBreakDurations": {
+      "3": "3 λεπτά",
+      "5": "5 λεπτά",
+      "10": "10 λεπτά",
+      "15": "15 λεπτά"
+    },
+    "longBreakTitle": "Διάρκεια μεγάλων περιόδων διαλείμματος σε λεπτά",
+    "longBreak": "Διάρκεια Μεγάλου Διαλείμματος (λεπτά)",
+    "sessionsBeforeLongTitle": "Αριθμός συνεδριών εργασίας πριν από μεγάλο διάλειμμα",
+    "sessionsBeforeLong": "Συνεδρίες πριν από μεγάλο διάλειμμα",
+    "sessionOptions": {
+      "2": "Κάθε 2 συνεδρίες",
+      "3": "Κάθε 3 συνεδρίες",
+      "4": "Κάθε 4 συνεδρίες",
+      "5": "Κάθε 5 συνεδρίες",
+      "6": "Κάθε 6 συνεδρίες"
+    },
+    "tickSounds": "Ήχοι Tick",
+    "tickSoundTitle": "Προαιρετικός ήχος tick για να σας υπενθυμίσει ότι είστε σε συνεδρία εργασίας",
+    "tickSoundType": "Τύπος Ήχου Tick",
+    "tickOptions": {
+      "none": "Χωρίς ticking",
+      "soft": "Απαλό tick",
+      "classic": "Κλασικό tick",
+      "digital": "Ψηφιακό tick"
+    },
+    "tickIntervalTitle": "Πόσο συχνά να αναπαράγεται ο ήχος tick σε δευτερόλεπτα",
+    "tickInterval": "Διάστημα Tick (δευτερόλεπτα)",
+    "tickIntervals": {
+      "off": "Απενεργοποιημένο (χωρίς ticking)",
+      "1": "Κάθε 1 δευτερόλεπτο",
+      "2": "Κάθε 2 δευτερόλεπτα",
+      "3": "Κάθε 3 δευτερόλεπτα",
+      "5": "Κάθε 5 δευτερόλεπτα",
+      "10": "Κάθε 10 δευτερόλεπτα",
+      "15": "Κάθε 15 δευτερόλεπτα",
+      "30": "Κάθε 30 δευτερόλεπτα",
+      "60": "Κάθε 60 δευτερόλεπτα"
+    },
+    "announceSounds": "Ήχοι Ανακοίνωσης",
+    "shortBreakAnnounceTitle": "Ήχος για αναπαραγωγή όταν αρχίζει σύντομο διάλειμμα",
+    "shortBreakAnnounce": "Ανακοίνωση Σύντομου Διαλείμματος",
+    "longBreakAnnounceTitle": "Ήχος για αναπαραγωγή όταν αρχίζει μεγάλο διάλειμμα",
+    "longBreakAnnounce": "Ανακοίνωση Μεγάλου Διαλείμματος",
+    "resumeWorkAnnounceTitle": "Ήχος για αναπαραγωγή κατά την επανάληψη της εργασίας μετά από διάλειμμα",
+    "resumeWorkAnnounce": "Ανακοίνωση Επανάληψης Εργασίας",
+    "options": "Επιλογές",
+    "autoStartTitle": "Αυτόματη έναρξη της επόμενης συνεδρίας χωρίς χειροκίνητη παρέμβαση",
+    "autoStart": "Αυτόματη έναρξη επόμενης συνεδρίας",
+    "promptDescriptionsTitle": "Αίτηση για περιγραφή δραστηριότητας και δημιουργία καταχωρίσεων αρχείου για συνεδρίες εργασίας",
+    "promptDescriptions": "Αίτηση για περιγραφές συνεδριών εργασίας",
+    "logBreaksTitle": "Επίσης αρχειοθέτηση συνεδριών διαλειμμάτων στον παρακολουθητή δραστηριότητας",
+    "logBreaks": "Αρχειοθέτηση και συνεδριών διαλειμμάτων",
+    "enableLongBreaksTitle": "Ενεργοποίηση μεγάλων διαλειμμάτων μετά την ολοκλήρωση πολλαπλών συνεδριών",
+    "enableLongBreaks": "Ενεργοποίηση μεγάλων διαλειμμάτων",
+    "allowPausingTitle": "Επίτρεψη παύσης συνεδριών Pomodoro από το banner",
+    "allowPausing": "Επίτρεψη παύσης συνεδρίας",
+    "autoResetDailyTitle": "Αυτόματη επαναφορά του μετρητή συνεδριών σε 1 όταν αλλάζει η ημέρα",
+    "autoResetDaily": "Αυτόματη επαναφορά συνεδριών καθημερινά",
+    "sessionManagement": "Διαχείριση Συνεδριών",
+    "resetCounterTitle": "Επαναφορά μετρητή συνεδριών σε 1",
+    "resetCounter": "Επαναφορά Μετρητή Συνεδριών"
+  },
+  "dataManagement": {
+    "backup": "Αντίγραφο Ασφαλείας Βάσης Δεδομένων",
+    "backupDescription": "Εξαγωγή ή εισαγωγή των δεδομένων δραστηριότητάς σας",
+    "exportDatabase": "Εξαγωγή Βάσης Δεδομένων",
+    "importDatabase": "Εισαγωγή Βάσης Δεδομένων",
+    "warningSettings": "Ρυθμίσεις Προειδοποιήσεων",
+    "warningDescription": "Διαμόρφωση διαλόγων επιβεβαίωσης για καταστροφικές ενέργειες",
+    "warnDeleteTitle": "Εμφάνιση διαλόγου επιβεβαίωσης κατά τη διαγραφή δραστηριοτήτων",
+    "warnDelete": "Προειδοποίηση κατά τη διαγραφή δραστηριότητας",
+    "warnResetTitle": "Εμφάνιση διαλόγου επιβεβαίωσης κατά την επαναφορά του μετρητή συνεδριών Pomodoro",
+    "warnReset": "Προειδοποίηση κατά την επαναφορά συνεδρίας",
+    "forceManualSave": "Εξαναγκασμός Χειροκίνητης Αποθήκευσης"
+  },
+  "diagnostics": {
+    "title": "🔧 Διαγνωστικά",
+    "systemTests": "Δοκιμές Συστήματος",
+    "systemTestsDescription": "Δοκιμή διαφόρων συστημάτων και λειτουργιών",
+    "notifications": "🔔 Ειδοποιήσεις",
+    "testReminderTitle": "Αποστολή δοκιμαστικής υπενθύμισης",
+    "testReminder": "🧪 Δοκιμαστική Υπενθύμιση",
+    "testSoundTitle": "Αναπαραγωγή δοκιμαστικού ήχου υπενθύμισης",
+    "testSound": "🔊 Δοκιμαστικός Ήχος",
+    "refreshStatusTitle": "Ανανέωση της εμφάνισης κατάστασης άδειας υπενθύμισης",
+    "refreshStatus": "🔄 Ανανέωση Κατάστασης",
+    "forceEnableTitle": "Εξαναγκασμός εμφάνισης διαλόγου άδειας ειδοποίησης",
+    "forceEnable": "⚡ Εξαναγκασμός Ενεργοποίησης",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "Εκτέλεση περιεκτικών διαγνωστικών service worker",
+    "runDiagnostics": "🔍 Εκτέλεση Διαγνωστικών",
+    "dataManagement": "⚠️ Διαχείριση Δεδομένων",
+    "dataWarning": "Αυτές οι ενέργειες δεν μπορούν να αναιρεθούν",
+    "clearAllData": "🗑️ Εκκαθάριση Όλων των Δεδομένων"
+  },
+  "modals": {
+    "edit": {
+      "title": "Επεξεργασία Καταχώρισης",
+      "activity": "Δραστηριότητα",
+      "description": "Περιγραφή",
+      "time": "Ώρα",
+      "markTodo": "Σήμανση ως Εργασία",
+      "markNote": "Σήμανση ως Σημείωση",
+      "dueDate": "Ημερομηνία Λήξης (προαιρετική)",
+      "update": "Ενημέρωση Καταχώρισης",
+      "cancel": "Ακύρωση"
+    },
+    "templateManager": {
+      "title": "Διαχειριστής Προτύπων",
+      "saveAll": "Αποθήκευση Όλων των Αλλαγών",
+      "close": "Κλείσιμο",
+      "templates": "Πρότυπα",
+      "addTemplate": "Προσθήκη Προτύπου",
+      "resetAll": "Επαναφορά Όλων",
+      "selectTemplate": "Επιλέξτε πρότυπο για επεξεργασία",
+      "save": "Αποθήκευση",
+      "delete": "Διαγραφή",
+      "duplicate": "Αντιγραφή",
+      "editor": "Επεξεργαστής",
+      "preview": "Προεπισκόπηση",
+      "templateName": "Όνομα Προτύπου",
+      "templateNamePlaceholder": "π.χ. Το Προσωπικό μου Πρότυπο",
+      "description": "Περιγραφή",
+      "descriptionPlaceholder": "Σύντομη περιγραφή του προτύπου",
+      "outputType": "Τύπος Εξόδου",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Απλό Κείμενο"
+      },
+      "templateContent": "Περιεχόμενο Προτύπου",
+      "templateContentPlaceholder": "Εισάγετε το περιεχόμενο του προτύπου σας εδώ...",
+      "setDefault": "Ορισμός ως προεπιλεγμένο πρότυπο",
+      "previewTitle": "Προεπισκόπηση",
+      "rendered": "Αποδοθείσα",
+      "source": "Πηγή",
+      "refresh": "Ανανέωση",
+      "selectTemplatePreview": "Επιλέξτε ένα πρότυπο για να δείτε την προεπισκόπηση"
+    },
+    "templateGuide": {
+      "title": "Οδηγός Προτύπων",
+      "activityDescription": "Περιγραφή δραστηριότητας"
+    },
+    "pomodoroActivity": {
+      "title": "Δραστηριότητα Συνεδρίας Εργασίας",
+      "activityLabel": "Σε τι θα εργαστείτε;",
+      "activityPlaceholder": "π.χ. Γράψιμο αναφοράς, Προετοιμασία συνάντησης",
+      "usePrevious": "Χρήση Προηγούμενης Δραστηριότητας",
+      "descriptionLabel": "Περιγραφή (προαιρετική)",
+      "descriptionPlaceholder": "Πρόσθετες λεπτομέρειες για αυτή τη συνεδρία εργασίας",
+      "startSession": "Έναρξη Συνεδρίας Εργασίας",
+      "cancel": "Ακύρωση"
+    },
+    "pomodoroAbandon": {
+      "title": "Εγκατάλειψη Συνεδρίας",
+      "workedFor": "Εργαστήκατε για {minutes} λεπτά",
+      "saveQuestion": "Θα θέλατε να αποθηκεύσετε αυτό που καταφέρατε κατά τη διάρκεια αυτής της μερικής συνεδρίας;",
+      "activityLabel": "Επιτευχθείσα δραστηριότητα",
+      "activityPlaceholder": "Σε τι εργαστήκατε κατά τη διάρκεια αυτού του χρόνου;",
+      "descriptionLabel": "Περιγραφή (προαιρετική)",
+      "descriptionPlaceholder": "Πρόσθετες λεπτομέρειες για αυτό που καταφέρατε",
+      "saveAbandon": "Αποθήκευση Εργασίας & Εγκατάλειψη",
+      "justAbandon": "Απλώς Εγκατάλειψη"
+    },
+    "confirmation": {
+      "title": "Επιβεβαίωση Ενέργειας",
+      "defaultMessage": "Είστε σίγουροι ότι θέλετε να εκτελέσετε αυτή την ενέργεια;",
+      "dontAskAgain": "Να μην ρωτηθώ ξανά για αυτόν τον τύπο ενέργειας",
+      "confirm": "Επιβεβαίωση",
+      "cancel": "Ακύρωση"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Πληροφορίες Ωρών Δραστηριότητας",
+      "alertsOff": "Οι ειδοποιήσεις υπενθυμίσεων είναι απενεργοποιημένες εκτός των ωρών δραστηριότητας.",
+      "configure": "⚙️ Διαμόρφωση Ωρών Δραστηριότητας",
+      "gotIt": "Κατάλαβα"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Ληγμένα Στοιχεία",
+      "message": "Τα ακόλουθα στοιχεία έχουν υπερβεί την ημερομηνία λήξης τους:",
+      "gotIt": "Κατάλαβα"
+    },
+    "hashtagBrowser": {
+      "title": "Φυλλομετρητής Hashtags",
+      "count": "Βρέθηκαν {count} hashtags",
+      "noHashtags": "Δεν βρέθηκαν hashtags. Προσθέστε δραστηριότητες με #hashtags για να τα δείτε εδώ!"
+    },
+    "userGuide": {
+      "title": "Οδηγός Χρήστη",
+      "settingsCustomization": "Ρυθμίσεις και προσαρμογή"
+    },
+    "notificationSetup": {
+      "title": "Ενεργοποίηση Ειδοποιήσεων Συστήματος;",
+      "appName": "Παρακολούθηση Δραστηριοτήτων",
+      "enableOption": "✅ Ενεργοποίηση Ειδοποιήσεων Συστήματος",
+      "soundOption": "🔊 Μόνο Ήχος",
+      "enableButton": "Ενεργοποίηση Ειδοποιήσεων Συστήματος",
+      "soundButton": "Μόνο Ήχος"
+    },
+    "about": {
+      "title": "Σχετικά με την Παρακολούθηση Δραστηριοτήτων",
+      "appInfo": "Πληροφορίες Εφαρμογής",
+      "versionHistory": "Ιστορικό Εκδόσεων",
+      "loadingVersion": "Φόρτωση ιστορικού εκδόσεων...",
+      "appName": "Παρακολούθηση Δραστηριοτήτων",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ Προβολή στο GitHub"
+    },
+    "workspaceManager": {
+      "title": "🏢 Διαχειριστής Χώρων Εργασίας",
+      "currentWorkspace": "Τρέχων Χώρος Εργασίας: {name}",
+      "description": "Κάθε χώρος εργασίας διατηρεί ξεχωριστές δραστηριότητες, ρυθμίσεις και κατάσταση...",
+      "availableWorkspaces": "Διαθέσιμοι Χώροι Εργασίας",
+      "enterName": "Εισάγετε όνομα χώρου εργασίας...",
+      "createWorkspace": "Δημιουργία Χώρου Εργασίας",
+      "close": "Κλείσιμο"
+    },
+    "languagePicker": {
+      "title": "🌐 Επιλογή Γλώσσας"
+    }
+  },
+  "common": {
+    "save": "Αποθήκευση",
+    "cancel": "Ακύρωση",
+    "delete": "Διαγραφή",
+    "edit": "Επεξεργασία",
+    "close": "Κλείσιμο",
+    "yes": "Ναι",
+    "no": "Όχι",
+    "ok": "Εντάξει",
+    "loading": "Φόρτωση...",
+    "error": "Σφάλμα",
+    "success": "Επιτυχία",
+    "warning": "Προειδοποίηση",
+    "info": "Πληροφορία",
+    "none": "Κανένα",
+    "all": "Όλα",
+    "today": "Σήμερα",
+    "yesterday": "Χθες",
+    "tomorrow": "Αύριο",
+    "thisWeek": "Αυτή την Εβδομάδα",
+    "thisMonth": "Αυτόν τον Μήνα",
+    "minutes": "{count} λεπτά",
+    "hours": "{count} ώρες",
+    "days": "{count} ημέρες",
+    "weeks": "{count} εβδομάδες",
+    "months": "{count} μήνες",
+    "daysOfWeek": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "markComplete": "Σήμανση ως ολοκληρωμένο",
+    "outsideActivityHours": "Εκτός ωρών δραστηριότητας",
+    "todoTag": "Εργασία",
+    "noteTag": "Σημείωση"
+  }
+}

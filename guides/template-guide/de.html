@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Erste Schritte</h4>
+        <p>Templates verwenden eine einfache Variablenersetzungssyntax mit doppelten geschweiften Klammern, um dynamische Berichte zu erstellen.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Grundlegende Syntax</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Einfache Variablenersetzung</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Schleife über Arrays</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Bedingter Inhalt</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Pipe-Syntax und Funktionsverkettung</h4>
+        <p>Transformieren Sie Daten mit der Pipe-Syntax (<code>|</code>), um mehrere Funktionen miteinander zu verketten:</p>
+        
+        <h5>Grundlegende Pipe-Syntax</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Eine einzelne Transformation anwenden</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Mehrere Transformationen verketten</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Parameter an Funktionen übergeben</li>
+        </ul>
+
+        <h5>Verfügbare Transformationsfunktionen</h5>
+        <ul>
+            <li><code>date('format')</code> - Zeitstempel als Daten formatieren
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Zeit aus Zeitstempeln extrahieren
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - CSV-Sonderzeichen escapen
+                <ul>
+                    <li>Umschließt Text mit Anführungszeichen, wenn er Kommas, Anführungszeichen oder Zeilenwechsel enthält</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Zeilenumbrüche aus Text entfernen
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>CSV-Template-Beispiel mit Verkettung</h5>
+        <p>So verwendet das CSV-Template Verkettung, um saubere, ordnungsgemäß escape-te Ausgaben zu erstellen:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>So funktioniert es:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Konvertiert Zeitstempel in das Format YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Extrahiert den Zeitanteil</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Entfernt zuerst Zeilenwechsel, dann Escaping für CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Gleicher Prozess für Beschreibungen</li>
+        </ul>
+
+        <h5>Reihenfolge ist wichtig bei der Verkettung!</h5>
+        <p>Funktionen werden von links nach rechts angewendet, daher ist die Reihenfolge wichtig:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Entferne zuerst Umbrüche, dann escapen</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Zuerst escapen kann die Umbruchentfernung beeinträchtigen</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Verfügbare Daten</h4>
+        <p>Die folgenden Daten sind in Ihren Templates verfügbar:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - Der Berichtstitel</li>
+            <li><code>{{startDate}}</code> - Berichtstartdatum (formatiert)</li>
+            <li><code>{{endDate}}</code> - Berichtsenddatum (formatiert)</li>
+            <li><code>{{totalEntries}}</code> - Gesamtzahl der Aktivitätseinträge</li>
+            <li><code>{{entries}}</code> - Array aller Aktivitätseinträge</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Eintragseigenschaften</h4>
+        <p>Jeder Eintrag in der <code>{{#each entries}}</code>-Schleife hat:</p>
+        <ul>
+            <li><code>{{activity}}</code> - Der Aktivitätsname</li>
+            <li><code>{{description}}</code> - Aktivitätsbeschreibung</li>
+            <li><code>{{timestamp}}</code> - Roher ISO-Zeitstempel</li>
+            <li><code>{{formattedTime}}</code> - Schön formatierte Zeit (z.B. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Schön formatiertes Datum (z.B. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean: true, wenn dies ein Todo-Element ist</li>
+            <li><code>{{tags}}</code> - Array von Hashtags für diesen Eintrag</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Häufige Transformationen</h4>
+        <p>Zeitstempel transformieren und Daten formatieren:</p>
+        <ul>
+            <li><strong>Datumsformate</strong>: Verwenden Sie <code>{{formattedDate}}</code> und <code>{{formattedTime}}</code> für lesbare Formate</li>
+            <li><strong>Bedingter Inhalt</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - nur anzeigen, wenn Beschreibung existiert</li>
+            <li><strong>Schleife über Tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - alle Hashtags anzeigen</li>
+            <li><strong>Todo-Filterung</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - Todo-Elemente markieren</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Markdown-Formatierung</h4>
+        <p>Verwenden Sie Markdown-Syntax für lesbare Formatierung:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Große Überschrift</li>
+            <li><code>## {{activity}}</code> - Mittlere Überschrift</li>
+            <li><code>**{{activity}}**</code> - Fettgedruckter Text</li>
+            <li><code>*{{description}}*</code> - Kursiver Text</li>
+            <li><code>- {{activity}}</code> - Aufzählungspunkt</li>
+            <li><code>`{{formattedTime}}`</code> - Code-Formatierung</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Beispiel-Template</h4>
+        <pre><code># {{reportTitle}}
+Von {{startDate}} bis {{endDate}}
+
+Gesamtaktivitäten: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**TODO-ELEMENT**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Profi-Tipps</h4>
+        <ul>
+            <li><strong>HTML-Templates</strong>: Verwenden Sie diese für reichhaltige Formatierung mit CSS-Stilen und komplexen Layouts</li>
+            <li><strong>Markdown-Templates</strong>: Perfekt für einfache, lesbare Dokumentation</li>
+            <li><strong>CSV-Templates</strong>: Ideal für Datenanalyse in Tabellenkalkulationen</li>
+            <li><strong>Vorschau-Funktion</strong>: Testen Sie immer Ihre Templates vor dem Speichern</li>
+            <li><strong>Benutzerdefinierte Formate</strong>: Kombinieren Sie mehrere Variablen für einzigartige Layouts</li>
+        </ul>
+    </div>
+</div>

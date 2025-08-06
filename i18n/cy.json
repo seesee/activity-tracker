@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "Cymraeg",
+    "languageCode": "cy",
+    "locale": "cy-GB",
+    "filename": "index.cy.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "dd/MM/yyyy",
+      "long": "d MMMM yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM yyyy"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ".",
+      "thousands": ",",
+      "currency": "£"
+    }
+  },
+  "app": {
+    "title": "Traciwr Gweithgareddau",
+    "tagline": "Dyddiadur tasgau, trefnydd a sail gwybodaeth",
+    "loading": "Yn llwytho...",
+    "error": "Mae gwall wedi digwydd",
+    "offline": "App all-lein"
+  },
+  "navigation": {
+    "tracker": "📝 Traciwr",
+    "todo": "✅ I'w Wneud",
+    "notes": "📔 Nodiadau",
+    "alert": "⚠️ Rhybudd",
+    "alertTitle": "Gweld eitemau sydd wedi dyddio",
+    "startReminders": "Dechrau Atgofwyr",
+    "startPomodoro": "🍅 Dechrau Pomodoro",
+    "settingsMenu": "Dewislen gosodiadau",
+    "burgerMenu": {
+      "tracker": "Traciwr",
+      "notes": "Nodiadau",
+      "todo": "I'w Wneud",
+      "reports": "Adroddiadau",
+      "workspaces": "Mannau Gwaith",
+      "settings": "Gosodiadau...",
+      "diagnostics": "Diagnostig",
+      "language": "Iaith",
+      "userGuide": "Canllaw Defnyddiwr",
+      "about": "Ynghylch"
+    },
+    "pauseMenu": {
+      "minutes5": "5 munud",
+      "minutes15": "15 munud",
+      "minutes30": "30 munud",
+      "hour1": "1 awr",
+      "hours2": "2 awr",
+      "untilManualResume": "Hyd nes ailddechrau â llaw"
+    }
+  },
+  "search": {
+    "placeholder": "Chwilio gweithgareddau, tasgau a hashnodau...",
+    "browseHashtags": "Pori hashnodau",
+    "results": "Canlyniadau Chwilio",
+    "noResults": "Defnyddiwch y bar chwilio uchod i ddod o hyd i weithgareddau, tasgau a hashnodau.",
+    "resultCount": "{count} canlyniad",
+    "sortBy": "Trefnu yn ôl:",
+    "show": "Dangos:",
+    "filters": {
+      "relevance": "Perthnasedd",
+      "newestFirst": "Diweddaraf Gyntaf",
+      "oldestFirst": "Hynaf Gyntaf",
+      "activityAZ": "Gweithgaredd A-Z",
+      "activityZA": "Gweithgaredd Z-A",
+      "allItems": "Pob Eitem",
+      "activitiesOnly": "Gweithgareddau Yn Unig",
+      "todosOnly": "Tasgau Yn Unig",
+      "completedOnly": "Cwblhau Yn Unig"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Modd Pomodoro wedi'i analluogi",
+    "pause": "Seibiant",
+    "nextReminder": "Atgofydd gweithgaredd nesaf mewn:",
+    "checkingNotifications": "Yn gwirio statws hysbysiadau...",
+    "remindersActiveWithSystem": "Atgoffion gweithgaredd yn weithredol gyda hysbysiadau system",
+    "remindersActiveWithSound": "Atgoffion gweithgaredd yn weithredol gyda rhybuddion sain",
+    "turnOffReminders": "Diffodd atgoffion gweithgaredd",
+    "remindersDisabled": "Mae atgoffion gweithgaredd wedi'u hanalluogi",
+    "turnOnReminders": "Troi atgoffion gweithgaredd ymlaen",
+    "paused": "Wedi'i oedi",
+    "readyToStart": "Yn barod i ddechrau"
+  },
+  "tracker": {
+    "title": "Cofnod Gweithgaredd",
+    "hideShowForm": "Cuddio/Dangos ffurflen",
+    "activityLabel": "Beth ydych chi'n ei wneud?",
+    "activityPlaceholder": "e.e. Ysgrifennu adroddiad, Cyfarfod tîm #gwaith",
+    "descriptionLabel": "Disgrifiad (dewisol)",
+    "descriptionPlaceholder": "Manylion ychwanegol am y gweithgaredd hwn",
+    "timeLabel": "Amser",
+    "markTodoTitle": "Marcio fel tasg i'w gwneud (Ctrl+T i newid)",
+    "markTodo": "Marcio fel Tasg",
+    "markNoteTitle": "Marcio fel nodyn (Ctrl+N i newid)",
+    "markNote": "Marcio fel Nodyn",
+    "removeFromTodos": "Tynnu o Dasgau",
+    "removeFromNotes": "Tynnu o Nodiadau",
+    "todoActive": "✓ Tasg",
+    "noteActive": "✓ Nodyn",
+    "dueDateLabel": "Dyddiad Terfyn (dewisol)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1d",
+      "plus1d": "+1d",
+      "minus1w": "-1w",
+      "plus1w": "+1w",
+      "minus1m": "-1m",
+      "plus1m": "+1m"
+    },
+    "addEntry": "Ychwanegu Cofnod",
+    "reset": "Ailosod",
+    "recentEntries": "Cofnodion Diweddar",
+    "previous": "‹ Cynt",
+    "next": "Nesaf ›",
+    "placeholders": {
+      "trackerActivity": "e.e., Ysgrifennu adroddiad, Cyfarfod tîm #gwaith",
+      "trackerDescription": "Manylion ychwanegol am y gweithgaredd hwn..."
+    }
+  },
+  "todo": {
+    "newTodo": "Tasg Newydd",
+    "todoLabel": "Beth sydd angen i chi ei wneud?",
+    "todoPlaceholder": "e.e. Ffonio cleient ynghylch prosiect, Adolygu cyllideb #gwaith",
+    "descriptionLabel": "Disgrifiad (dewisol)",
+    "descriptionPlaceholder": "Manylion ychwanegol am yr eitem tasg hon",
+    "markTodoTitle": "Marcio fel tasg i'w gwneud",
+    "markNoteTitle": "Marcio fel nodyn",
+    "addTodo": "Ychwanegu Tasg",
+    "newTodoNote": "Nodyn Tasg Newydd",
+    "todoNoteLabel": "Beth sydd angen i chi ei nodi a'i wneud?",
+    "todoNoteDescription": "Manylion nodyn a disgrifiad tasg",
+    "addTodoNote": "Ychwanegu Nodyn Tasg",
+    "todoList": "Rhestr Tasgau",
+    "filter": "Hidlo:",
+    "sortBy": "Trefnu yn ôl:",
+    "filters": {
+      "allTodos": "Pob Tasg",
+      "dueToday": "Yn Ddyledus Heddiw",
+      "overdue": "Dros eu Terfyn",
+      "noDueDate": "Dim Dyddiad Terfyn"
+    },
+    "sorting": {
+      "newestFirst": "Diweddaraf Gyntaf",
+      "oldestFirst": "Hynaf Gyntaf",
+      "dueDateEarliest": "Dyddiad Terfyn (Cynharaf)",
+      "dueDateLatest": "Dyddiad Terfyn (Diweddaraf)",
+      "activityAZ": "Gweithgaredd A-Z",
+      "activityZA": "Gweithgaredd Z-A"
+    },
+    "todoCount": "{count} tasg",
+    "noTodos": "Ni chanfuwyd tasgau. Ychwanegwch weithgareddau fel tasgau i'w gweld yma!",
+    "pagination": {
+      "previous": "← Cynt",
+      "next": "Nesaf →",
+      "pageInfo": "Tudalen {current} o {total}"
+    },
+    "markCompleteHelp": "Cliciwch \"Marcio fel Cwblhau\" i orffen tasgau",
+    "placeholders": {
+      "todoActivity": "e.e., Ymchwilio opsiynau cyllideb, Adolygu agenda cyfarfod #gwaith",
+      "todoDescription": "Dalliwch eich nodiadau a disgrifiwch beth sydd angen ei wneud..."
+    }
+  },
+  "notes": {
+    "newNote": "Nodyn Newydd",
+    "titleLabel": "Teitl nodyn neu bwnc",
+    "titlePlaceholder": "e.e. Nodiadau cyfarfod, Syniadau ar gyfer prosiect #synfyfyrio",
+    "contentLabel": "Cynnwys nodyn",
+    "contentPlaceholder": "Ysgrifennwch gynnwys eich nodyn yma...",
+    "addNote": "Ychwanegu Nodyn",
+    "notesTitle": "Nodiadau",
+    "filters": {
+      "allNotes": "Pob Nodyn",
+      "today": "Heddiw",
+      "thisWeek": "Yr Wythnos Hon",
+      "thisMonth": "Y Mis Hwn"
+    },
+    "sort": "Trefnu:",
+    "sorting": {
+      "newestFirst": "Diweddaraf Gyntaf",
+      "oldestFirst": "Hynaf Gyntaf",
+      "activityName": "Enw Gweithgaredd"
+    },
+    "searchPlaceholder": "Chwilio drwy nodiadau...",
+    "clear": "Clirio",
+    "noNotes": "Ni chanfuwyd nodiadau.",
+    "placeholders": {
+      "noteActivity": "e.e., Nodiadau cyfarfod, Syniadau ar gyfer prosiect #brainstorm",
+      "noteDescription": "Ysgrifennwch gynnwys eich nodiadau, syniadau, arsylwadau neu feddyliau yma..."
+    }
+  },
+  "reports": {
+    "title": "Adroddiadau Gweithgaredd",
+    "dateRange": "Ystod Dyddiad",
+    "dateRangeDescription": "Dewis cyfnod amser ar gyfer eich adroddiad",
+    "startDateTitle": "Dewis dyddiad dechrau ar gyfer eich adroddiad",
+    "startDateLabel": "Dyddiad Dechrau",
+    "endDateTitle": "Dewis dyddiad gorffen ar gyfer eich adroddiad",
+    "endDateLabel": "Dyddiad Gorffen",
+    "generateReportTitle": "Cynhyrchu adroddiad ar gyfer yr ystod dyddiad a ddewisir",
+    "generateReport": "Cynhyrchu Adroddiad",
+    "thisWeekTitle": "Gosod ystod dyddiad i'r wythnos gyfredol",
+    "thisWeek": "Yr Wythnos Hon",
+    "templateOptions": "Templed ac Opsiynau",
+    "templateOptionsDescription": "Dewis fformat, opsiynau a lawrlwytho eich adroddiad",
+    "reportTemplateTitle": "Dewis y fformat ar gyfer eich adroddiad",
+    "reportTemplateLabel": "Templed Adroddiad",
+    "todoItems": "Eitemau Tasgau:",
+    "todoOptions": {
+      "excludeAll": "Eithrio pob tasg",
+      "incompleteOnly": "Cynnwys tasgau anghyflawn yn unig",
+      "includeAll": "Cynnwys pob tasg"
+    },
+    "notes": "Nodiadau:",
+    "noteOptions": {
+      "exclude": "Eithrio nodiadau",
+      "include": "Cynnwys nodiadau"
+    },
+    "downloadReportTitle": "Lawrlwytho'r adroddiad a gynhyrchir",
+    "downloadReport": "Lawrlwytho Adroddiad",
+    "openNewTabTitle": "Agor yr adroddiad a gynhyrchir mewn tab newydd",
+    "openNewTab": "Agor mewn Tab Newydd",
+    "weekNavigation": {
+      "previous": "← Wythnos Flaenorol",
+      "next": "Wythnos Nesaf →",
+      "weekOf": "Wythnos {date}"
+    },
+    "reportPreview": "Rhagolwg Adroddiad",
+    "viewFormattedTitle": "Gweld allbwn wedi'i fformatio'r adroddiad",
+    "rendered": "Wedi'i Rendro",
+    "viewSourceTitle": "Gweld cod ffynhonnell crai'r adroddiad",
+    "source": "Ffynhonnell",
+    "copyReportTitle": "Copïo cynnwys adroddiad i'r clipfwrdd",
+    "copyReport": "Copïo Adroddiad",
+    "selectDateRange": "Dewiswch ystod dyddiad a chynhyrchwch adroddiad i weld rhagolwg.",
+    "reportTemplates": "Templedi Adroddiad",
+    "templatesDescription": "Rheoli templedi ar gyfer cynhyrchu adroddiadau",
+    "manageTemplatesTitle": "Agor y golygydd templedi i greu a diwygio templedi adroddiad",
+    "manageTemplates": "Rheoli Templedi",
+    "resetDefaultTitle": "Adfer pob templed i'w fersiynau rhagosodedig gwreiddiol",
+    "resetDefault": "Ailosod i Ragosodedig",
+    "templateGuideTitle": "Gweld dogfennaeth cymorth ar gyfer cystrawen templedi a data sydd ar gael",
+    "templateGuide": "📋 Canllaw Templedi"
+  },
+  "settings": {
+    "title": "Gosodiadau",
+    "enableReminders": "Galluogi Atgofwyr",
+    "generalSettings": "Gosodiadau Cyffredinol",
+    "generalDescription": "Gosodiadau sy'n berthnasol i bob modd gweithredu",
+    "colourThemeTitle": "Dewis eich dewis thema lliw",
+    "colourTheme": "Thema Lliw",
+    "themeOptions": {
+      "system": "Dilyn gosodiadau system",
+      "light": "Modd golau",
+      "dark": "Modd tywyll"
+    },
+    "soundSettingsTitle": "Dewis pa synau i'w distewi",
+    "soundSettings": "Gosodiadau Sain",
+    "soundOptions": {
+      "allEnabled": "Pob sain wedi'i alluogi",
+      "muteAll": "Distewi pob sain",
+      "mutePomodoroOnly": "Distewi synau Pomodoro yn unig",
+      "muteNotificationOnly": "Distewi synau hysbysiadau yn unig"
+    },
+    "itemsPerPageTitle": "Nifer yr eitemau i'w dangos fesul tudalen mewn rhestrau",
+    "itemsPerPage": "Eitemau fesul tudalen",
+    "itemsPerPageOptions": {
+      "10": "10 eitem",
+      "20": "20 eitem",
+      "30": "30 eitem",
+      "50": "50 eitem",
+      "100": "100 eitem"
+    },
+    "systemNotificationsTitle": "Anfon hysbysiadau system i'ch system weithredu",
+    "systemNotifications": "Hysbysiadau System",
+    "dateFormatTitle": "Dewiswch eich fformat arddangos dyddiad a ffefrir",
+    "dateFormat": "Fformat Dyddiad",
+    "dateFormatOptions": {
+      "default": "Rhagosodedig (yn seiliedig ar osodiadau rhanbarthol)",
+      "iso": "ISO 8601 (BBBB-MM-DD)",
+      "us": "Fformat UDA (MM/DD/BBBB)",
+      "european": "Ewropeaidd (DD/MM/BBBB)",
+      "short": "Fformat Byr",
+      "long": "Fformat Hir"
+    },
+    "yesNo": {
+      "yes": "Ie",
+      "no": "Na"
+    },
+    "reminderSettings": "Gosodiadau Atgofwyr",
+    "reminderIntervalTitle": "Pa mor aml y byddwch yn derbyn hysbysiadau atgofydd gweithgaredd",
+    "reminderInterval": "Cyfwng Atgofydd",
+    "intervals": {
+      "1min": "1 munud",
+      "2min": "2 funud",
+      "5min": "5 munud",
+      "15min": "15 munud",
+      "30min": "30 munud",
+      "1hour": "1 awr",
+      "1.5hour": "1.5 awr",
+      "2hour": "2 awr",
+      "3hour": "3 awr",
+      "4hour": "4 awr"
+    },
+    "pauseResumeTitle": "Pa mor hir mae rhybuddion yn aros yn seibiant cyn parhau'n awtomatig",
+    "pauseResume": "Wrth oedi, parhau ar ôl",
+    "never": "Byth",
+    "autoStartTitle": "Dechrau atgofwyr yn awtomatig pan fydd yr app yn agor",
+    "autoStart": "Dechrau awtomatig atgofwyr wrth agor yr app",
+    "reminderSoundTitle": "Dewis y sain sy'n chwarae gydag atgofwyr",
+    "reminderSound": "Sain Atgofydd"
+  },
+  "schedule": {
+    "title": "Amserlen Gweithgaredd",
+    "description": "Gosod eich oriau a dyddiau gweithgaredd gweithredol ar gyfer hysbysiadau",
+    "activityHours": "Oriau Gweithgaredd",
+    "complexScheduleTitle": "Galluogi amserlennu cymhleth gyda sawl ystod amser y dydd",
+    "complexSchedule": "Amserlen Gymhleth",
+    "startTimeTitle": "Pryd mae eich cyfnod gweithgaredd yn dechrau",
+    "startTime": "Amser Dechrau",
+    "endTimeTitle": "Pryd mae eich cyfnod gweithgaredd yn gorffen",
+    "endTime": "Amser Gorffen",
+    "complexDescription": "Gosod sawl ystod amser ar gyfer bob dydd i ddarparu ar gyfer amserlenni cymhleth.",
+    "days": {
+      "monday": "Dydd Llun",
+      "tuesday": "Dydd Mawrth",
+      "wednesday": "Dydd Mercher",
+      "thursday": "Dydd Iau",
+      "friday": "Dydd Gwener",
+      "saturday": "Dydd Sadwrn",
+      "sunday": "Dydd Sul"
+    },
+    "addRange": "+ Ychwanegu Ystod",
+    "activityDays": "Dyddiau Gweithgaredd",
+    "datePreview": {
+      "prefix": "Rhagolwg: "
+    }
+  },
+  "pomodoro": {
+    "title": "Modd Pomodoro",
+    "description": "Cyfyngau gwaith/seibiant strwythuredig gyda hysbysiadau awtomatig",
+    "enableTitle": "Galluogi modd amseru Pomodoro gyda rhybuddion gwaith a seibiant",
+    "enable": "Galluogi Modd Pomodoro",
+    "workDurationTitle": "Hyd cyfnodau gwaith mewn munudau",
+    "workDuration": "Hyd Gwaith (munudau)",
+    "workDurations": {
+      "15": "15 munud",
+      "20": "20 munud",
+      "25": "25 munud",
+      "30": "30 munud",
+      "45": "45 munud",
+      "60": "60 munud"
+    },
+    "shortBreakTitle": "Hyd cyfnodau seibiant byr mewn munudau",
+    "shortBreak": "Hyd Seibiant Byr (munudau)",
+    "shortBreakDurations": {
+      "3": "3 munud",
+      "5": "5 munud",
+      "10": "10 munud",
+      "15": "15 munud"
+    },
+    "longBreakTitle": "Hyd cyfnodau seibiant hir mewn munudau",
+    "longBreak": "Hyd Seibiant Hir (munudau)",
+    "sessionsBeforeLongTitle": "Nifer y sesiynau gwaith cyn cymryd seibiant hir",
+    "sessionsBeforeLong": "Sesiynau cyn seibiant hir",
+    "sessionOptions": {
+      "2": "Bob 2 sesiwn",
+      "3": "Bob 3 sesiwn",
+      "4": "Bob 4 sesiwn",
+      "5": "Bob 5 sesiwn",
+      "6": "Bob 6 sesiwn"
+    },
+    "tickSounds": "Synau Tic",
+    "tickSoundTitle": "Sain tic ddewisol i'ch atgoffa eich bod mewn sesiwn waith",
+    "tickSoundType": "Math Sain Tic",
+    "tickOptions": {
+      "none": "Dim ticio",
+      "soft": "Tic meddal",
+      "classic": "Tic clasurol",
+      "digital": "Tic digidol"
+    },
+    "tickIntervalTitle": "Pa mor aml i chwarae'r sain tic mewn eiliadau",
+    "tickInterval": "Cyfwng Tic (eiliadau)",
+    "tickIntervals": {
+      "off": "I ffwrdd (dim ticio)",
+      "1": "Bob 1 eiliad",
+      "2": "Bob 2 eiliad",
+      "3": "Bob 3 eiliad",
+      "5": "Bob 5 eiliad",
+      "10": "Bob 10 eiliad",
+      "15": "Bob 15 eiliad",
+      "30": "Bob 30 eiliad",
+      "60": "Bob 60 eiliad"
+    },
+    "announceSounds": "Synau Cyhoeddi",
+    "shortBreakAnnounceTitle": "Sain i'w chwarae pan mae seibiant byr yn dechrau",
+    "shortBreakAnnounce": "Cyhoeddiad Seibiant Byr",
+    "longBreakAnnounceTitle": "Sain i'w chwarae pan mae seibiant hir yn dechrau",
+    "longBreakAnnounce": "Cyhoeddiad Seibiant Hir",
+    "resumeWorkAnnounceTitle": "Sain i'w chwarae wrth ailddechrau gwaith ar ôl seibiant",
+    "resumeWorkAnnounce": "Cyhoeddiad Ailddechrau Gwaith",
+    "options": "Opsiynau",
+    "autoStartTitle": "Dechrau'r sesiwn nesaf yn awtomatig heb ofyn am ymyrraeth â llaw",
+    "autoStart": "Dechrau sesiwn nesaf yn awtomatig",
+    "promptDescriptionsTitle": "Gofyn am ddisgrifiad gweithgaredd a chreu cofnodion log ar gyfer sesiynau gwaith",
+    "promptDescriptions": "Gofyn am ddisgrifiadau sesiwn gwaith",
+    "logBreaksTitle": "Hefyd cofnodi sesiynau seibiant yn y traciwr gweithgaredd",
+    "logBreaks": "Cofnodi sesiynau seibiant hefyd",
+    "enableLongBreaksTitle": "Galluogi seibiannau hir ar ôl cwblhau sawl sesiwn",
+    "enableLongBreaks": "Galluogi seibiannau hir",
+    "allowPausingTitle": "Caniatáu oedi sesiynau Pomodoro o'r baner",
+    "allowPausing": "Caniatáu oedi sesiwn",
+    "autoResetDailyTitle": "Ailosod y rhifydd sesiwn i 1 yn awtomatig pan mae'r dydd yn newid",
+    "autoResetDaily": "Ailosod sesiynau'n ddyddiol yn awtomatig",
+    "sessionManagement": "Rheoli Sesiynau",
+    "resetCounterTitle": "Ailosod rhifydd sesiynau i 1",
+    "resetCounter": "Ailosod Rhifydd Sesiynau"
+  },
+  "dataManagement": {
+    "backup": "Cadw Wrth Gefn Cronfa Ddata",
+    "backupDescription": "Allforio neu fewnforio eich data gweithgaredd",
+    "exportDatabase": "Allforio Cronfa Ddata",
+    "importDatabase": "Mewnforio Cronfa Ddata",
+    "warningSettings": "Gosodiadau Rhybudd",
+    "warningDescription": "Ffurfweddu deialogau cadarnhau ar gyfer gweithredoedd dinistriol",
+    "warnDeleteTitle": "Dangos deialog cadarnhau wrth ddileu gweithgareddau",
+    "warnDelete": "Rhybuddio wrth ddileu gweithgaredd",
+    "warnResetTitle": "Dangos deialog cadarnhau wrth ailosod rhifydd sesiynau Pomodoro",
+    "warnReset": "Rhybuddio wrth ailosod sesiwn",
+    "forceManualSave": "Gorfodi Cadw Â Llaw"
+  },
+  "diagnostics": {
+    "title": "🔧 Diagnostig",
+    "systemTests": "Profion System",
+    "systemTestsDescription": "Profi amrywiol gydrannau a swyddogaethau'r system",
+    "notifications": "🔔 Hysbysiadau",
+    "testReminderTitle": "Anfon atgofydd prawf",
+    "testReminder": "🧪 Atgofydd Prawf",
+    "testSoundTitle": "Chwarae sain atgofydd prawf",
+    "testSound": "🔊 Sain Prawf",
+    "refreshStatusTitle": "Adnewyddu'r dangosiad statws caniatâd atgofydd",
+    "refreshStatus": "🔄 Adnewyddu Statws",
+    "forceEnableTitle": "Gorfodi dangos deialog caniatâd hysbysiad",
+    "forceEnable": "⚡ Gorfodi Galluogi",
+    "serviceWorker": "⚙️ Gweithiwr Gwasanaeth",
+    "runDiagnosticsTitle": "Rhedeg diagnostig cynhwysfawr gweithiwr gwasanaeth",
+    "runDiagnostics": "🔍 Rhedeg Diagnostig",
+    "dataManagement": "⚠️ Rheoli Data",
+    "dataWarning": "Ni ellir dadwneud y gweithredoedd hyn",
+    "clearAllData": "🗑️ Clirio Pob Data"
+  },
+  "modals": {
+    "edit": {
+      "title": "Golygu Cofnod",
+      "activity": "Gweithgaredd",
+      "description": "Disgrifiad",
+      "time": "Amser",
+      "markTodo": "Marcio fel Tasg",
+      "markNote": "Marcio fel Nodyn",
+      "dueDate": "Dyddiad Terfyn (dewisol)",
+      "update": "Diweddaru Cofnod",
+      "cancel": "Canslo"
+    },
+    "templateManager": {
+      "title": "Rheolwr Templedi",
+      "saveAll": "Cadw Pob Newid",
+      "close": "Cau",
+      "templates": "Templedi",
+      "addTemplate": "Ychwanegu Templed",
+      "resetAll": "Ailosod Popeth",
+      "selectTemplate": "Dewis templed i'w olygu",
+      "save": "Cadw",
+      "delete": "Dileu",
+      "duplicate": "Dyblygu",
+      "editor": "Golygydd",
+      "preview": "Rhagolwg",
+      "templateName": "Enw Templed",
+      "templateNamePlaceholder": "e.e. Fy Nhem­pled Personol",
+      "description": "Disgrifiad",
+      "descriptionPlaceholder": "Disgrifiad byr o'r templed",
+      "outputType": "Math Allbwn",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Testun Plaen"
+      },
+      "templateContent": "Cynnwys Templed",
+      "templateContentPlaceholder": "Rhowch gynnwys eich templed yma...",
+      "setDefault": "Gosod fel templed rhagosodedig",
+      "previewTitle": "Rhagolwg",
+      "rendered": "Wedi'i Rendro",
+      "source": "Ffynhonnell",
+      "refresh": "Adnewyddu",
+      "selectTemplatePreview": "Dewis templed i weld rhagolwg"
+    },
+    "templateGuide": {
+      "title": "Canllaw Templedi",
+      "activityDescription": "Disgrifiad gweithgaredd"
+    },
+    "pomodoroActivity": {
+      "title": "Gweithgaredd Sesiwn Gwaith",
+      "activityLabel": "Beth fyddwch chi'n gweithio arno?",
+      "activityPlaceholder": "e.e. Ysgrifennu adroddiad, Paratoi cyfarfod",
+      "usePrevious": "Defnyddio Gweithgaredd Blaenorol",
+      "descriptionLabel": "Disgrifiad (dewisol)",
+      "descriptionPlaceholder": "Manylion ychwanegol am y sesiwn gwaith hon",
+      "startSession": "Dechrau Sesiwn Gwaith",
+      "cancel": "Canslo"
+    },
+    "pomodoroAbandon": {
+      "title": "Gadael Sesiwn",
+      "workedFor": "Fe weithioch am {minutes} munud",
+      "saveQuestion": "Hoffech chi gadw'r hyn a gyflawnasom yn ystod y sesiwn rhannol hon?",
+      "activityLabel": "Gweithgaredd a gyflawnwyd",
+      "activityPlaceholder": "Beth weithioch chi arno yn ystod yr amser hwn?",
+      "descriptionLabel": "Disgrifiad (dewisol)",
+      "descriptionPlaceholder": "Manylion ychwanegol am yr hyn a gyflawnasom",
+      "saveAbandon": "Cadw Gwaith a Gadael",
+      "justAbandon": "Gadael Yn Unig"
+    },
+    "confirmation": {
+      "title": "Cadarnhau Gweithred",
+      "defaultMessage": "Ydych chi'n siŵr eich bod am gyflawni'r weithred hon?",
+      "dontAskAgain": "Peidio gofyn eto ar gyfer y math hwn o weithred",
+      "confirm": "Cadarnhau",
+      "cancel": "Canslo"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Gwybodaeth Oriau Gweithgaredd",
+      "alertsOff": "Mae rhybuddion atgofydd wedi'u diffodd y tu allan i oriau gweithgaredd.",
+      "configure": "⚙️ Ffurfweddu Oriau Gweithgaredd",
+      "gotIt": "Deall"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Eitemau Dros eu Terfyn",
+      "message": "Mae'r eitemau canlynol wedi mynd heibio eu dyddiad terfyn:",
+      "gotIt": "Deall"
+    },
+    "hashtagBrowser": {
+      "title": "Porwr Hashnodau",
+      "count": "{count} hashnod wedi'u canfod",
+      "noHashtags": "Ni chanfuwyd hashnodau. Ychwanegwch weithgareddau gyda #hashnodau i'w gweld yma!"
+    },
+    "userGuide": {
+      "title": "Canllaw Defnyddiwr",
+      "settingsCustomization": "Gosodiadau a Chustomeiddia"
+    },
+    "notificationSetup": {
+      "title": "Galluogi Hysbysiadau System?",
+      "appName": "Traciwr Gweithgareddau",
+      "enableOption": "✅ Galluogi Hysbysiadau System",
+      "soundOption": "🔊 Sain Yn Unig",
+      "enableButton": "Galluogi Hysbysiadau System",
+      "soundButton": "Sain Yn Unig"
+    },
+    "about": {
+      "title": "Ynghylch Traciwr Gweithgareddau",
+      "appInfo": "Gwybodaeth Ap",
+      "versionHistory": "Hanes Fersiynau",
+      "loadingVersion": "Yn llwytho hanes fersiynau...",
+      "appName": "Traciwr Gweithgareddau",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ Gweld ar GitHub"
+    },
+    "workspaceManager": {
+      "title": "🏢 Rheolwr Mannau Gwaith",
+      "currentWorkspace": "Man Gwaith Cyfredol: {name}",
+      "description": "Mae pob man gwaith yn cynnal gweithgareddau, gosodiadau a chyflwr ar wahân...",
+      "availableWorkspaces": "Mannau Gwaith Sydd ar Gael",
+      "enterName": "Rhowch enw man gwaith...",
+      "createWorkspace": "Creu Man Gwaith",
+      "close": "Cau"
+    },
+    "languagePicker": {
+      "title": "🌐 Dewis iaith"
+    }
+  },
+  "common": {
+    "save": "Cadw",
+    "cancel": "Canslo",
+    "delete": "Dileu",
+    "edit": "Golygu",
+    "close": "Cau",
+    "yes": "Ie",
+    "no": "Na",
+    "ok": "Iawn",
+    "loading": "Yn llwytho...",
+    "error": "Gwall",
+    "success": "Llwyddiant",
+    "warning": "Rhybudd",
+    "info": "Gwybodaeth",
+    "none": "Dim",
+    "all": "Popeth",
+    "today": "Heddiw",
+    "yesterday": "Ddoe",
+    "tomorrow": "Yfory",
+    "thisWeek": "Yr Wythnos Hon",
+    "thisMonth": "Y Mis Hwn",
+    "minutes": "{count} munud",
+    "hours": "{count} awr",
+    "days": "{count} diwrnod",
+    "weeks": "{count} wythnos",
+    "months": "{count} mis",
+    "daysOfWeek": {
+      "monday": "Dydd Llun",
+      "tuesday": "Dydd Mawrth",
+      "wednesday": "Dydd Mercher",
+      "thursday": "Dydd Iau",
+      "friday": "Dydd Gwener",
+      "saturday": "Dydd Sadwrn",
+      "sunday": "Dydd Sul"
+    },
+    "markComplete": "Marcio fel cyflawn",
+    "outsideActivityHours": "Y tu allan i oriau gweithgaredd",
+    "todoTag": "Tasg",
+    "noteTag": "Nodyn"
+  }
+}

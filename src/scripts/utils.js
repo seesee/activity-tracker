@@ -3,34 +3,185 @@
  */
 
 /**
- * Format a timestamp to a readable date and time string
+ * Get user's date format preference
+ * @returns {string} Selected date format
+ */
+function getUserDateFormat() {
+    try {
+        const settings = JSON.parse(localStorage.getItem('activitySettings') || '{}');
+        return settings.dateFormat || 'default';
+    } catch {
+        return 'default';
+    }
+}
+
+/**
+ * Get date formatting options based on user preference
+ * @param {string} formatType - Type of format (datetime, date, time)
+ * @returns {Object} Formatting options for toLocaleDateString/toLocaleString
+ */
+function getDateFormatOptions(formatType = 'datetime') {
+    const userFormat = getUserDateFormat();
+    
+    const formatMappings = {
+        datetime: {
+            default: {
+                locale: 'en-GB',
+                options: {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            },
+            iso: {
+                locale: 'sv-SE', // Swedish locale uses ISO format
+                options: {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            },
+            us: {
+                locale: 'en-US',
+                options: {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            },
+            european: {
+                locale: 'en-GB',
+                options: {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            },
+            short: {
+                locale: 'en-GB',
+                options: {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            },
+            long: {
+                locale: 'en-GB',
+                options: {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            }
+        },
+        date: {
+            default: {
+                locale: 'en-GB',
+                options: {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }
+            },
+            iso: {
+                locale: 'sv-SE',
+                options: {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }
+            },
+            us: {
+                locale: 'en-US',
+                options: {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }
+            },
+            european: {
+                locale: 'en-GB',
+                options: {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }
+            },
+            short: {
+                locale: 'en-GB',
+                options: {
+                    month: 'short',
+                    day: 'numeric'
+                }
+            },
+            long: {
+                locale: 'en-GB',
+                options: {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }
+            }
+        }
+    };
+
+    return formatMappings[formatType][userFormat] || formatMappings[formatType]['default'];
+}
+
+/**
+ * Format a timestamp to a readable date and time string using user's preferred format
  * @param {string} timestamp - ISO timestamp string
  * @returns {string} Formatted date and time
  */
 function formatDateTime(timestamp) {
     const date = new Date(timestamp);
-    return date.toLocaleString('en-GB', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    const format = getDateFormatOptions('datetime');
+    
+    // For ISO format, handle manually for consistent YYYY-MM-DD HH:MM format
+    if (getUserDateFormat() === 'iso') {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hour = String(date.getHours()).padStart(2, '0');
+        const minute = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hour}:${minute}`;
+    }
+    
+    return date.toLocaleString(format.locale, format.options);
 }
 
 /**
- * Format a date to a readable date string
+ * Format a date to a readable date string using user's preferred format
  * @param {Date} date - Date object
  * @returns {string} Formatted date
  */
 function formatDate(date) {
-    return date.toLocaleDateString('en-GB', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    const format = getDateFormatOptions('date');
+    
+    // For ISO format, handle manually for consistent YYYY-MM-DD format
+    if (getUserDateFormat() === 'iso') {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    return date.toLocaleDateString(format.locale, format.options);
 }
 
 /**
@@ -296,4 +447,86 @@ function deepClone(obj) {
         });
         return cloned;
     }
+}
+
+/**
+ * Initialize date input formatters for all datetime-local inputs
+ */
+function initializeDateInputFormatters() {
+    const dateTimeInputs = document.querySelectorAll('input[type="datetime-local"], input[type="date"]');
+    
+    dateTimeInputs.forEach(input => {
+        // Skip if already initialized
+        if (input.dataset.formatterInitialized) return;
+        
+        // Create a display element for the formatted date
+        const display = document.createElement('div');
+        display.className = 'date-format-display';
+        display.style.cssText = `
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 2px;
+            min-height: 1.2em;
+        `;
+        
+        // Insert after the input
+        input.parentNode.insertBefore(display, input.nextSibling);
+        
+        // Function to update the display
+        const updateDisplay = () => {
+            if (input.value) {
+                try {
+                    const date = new Date(input.value);
+                    if (!isNaN(date.getTime())) {
+                        if (input.type === 'datetime-local') {
+                            display.textContent = t('schedule.datePreview.prefix') + formatDateTime(date.toISOString());
+                        } else {
+                            display.textContent = t('schedule.datePreview.prefix') + formatDate(date);
+                        }
+                        display.style.color = '#666';
+                    } else {
+                        display.textContent = '';
+                    }
+                } catch (error) {
+                    display.textContent = '';
+                }
+            } else {
+                display.textContent = '';
+            }
+        };
+        
+        // Listen for changes
+        input.addEventListener('input', updateDisplay);
+        input.addEventListener('change', updateDisplay);
+        
+        // Initial update
+        updateDisplay();
+        
+        // Mark as initialized
+        input.dataset.formatterInitialized = 'true';
+    });
+}
+
+/**
+ * Update all date input formatters when date format changes
+ */
+function updateDateInputFormatters() {
+    const displays = document.querySelectorAll('.date-format-display');
+    displays.forEach(display => {
+        const input = display.previousElementSibling;
+        if (input && input.value) {
+            try {
+                const date = new Date(input.value);
+                if (!isNaN(date.getTime())) {
+                    if (input.type === 'datetime-local') {
+                        display.textContent = t('schedule.datePreview.prefix') + formatDateTime(date.toISOString());
+                    } else {
+                        display.textContent = t('schedule.datePreview.prefix') + formatDate(date);
+                    }
+                }
+            } catch (error) {
+                // Ignore errors
+            }
+        }
+    });
 }

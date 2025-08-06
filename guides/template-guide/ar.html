@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>البدء</h4>
+        <p>تستخدم القوالب صيغة بسيطة لاستبدال المتغيرات بأقواس مجعدة مزدوجة لإنشاء تقارير ديناميكية.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>الصيغة الأساسية</h4>
+        <ul>
+            <li><code>{{variable}}</code> - استبدال متغير بسيط</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - حلقة عبر المصفوفات</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - محتوى شرطي</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>صيغة الأنابيب وتسلسل الوظائف</h4>
+        <p>حوّل البيانات باستخدام صيغة الأنابيب (<code>|</code>) لربط عدة وظائف معًا:</p>
+        
+        <h5>صيغة الأنابيب الأساسية</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - تطبيق تحويل واحد</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - ربط تحويلات متعددة</li>
+            <li><code>{{ variable | function('parameter') }}</code> - تمرير معاملات للوظائف</li>
+        </ul>
+
+        <h5>وظائف التحويل المتاحة</h5>
+        <ul>
+            <li><code>date('format')</code> - تنسيق الطوابع الزمنية كتواريخ
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - استخراج الوقت من الطوابع الزمنية
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - إخفاء الأحرف الخاصة لـ CSV
+                <ul>
+                    <li>يحيط النص بعلامات اقتباس إذا كان يحتوي على فواصل أو علامات اقتباس أو فواصل أسطر</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - إزالة فواصل الأسطر من النص
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>مثال قالب CSV مع التسلسل</h5>
+        <p>كيف يستخدم قالب CSV التسلسل لإنشاء مخرجات نظيفة ومُخفية بشكل صحيح:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>كيف يعمل هذا:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - يحول الطابع الزمني إلى تنسيق YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - يستخرج جزء الوقت</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - يزيل أولاً فواصل الأسطر، ثم يخفي لـ CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - نفس العملية للوصف</li>
+        </ul>
+
+        <h5>الترتيب مهم في التسلسل!</h5>
+        <p>تُطبق الوظائف من اليسار إلى اليمين، لذا الترتيب مهم:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - إزالة الفواصل أولاً، ثم الإخفاء</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - الإخفاء أولاً قد يتداخل مع إزالة الفواصل</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>البيانات المتاحة</h4>
+        <p>البيانات التالية متاحة في قوالبك:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - عنوان التقرير</li>
+            <li><code>{{startDate}}</code> - تاريخ بداية التقرير (منسق)</li>
+            <li><code>{{endDate}}</code> - تاريخ انتهاء التقرير (منسق)</li>
+            <li><code>{{totalEntries}}</code> - العدد الإجمالي لإدخالات النشاط</li>
+            <li><code>{{entries}}</code> - مصفوفة جميع إدخالات النشاط</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>خصائص الإدخال</h4>
+        <p>كل إدخال في حلقة <code>{{#each entries}}</code> لديه:</p>
+        <ul>
+            <li><code>{{activity}}</code> - اسم النشاط</li>
+            <li><code>{{description}}</code> - وصف النشاط</li>
+            <li><code>{{timestamp}}</code> - طابع زمني ISO خام</li>
+            <li><code>{{formattedTime}}</code> - وقت منسق بطريقة جميلة (مثل "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - تاريخ منسق بطريقة جميلة (مثل "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - قيمة منطقية: true إذا كان هذا عنصر مهام</li>
+            <li><code>{{tags}}</code> - مصفوفة علامات التصنيف لهذا الإدخال</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>التحويلات الشائعة</h4>
+        <p>حوّل الطوابع الزمنية ونسّق البيانات:</p>
+        <ul>
+            <li><strong>تنسيقات التاريخ</strong>: استخدم <code>{{formattedDate}}</code> و <code>{{formattedTime}}</code> للتنسيقات المقروءة</li>
+            <li><strong>المحتوى الشرطي</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - اعرض فقط إذا كان الوصف موجودًا</li>
+            <li><strong>حلقة عبر العلامات</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - اعرض جميع علامات التصنيف</li>
+            <li><strong>تصفية المهام</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - وسّم عناصر المهام</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>تنسيق Markdown</h4>
+        <p>استخدم صيغة Markdown للتنسيق المقروء:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - عنوان كبير</li>
+            <li><code>## {{activity}}</code> - عنوان متوسط</li>
+            <li><code>**{{activity}}**</code> - نص عريض</li>
+            <li><code>*{{description}}*</code> - نص مائل</li>
+            <li><code>- {{activity}}</code> - نقطة قائمة</li>
+            <li><code>`{{formattedTime}}`</code> - تنسيق كود</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>مثال قالب</h4>
+        <pre><code># {{reportTitle}}
+من {{startDate}} إلى {{endDate}}
+
+إجمالي الأنشطة: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+العلامات: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**عنصر مهام**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>نصائح محترفة</h4>
+        <ul>
+            <li><strong>قوالب HTML</strong>: استخدم للتنسيق الغني مع أنماط CSS والتخطيطات المعقدة</li>
+            <li><strong>قوالب Markdown</strong>: مثالية للوثائق البسيطة والمقروءة</li>
+            <li><strong>قوالب CSV</strong>: مثالية لتحليل البيانات في جداول البيانات</li>
+            <li><strong>ميزة المعاينة</strong>: اختبر قوالبك دائمًا قبل الحفظ</li>
+            <li><strong>التنسيقات المخصصة</strong>: ادمج متغيرات متعددة للتخطيطات الفريدة</li>
+        </ul>
+    </div>
+</div>

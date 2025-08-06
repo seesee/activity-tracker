@@ -1081,7 +1081,7 @@ class PomodoroManager {
         
         if (!this.isActive) {
             if (statusDisplay) {
-                statusDisplay.textContent = 'Pomodoro mode disabled';
+                statusDisplay.textContent = t('status.pomodoroDisabled');
                 statusDisplay.style.display = 'block';
             }
             if (timer) timer.style.display = 'none';

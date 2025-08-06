@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "日本語",
+    "languageCode": "ja",
+    "locale": "ja-JP",
+    "filename": "index.ja.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "yyyy/MM/dd",
+      "long": "yyyy年M月d日",
+      "weekday": "EEEE",
+      "monthYear": "yyyy年M月"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ".",
+      "thousands": ",",
+      "currency": "¥"
+    }
+  },
+  "app": {
+    "title": "アクティビティトラッカー",
+    "tagline": "タスク日記、オーガナイザー、ナレッジベース",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "offline": "アプリがオフライン"
+  },
+  "navigation": {
+    "tracker": "📝 トラッカー",
+    "todo": "✅ TODO",
+    "notes": "📔 メモ",
+    "alert": "⚠️ アラート",
+    "alertTitle": "期限切れの項目を表示",
+    "startReminders": "リマインダーを開始",
+    "startPomodoro": "🍅 ポモドーロを開始",
+    "settingsMenu": "設定メニュー",
+    "burgerMenu": {
+      "tracker": "トラッカー",
+      "notes": "メモ",
+      "todo": "TODO",
+      "reports": "レポート",
+      "workspaces": "ワークスペース",
+      "settings": "設定...",
+      "diagnostics": "診断",
+      "language": "言語",
+      "userGuide": "ユーザーガイド",
+      "about": "アプリについて"
+    },
+    "pauseMenu": {
+      "minutes5": "5分",
+      "minutes15": "15分",
+      "minutes30": "30分",
+      "hour1": "1時間",
+      "hours2": "2時間",
+      "untilManualResume": "手動で再開するまで"
+    }
+  },
+  "search": {
+    "placeholder": "アクティビティ、タスク、ハッシュタグを検索...",
+    "browseHashtags": "ハッシュタグを閲覧",
+    "results": "検索結果",
+    "noResults": "上の検索バーを使用してアクティビティ、タスク、ハッシュタグを検索してください。",
+    "resultCount": "{count}件の結果",
+    "sortBy": "並び順：",
+    "show": "表示：",
+    "filters": {
+      "relevance": "関連性",
+      "newestFirst": "新しい順",
+      "oldestFirst": "古い順",
+      "activityAZ": "アクティビティA-Z",
+      "activityZA": "アクティビティZ-A",
+      "allItems": "すべての項目",
+      "activitiesOnly": "アクティビティのみ",
+      "todosOnly": "TODOのみ",
+      "completedOnly": "完了済みのみ"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "ポモドーロモードが無効",
+    "pause": "一時停止",
+    "nextReminder": "次のアクティビティリマインダー：",
+    "checkingNotifications": "通知状況を確認中...",
+    "remindersActiveWithSystem": "システム通知でアクティビティリマインダーがアクティブ",
+    "remindersActiveWithSound": "サウンドアラートでアクティビティリマインダーがアクティブ",
+    "turnOffReminders": "アクティビティリマインダーをオフ",
+    "remindersDisabled": "アクティビティリマインダーは無効です",
+    "turnOnReminders": "アクティビティリマインダーをオン",
+    "paused": "一時停止中",
+    "readyToStart": "開始準備完了"
+  },
+  "tracker": {
+    "title": "アクティビティ入力",
+    "hideShowForm": "フォームを非表示/表示",
+    "activityLabel": "何をしていますか？",
+    "activityPlaceholder": "例：レポート作成、チームミーティング #仕事",
+    "descriptionLabel": "説明（任意）",
+    "descriptionPlaceholder": "このアクティビティに関する追加の詳細",
+    "timeLabel": "時間",
+    "markTodoTitle": "TODOとしてマーク（Ctrl+Tで切り替え）",
+    "markTodo": "TODOとしてマーク",
+    "markNoteTitle": "メモとしてマーク（Ctrl+Nで切り替え）",
+    "markNote": "メモとしてマーク",
+    "removeFromTodos": "TODOから削除",
+    "removeFromNotes": "メモから削除",
+    "todoActive": "✓ TODO",
+    "noteActive": "✓ メモ",
+    "dueDateLabel": "期限（任意）",
+    "dueDateQuickButtons": {
+      "minus1d": "-1日",
+      "plus1d": "+1日",
+      "minus1w": "-1週",
+      "plus1w": "+1週",
+      "minus1m": "-1月",
+      "plus1m": "+1月"
+    },
+    "addEntry": "エントリを追加",
+    "reset": "リセット",
+    "recentEntries": "最近のエントリ",
+    "previous": "‹ 前へ",
+    "next": "次へ ›",
+    "placeholders": {
+      "trackerActivity": "例：レポート作成、チームミーティング #仕事",
+      "trackerDescription": "このアクティビティについての追加詳細..."
+    }
+  },
+  "todo": {
+    "newTodo": "新しいTODO",
+    "todoLabel": "何をする必要がありますか？",
+    "todoPlaceholder": "例：プロジェクトについてクライアントに電話、予算を確認 #仕事",
+    "descriptionLabel": "説明（任意）",
+    "descriptionPlaceholder": "このTODO項目に関する追加の詳細",
+    "markTodoTitle": "TODOとしてマーク",
+    "markNoteTitle": "メモとしてマーク",
+    "addTodo": "TODOを追加",
+    "newTodoNote": "新しいTODOメモ",
+    "todoNoteLabel": "何をメモして実行する必要がありますか？",
+    "todoNoteDescription": "メモの詳細とTODOの説明",
+    "addTodoNote": "TODOメモを追加",
+    "todoList": "TODOリスト",
+    "filter": "フィルタ：",
+    "sortBy": "並び順：",
+    "filters": {
+      "allTodos": "すべてのTODO",
+      "dueToday": "今日期限",
+      "overdue": "期限切れ",
+      "noDueDate": "期限なし"
+    },
+    "sorting": {
+      "newestFirst": "新しい順",
+      "oldestFirst": "古い順",
+      "dueDateEarliest": "期限（早い順）",
+      "dueDateLatest": "期限（遅い順）",
+      "activityAZ": "アクティビティA-Z",
+      "activityZA": "アクティビティZ-A"
+    },
+    "todoCount": "{count}個のTODO",
+    "noTodos": "TODOが見つかりません。アクティビティをTODOとして追加すると、ここに表示されます！",
+    "pagination": {
+      "previous": "← 前へ",
+      "next": "次へ →",
+      "pageInfo": "ページ{current}/{total}"
+    },
+    "markCompleteHelp": "\"完了としてマーク\"をクリックしてTODOを完了します",
+    "placeholders": {
+      "todoActivity": "例：予算オプションを調査、会議アジェンダをレビュー #仕事",
+      "todoDescription": "メモを取り、何をする必要があるか説明してください..."
+    }
+  },
+  "notes": {
+    "newNote": "新しいメモ",
+    "titleLabel": "メモのタイトルまたはトピック",
+    "titlePlaceholder": "例：会議メモ、プロジェクトのアイデア #ブレインストーミング",
+    "contentLabel": "メモの内容",
+    "contentPlaceholder": "ここにメモの内容を書いてください...",
+    "addNote": "メモを追加",
+    "notesTitle": "メモ",
+    "filters": {
+      "allNotes": "すべてのメモ",
+      "today": "今日",
+      "thisWeek": "今週",
+      "thisMonth": "今月"
+    },
+    "sort": "並び替え：",
+    "sorting": {
+      "newestFirst": "新しい順",
+      "oldestFirst": "古い順",
+      "activityName": "アクティビティ名"
+    },
+    "searchPlaceholder": "メモを検索...",
+    "clear": "クリア",
+    "noNotes": "メモが見つかりません。",
+    "placeholders": {
+      "noteActivity": "例：会議メモ、プロジェクトのアイデア #ブレインストーミング",
+      "noteDescription": "ここにノートの内容、アイデア、観察、考えを書いてください..."
+    }
+  },
+  "reports": {
+    "title": "アクティビティレポート",
+    "dateRange": "日付範囲",
+    "dateRangeDescription": "レポートの期間を選択してください",
+    "startDateTitle": "レポートの開始日を選択",
+    "startDateLabel": "開始日",
+    "endDateTitle": "レポートの終了日を選択",
+    "endDateLabel": "終了日",
+    "generateReportTitle": "選択した日付範囲のレポートを生成",
+    "generateReport": "レポートを生成",
+    "thisWeekTitle": "日付範囲を今週に設定",
+    "thisWeek": "今週",
+    "templateOptions": "テンプレートとオプション",
+    "templateOptionsDescription": "形式とオプションを選択してレポートをダウンロード",
+    "reportTemplateTitle": "レポートの形式を選択",
+    "reportTemplateLabel": "レポートテンプレート",
+    "todoItems": "TODO項目：",
+    "todoOptions": {
+      "excludeAll": "すべてのTODOを除外",
+      "incompleteOnly": "未完了のTODOのみ含める",
+      "includeAll": "すべてのTODOを含める"
+    },
+    "notes": "メモ：",
+    "noteOptions": {
+      "exclude": "メモを除外",
+      "include": "メモを含める"
+    },
+    "downloadReportTitle": "生成されたレポートをダウンロード",
+    "downloadReport": "レポートをダウンロード",
+    "openNewTabTitle": "生成されたレポートを新しいタブで開く",
+    "openNewTab": "新しいタブで開く",
+    "weekNavigation": {
+      "previous": "← 前の週",
+      "next": "次の週 →",
+      "weekOf": "{date}の週"
+    },
+    "reportPreview": "レポートプレビュー",
+    "viewFormattedTitle": "レポートのフォーマットされた出力を表示",
+    "rendered": "レンダリング済み",
+    "viewSourceTitle": "レポートの生ソースコードを表示",
+    "source": "ソース",
+    "copyReportTitle": "レポートの内容をクリップボードにコピー",
+    "copyReport": "レポートをコピー",
+    "selectDateRange": "日付範囲を選択してレポートを生成すると、プレビューが表示されます。",
+    "reportTemplates": "レポートテンプレート",
+    "templatesDescription": "レポート生成用のテンプレートを管理",
+    "manageTemplatesTitle": "テンプレートエディタを開き、レポートテンプレートを作成・修正",
+    "manageTemplates": "テンプレートを管理",
+    "resetDefaultTitle": "すべてのテンプレートを元のデフォルトバージョンに復元",
+    "resetDefault": "デフォルトにリセット",
+    "templateGuideTitle": "テンプレート構文と利用可能なデータのヘルプドキュメントを表示",
+    "templateGuide": "📋 テンプレートガイド"
+  },
+  "settings": {
+    "title": "設定",
+    "enableReminders": "リマインダーを有効にする",
+    "generalSettings": "一般設定",
+    "generalDescription": "すべての動作モードに適用される設定",
+    "colourThemeTitle": "カラーテーマの設定を選択",
+    "colourTheme": "カラーテーマ",
+    "themeOptions": {
+      "system": "システム設定に従う",
+      "light": "ライトモード",
+      "dark": "ダークモード"
+    },
+    "soundSettingsTitle": "ミュートする音を選択",
+    "soundSettings": "サウンド設定",
+    "soundOptions": {
+      "allEnabled": "すべての音を有効",
+      "muteAll": "すべての音をミュート",
+      "mutePomodoroOnly": "ポモドーロ音のみミュート",
+      "muteNotificationOnly": "通知音のみミュート"
+    },
+    "itemsPerPageTitle": "リストでページあたりに表示する項目数",
+    "itemsPerPage": "ページあたりの項目数",
+    "itemsPerPageOptions": {
+      "10": "10項目",
+      "20": "20項目",
+      "30": "30項目",
+      "50": "50項目",
+      "100": "100項目"
+    },
+    "systemNotificationsTitle": "オペレーティングシステムにシステム通知を送信",
+    "systemNotifications": "システム通知",
+    "dateFormatTitle": "お好みの日付表示形式を選択",
+    "dateFormat": "日付形式",
+    "dateFormatOptions": {
+      "default": "デフォルト（ロケールベース）",
+      "iso": "ISO 8601（YYYY-MM-DD）",
+      "us": "米国形式（MM/DD/YYYY）",
+      "european": "ヨーロッパ（DD/MM/YYYY）",
+      "short": "短い形式",
+      "long": "長い形式"
+    },
+    "yesNo": {
+      "yes": "はい",
+      "no": "いいえ"
+    },
+    "reminderSettings": "リマインダー設定",
+    "reminderIntervalTitle": "アクティビティリマインダー通知を受信する頻度",
+    "reminderInterval": "リマインダー間隔",
+    "intervals": {
+      "1min": "1分",
+      "2min": "2分",
+      "5min": "5分",
+      "15min": "15分",
+      "30min": "30分",
+      "1hour": "1時間",
+      "1.5hour": "1.5時間",
+      "2hour": "2時間",
+      "3hour": "3時間",
+      "4hour": "4時間"
+    },
+    "pauseResumeTitle": "アラートが一時停止してから自動再開するまでの時間",
+    "pauseResume": "一時停止時、再開までの時間",
+    "never": "なし",
+    "autoStartTitle": "アプリを開くときにリマインダーを自動開始",
+    "autoStart": "アプリ開始時にリマインダーを自動開始",
+    "reminderSoundTitle": "リマインダーで再生する音を選択",
+    "reminderSound": "リマインダー音"
+  },
+  "schedule": {
+    "title": "アクティビティスケジュール",
+    "description": "通知用のアクティブなアクティビティ時間と曜日を設定",
+    "activityHours": "アクティビティ時間",
+    "complexScheduleTitle": "1日に複数の時間帯を持つ複雑なスケジューリングを有効化",
+    "complexSchedule": "複雑なスケジュール",
+    "startTimeTitle": "アクティビティ期間の開始時刻",
+    "startTime": "開始時刻",
+    "endTimeTitle": "アクティビティ期間の終了時刻",
+    "endTime": "終了時刻",
+    "complexDescription": "複雑なスケジュールに対応するために、各日に複数の時間帯を設定します。",
+    "days": {
+      "monday": "月曜日",
+      "tuesday": "火曜日",
+      "wednesday": "水曜日",
+      "thursday": "木曜日",
+      "friday": "金曜日",
+      "saturday": "土曜日",
+      "sunday": "日曜日"
+    },
+    "addRange": "+ 時間帯を追加",
+    "activityDays": "アクティビティ日",
+    "datePreview": {
+      "prefix": "プレビュー: "
+    }
+  },
+  "pomodoro": {
+    "title": "ポモドーロモード",
+    "description": "自動通知付きの構造化された作業/休憩インターバル",
+    "enableTitle": "作業と休憩のアラート付きポモドーロタイミングモードを有効化",
+    "enable": "ポモドーロモードを有効化",
+    "workDurationTitle": "作業期間の長さ（分）",
+    "workDuration": "作業時間（分）",
+    "workDurations": {
+      "15": "15分",
+      "20": "20分",
+      "25": "25分",
+      "30": "30分",
+      "45": "45分",
+      "60": "60分"
+    },
+    "shortBreakTitle": "短い休憩期間の長さ（分）",
+    "shortBreak": "短い休憩時間（分）",
+    "shortBreakDurations": {
+      "3": "3分",
+      "5": "5分",
+      "10": "10分",
+      "15": "15分"
+    },
+    "longBreakTitle": "長い休憩期間の長さ（分）",
+    "longBreak": "長い休憩時間（分）",
+    "sessionsBeforeLongTitle": "長い休憩を取る前の作業セッション数",
+    "sessionsBeforeLong": "長い休憩前のセッション",
+    "sessionOptions": {
+      "2": "2セッションごと",
+      "3": "3セッションごと",
+      "4": "4セッションごと",
+      "5": "5セッションごと",
+      "6": "6セッションごと"
+    },
+    "tickSounds": "チック音",
+    "tickSoundTitle": "作業セッション中であることを思い出させるオプションのチック音",
+    "tickSoundType": "チック音タイプ",
+    "tickOptions": {
+      "none": "チック音なし",
+      "soft": "ソフトなチック音",
+      "classic": "クラシックなチック音",
+      "digital": "デジタルなチック音"
+    },
+    "tickIntervalTitle": "チック音を再生する間隔（秒）",
+    "tickInterval": "チック音間隔（秒）",
+    "tickIntervals": {
+      "off": "オフ（チック音なし）",
+      "1": "1秒ごと",
+      "2": "2秒ごと",
+      "3": "3秒ごと",
+      "5": "5秒ごと",
+      "10": "10秒ごと",
+      "15": "15秒ごと",
+      "30": "30秒ごと",
+      "60": "60秒ごと"
+    },
+    "announceSounds": "アナウンス音",
+    "shortBreakAnnounceTitle": "短い休憩が始まるときに再生する音",
+    "shortBreakAnnounce": "短い休憩アナウンス",
+    "longBreakAnnounceTitle": "長い休憩が始まるときに再生する音",
+    "longBreakAnnounce": "長い休憩アナウンス",
+    "resumeWorkAnnounceTitle": "休憩後に作業を再開するときに再生する音",
+    "resumeWorkAnnounce": "作業再開アナウンス",
+    "options": "オプション",
+    "autoStartTitle": "手動の介入を必要とせずに次のセッションを自動開始",
+    "autoStart": "次のセッションを自動開始",
+    "promptDescriptionsTitle": "アクティビティの説明を求め、作業セッションのログエントリを作成",
+    "promptDescriptions": "作業セッションの説明を求める",
+    "logBreaksTitle": "アクティビティトラッカーで休憩セッションもログに記録",
+    "logBreaks": "休憩セッションもログに記録",
+    "enableLongBreaksTitle": "複数のセッション完了後に長い休憩を有効化",
+    "enableLongBreaks": "長い休憩を有効化",
+    "allowPausingTitle": "バナーからポモドーロセッションの一時停止を許可",
+    "allowPausing": "セッション一時停止を許可",
+    "autoResetDailyTitle": "日が変わったときにセッションカウンターを1に自動リセット",
+    "autoResetDaily": "セッションを毎日自動リセット",
+    "sessionManagement": "セッション管理",
+    "resetCounterTitle": "セッションカウンターを1にリセット",
+    "resetCounter": "セッションカウンターをリセット"
+  },
+  "dataManagement": {
+    "backup": "データベースバックアップ",
+    "backupDescription": "アクティビティデータをエクスポートまたはインポート",
+    "exportDatabase": "データベースをエクスポート",
+    "importDatabase": "データベースをインポート",
+    "warningSettings": "警告設定",
+    "warningDescription": "破壊的アクションの確認ダイアログを設定",
+    "warnDeleteTitle": "アクティビティを削除するときに確認ダイアログを表示",
+    "warnDelete": "アクティビティ削除時に警告",
+    "warnResetTitle": "ポモドーロセッションカウンターをリセットするときに確認ダイアログを表示",
+    "warnReset": "セッションリセット時に警告",
+    "forceManualSave": "手動保存を強制"
+  },
+  "diagnostics": {
+    "title": "🔧 診断",
+    "systemTests": "システムテスト",
+    "systemTestsDescription": "さまざまなシステムコンポーネントと機能をテスト",
+    "notifications": "🔔 通知",
+    "testReminderTitle": "テストリマインダーを送信",
+    "testReminder": "🧪 テストリマインダー",
+    "testSoundTitle": "テストリマインダー音を再生",
+    "testSound": "🔊 テスト音",
+    "refreshStatusTitle": "リマインダー許可ステータス表示を更新",
+    "refreshStatus": "🔄 ステータスを更新",
+    "forceEnableTitle": "通知許可ダイアログを強制表示",
+    "forceEnable": "⚡ 強制有効化",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "包括的なService Worker診断を実行",
+    "runDiagnostics": "🔍 診断を実行",
+    "dataManagement": "⚠️ データ管理",
+    "dataWarning": "これらのアクションは元に戻せません",
+    "clearAllData": "🗑️ すべてのデータをクリア"
+  },
+  "modals": {
+    "edit": {
+      "title": "エントリを編集",
+      "activity": "アクティビティ",
+      "description": "説明",
+      "time": "時間",
+      "markTodo": "TODOとしてマーク",
+      "markNote": "メモとしてマーク",
+      "dueDate": "期限（任意）",
+      "update": "エントリを更新",
+      "cancel": "キャンセル"
+    },
+    "templateManager": {
+      "title": "テンプレートマネージャー",
+      "saveAll": "すべての変更を保存",
+      "close": "閉じる",
+      "templates": "テンプレート",
+      "addTemplate": "テンプレートを追加",
+      "resetAll": "すべてリセット",
+      "selectTemplate": "編集するテンプレートを選択",
+      "save": "保存",
+      "delete": "削除",
+      "duplicate": "複製",
+      "editor": "エディタ",
+      "preview": "プレビュー",
+      "templateName": "テンプレート名",
+      "templateNamePlaceholder": "例：マイカスタムテンプレート",
+      "description": "説明",
+      "descriptionPlaceholder": "テンプレートの簡単な説明",
+      "outputType": "出力タイプ",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "プレーンテキスト"
+      },
+      "templateContent": "テンプレート内容",
+      "templateContentPlaceholder": "テンプレート内容をここに入力してください...",
+      "setDefault": "デフォルトテンプレートに設定",
+      "previewTitle": "プレビュー",
+      "rendered": "レンダリング済み",
+      "source": "ソース",
+      "refresh": "更新",
+      "selectTemplatePreview": "プレビューを表示するテンプレートを選択"
+    },
+    "templateGuide": {
+      "title": "テンプレートガイド",
+      "activityDescription": "アクティビティの説明"
+    },
+    "pomodoroActivity": {
+      "title": "作業セッションアクティビティ",
+      "activityLabel": "何の作業をしますか？",
+      "activityPlaceholder": "例：レポート作成、会議準備",
+      "usePrevious": "前のアクティビティを使用",
+      "descriptionLabel": "説明（任意）",
+      "descriptionPlaceholder": "この作業セッションの追加詳細",
+      "startSession": "作業セッションを開始",
+      "cancel": "キャンセル"
+    },
+    "pomodoroAbandon": {
+      "title": "セッション中断",
+      "workedFor": "{minutes}分間作業しました",
+      "saveQuestion": "この部分的なセッション中に達成したことを保存しますか？",
+      "activityLabel": "達成したアクティビティ",
+      "activityPlaceholder": "この時間にどんな作業をしましたか？",
+      "descriptionLabel": "説明（任意）",
+      "descriptionPlaceholder": "達成したことの追加詳細",
+      "saveAbandon": "作業を保存して中断",
+      "justAbandon": "ただ中断"
+    },
+    "confirmation": {
+      "title": "アクション確認",
+      "defaultMessage": "このアクションを実行してもよろしいですか？",
+      "dontAskAgain": "このタイプのアクションについて再度尋ねない",
+      "confirm": "確認",
+      "cancel": "キャンセル"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ アクティビティ時間情報",
+      "alertsOff": "リマインダーアラートはアクティビティ時間外はオフになります。",
+      "configure": "⚙️ アクティビティ時間を設定",
+      "gotIt": "了解"
+    },
+    "overdueAlert": {
+      "title": "⚠️ 期限切れ項目",
+      "message": "以下の項目が期限を過ぎています：",
+      "gotIt": "了解"
+    },
+    "hashtagBrowser": {
+      "title": "ハッシュタグブラウザ",
+      "count": "{count}個のハッシュタグが見つかりました",
+      "noHashtags": "ハッシュタグが見つかりません。#ハッシュタグ付きのアクティビティを追加すると、ここに表示されます！"
+    },
+    "userGuide": {
+      "title": "ユーザーガイド",
+      "settingsCustomization": "設定とカスタマイズ"
+    },
+    "notificationSetup": {
+      "title": "システム通知を有効にしますか？",
+      "appName": "アクティビティトラッカー",
+      "enableOption": "✅ システム通知を有効にする",
+      "soundOption": "🔊 音のみ",
+      "enableButton": "システム通知を有効にする",
+      "soundButton": "音のみ"
+    },
+    "about": {
+      "title": "アクティビティトラッカーについて",
+      "appInfo": "アプリ情報",
+      "versionHistory": "バージョン履歴",
+      "loadingVersion": "バージョン履歴を読み込み中...",
+      "appName": "アクティビティトラッカー",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ GitHubで表示"
+    },
+    "workspaceManager": {
+      "title": "🏢 ワークスペースマネージャー",
+      "currentWorkspace": "現在のワークスペース：{name}",
+      "description": "各ワークスペースは別々のアクティビティ、設定、状態を維持します...",
+      "availableWorkspaces": "利用可能なワークスペース",
+      "enterName": "ワークスペース名を入力...",
+      "createWorkspace": "ワークスペースを作成",
+      "close": "閉じる"
+    },
+    "languagePicker": {
+      "title": "🌐 言語を選択"
+    }
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "yes": "はい",
+    "no": "いいえ",
+    "ok": "OK",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "warning": "警告",
+    "info": "情報",
+    "none": "なし",
+    "all": "すべて",
+    "today": "今日",
+    "yesterday": "昨日",
+    "tomorrow": "明日",
+    "thisWeek": "今週",
+    "thisMonth": "今月",
+    "minutes": "{count}分",
+    "hours": "{count}時間",
+    "days": "{count}日",
+    "weeks": "{count}週",
+    "months": "{count}ヶ月",
+    "daysOfWeek": {
+      "monday": "月曜日",
+      "tuesday": "火曜日",
+      "wednesday": "水曜日",
+      "thursday": "木曜日",
+      "friday": "金曜日",
+      "saturday": "土曜日",
+      "sunday": "日曜日"
+    },
+    "markComplete": "完了とマーク",
+    "outsideActivityHours": "活動時間外",
+    "todoTag": "タスク",
+    "noteTag": "メモ"
+  }
+}

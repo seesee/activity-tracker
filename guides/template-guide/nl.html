@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Aan de slag</h4>
+        <p>Sjablonen gebruiken een eenvoudige variabele vervangingssyntax met dubbele accolades om dynamische rapporten te maken.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Basis syntaxis</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Eenvoudige variabele vervanging</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Loop door arrays</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Voorwaardelijke inhoud</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Pipe syntaxis en functie koppeling</h4>
+        <p>Transformeer gegevens met behulp van de pipe syntaxis (<code>|</code>) om meerdere functies aan elkaar te koppelen:</p>
+        
+        <h5>Basis pipe syntaxis</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Pas een enkele transformatie toe</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Koppel meerdere transformaties</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Geef parameters door aan functies</li>
+        </ul>
+
+        <h5>Beschikbare transformatie functies</h5>
+        <ul>
+            <li><code>date('format')</code> - Formatteer tijdstempels als datums
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Extraheer tijd uit tijdstempels
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Escape CSV speciale karakters
+                <ul>
+                    <li>Wikkelt tekst in aanhalingstekens als het komma's, aanhalingstekens of regeleinden bevat</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Verwijder regeleinden uit tekst
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>CSV sjabloon voorbeeld met koppeling</h5>
+        <p>Zo gebruikt het CSV sjabloon koppeling om schone, correct ge-escapete output te maken:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Hoe dit werkt:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Converteert tijdstempel naar YYYY-MM-DD formaat</li>
+            <li><code>entry.timestamp | time</code> - Extraheert het tijd gedeelte</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Verwijdert eerst regeleinden, daarna escape voor CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Hetzelfde proces voor beschrijvingen</li>
+        </ul>
+
+        <h5>Volgorde is belangrijk bij koppeling!</h5>
+        <p>Functies worden van links naar rechts toegepast, dus volgorde is belangrijk:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Verwijder eerst regeleinden, daarna escape</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Eerst escapen kan interfereren met regeleinde verwijdering</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Beschikbare gegevens</h4>
+        <p>De volgende gegevens zijn beschikbaar in uw sjablonen:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - De rapporttitel</li>
+            <li><code>{{startDate}}</code> - Rapport startdatum (geformatteerd)</li>
+            <li><code>{{endDate}}</code> - Rapport einddatum (geformatteerd)</li>
+            <li><code>{{totalEntries}}</code> - Totaal aantal activiteit items</li>
+            <li><code>{{entries}}</code> - Array van alle activiteit items</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Item eigenschappen</h4>
+        <p>Elk item in de <code>{{#each entries}}</code> loop heeft:</p>
+        <ul>
+            <li><code>{{activity}}</code> - De activiteitsnaam</li>
+            <li><code>{{description}}</code> - Activiteitsbeschrijving</li>
+            <li><code>{{timestamp}}</code> - Ruwe ISO tijdstempel</li>
+            <li><code>{{formattedTime}}</code> - Netjes geformatteerde tijd (bijv. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Netjes geformatteerde datum (bijv. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean: true als dit een todo item is</li>
+            <li><code>{{tags}}</code> - Array van hashtags voor dit item</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Veelgebruikte transformaties</h4>
+        <p>Transformeer tijdstempels en formatteer gegevens:</p>
+        <ul>
+            <li><strong>Datum formaten</strong>: Gebruik <code>{{formattedDate}}</code> en <code>{{formattedTime}}</code> voor leesbare formaten</li>
+            <li><strong>Voorwaardelijke inhoud</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - toon alleen als beschrijving bestaat</li>
+            <li><strong>Loop door tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - toon alle hashtags</li>
+            <li><strong>Todo filtering</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - markeer todo items</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Markdown opmaak</h4>
+        <p>Gebruik Markdown syntaxis voor leesbare opmaak:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Grote kop</li>
+            <li><code>## {{activity}}</code> - Middelgrote kop</li>
+            <li><code>**{{activity}}**</code> - Vetgedrukte tekst</li>
+            <li><code>*{{description}}*</code> - Cursieve tekst</li>
+            <li><code>- {{activity}}</code> - Opsommingspunt</li>
+            <li><code>`{{formattedTime}}`</code> - Code opmaak</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Voorbeeld sjabloon</h4>
+        <pre><code># {{reportTitle}}
+Van {{startDate}} tot {{endDate}}
+
+Totaal activiteiten: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**TODO ITEM**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Pro tips</h4>
+        <ul>
+            <li><strong>HTML sjablonen</strong>: Gebruik voor rijke opmaak met CSS stijlen en complexe lay-outs</li>
+            <li><strong>Markdown sjablonen</strong>: Perfect voor eenvoudige, leesbare documentatie</li>
+            <li><strong>CSV sjablonen</strong>: Ideaal voor data-analyse in spreadsheets</li>
+            <li><strong>Voorbeeldfunctie</strong>: Test altijd uw sjablonen voordat u opslaat</li>
+            <li><strong>Aangepaste formaten</strong>: Combineer meerdere variabelen voor unieke lay-outs</li>
+        </ul>
+    </div>
+</div>

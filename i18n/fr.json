@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "Français",
+    "languageCode": "fr",
+    "locale": "fr-FR",
+    "filename": "index.fr.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "dd/MM/yyyy",
+      "long": "d MMMM yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM yyyy"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ",",
+      "thousands": " ",
+      "currency": "€"
+    }
+  },
+  "app": {
+    "title": "Suivi d'Activités",
+    "tagline": "Journal de tâches, organisateur et base de connaissances",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "offline": "Application hors ligne"
+  },
+  "navigation": {
+    "tracker": "📝 Suivi",
+    "todo": "✅ À Faire",
+    "notes": "📔 Notes",
+    "alert": "⚠️ Alerte",
+    "alertTitle": "Voir les éléments en retard",
+    "startReminders": "Démarrer les Rappels",
+    "startPomodoro": "🍅 Démarrer Pomodoro",
+    "settingsMenu": "Menu des paramètres",
+    "burgerMenu": {
+      "tracker": "Suivi",
+      "notes": "Notes",
+      "todo": "À Faire",
+      "reports": "Rapports",
+      "workspaces": "Espaces de Travail",
+      "settings": "Paramètres...",
+      "diagnostics": "Diagnostics",
+      "language": "Langue",
+      "userGuide": "Guide Utilisateur",
+      "about": "À Propos"
+    },
+    "pauseMenu": {
+      "minutes5": "5 minutes",
+      "minutes15": "15 minutes",
+      "minutes30": "30 minutes",
+      "hour1": "1 heure",
+      "hours2": "2 heures",
+      "untilManualResume": "Jusqu'à la reprise manuelle"
+    }
+  },
+  "search": {
+    "placeholder": "Rechercher activités, tâches et hashtags...",
+    "browseHashtags": "Parcourir les hashtags",
+    "results": "Résultats de Recherche",
+    "noResults": "Utilisez la barre de recherche ci-dessus pour trouver des activités, tâches et hashtags.",
+    "resultCount": "{count} résultat{count, plural, one {} other {s}}",
+    "sortBy": "Trier par :",
+    "show": "Afficher :",
+    "filters": {
+      "relevance": "Pertinence",
+      "newestFirst": "Plus Récent en Premier",
+      "oldestFirst": "Plus Ancien en Premier",
+      "activityAZ": "Activité A-Z",
+      "activityZA": "Activité Z-A",
+      "allItems": "Tous les Éléments",
+      "activitiesOnly": "Activités Seulement",
+      "todosOnly": "Tâches Seulement",
+      "completedOnly": "Terminées Seulement"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Mode Pomodoro désactivé",
+    "pause": "Pause",
+    "nextReminder": "Prochain rappel d'activité dans :",
+    "checkingNotifications": "Vérification du statut des notifications...",
+    "remindersActiveWithSystem": "Rappels d'activité actifs avec notifications système",
+    "remindersActiveWithSound": "Rappels d'activité actifs avec alertes sonores",
+    "turnOffReminders": "Désactiver les rappels d'activité",
+    "remindersDisabled": "Les rappels d'activité sont désactivés",
+    "turnOnReminders": "Activer les rappels d'activité",
+    "paused": "En pause",
+    "readyToStart": "Prêt à démarrer"
+  },
+  "tracker": {
+    "title": "Saisie d'Activité",
+    "hideShowForm": "Masquer/Afficher le formulaire",
+    "activityLabel": "Que faites-vous ?",
+    "activityPlaceholder": "ex. Rédaction de rapport, Réunion d'équipe #travail",
+    "descriptionLabel": "Description (facultatif)",
+    "descriptionPlaceholder": "Détails supplémentaires sur cette activité",
+    "timeLabel": "Heure",
+    "markTodoTitle": "Marquer comme tâche à faire (Ctrl+T pour basculer)",
+    "markTodo": "Marquer comme Tâche",
+    "markNoteTitle": "Marquer comme note (Ctrl+N pour basculer)",
+    "markNote": "Marquer comme Note",
+    "removeFromTodos": "Retirer des Tâches",
+    "removeFromNotes": "Retirer des Notes",
+    "todoActive": "✓ Tâche",
+    "noteActive": "✓ Note",
+    "dueDateLabel": "Date d'Échéance (facultatif)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1j",
+      "plus1d": "+1j",
+      "minus1w": "-1s",
+      "plus1w": "+1s",
+      "minus1m": "-1m",
+      "plus1m": "+1m"
+    },
+    "addEntry": "Ajouter Entrée",
+    "reset": "Réinitialiser",
+    "recentEntries": "Entrées Récentes",
+    "previous": "‹ Précédent",
+    "next": "Suivant ›",
+    "placeholders": {
+      "trackerActivity": "ex. Rédaction de rapport, Réunion d'équipe #travail",
+      "trackerDescription": "Détails supplémentaires sur cette activité..."
+    }
+  },
+  "todo": {
+    "newTodo": "Nouvelle Tâche",
+    "todoLabel": "Que devez-vous faire ?",
+    "todoPlaceholder": "ex. Appeler client pour projet, Réviser budget #travail",
+    "descriptionLabel": "Description (facultatif)",
+    "descriptionPlaceholder": "Détails supplémentaires sur cette tâche",
+    "markTodoTitle": "Marquer comme tâche à faire",
+    "markNoteTitle": "Marquer comme note",
+    "addTodo": "Ajouter Tâche",
+    "newTodoNote": "Nouvelle Note de Tâche",
+    "todoNoteLabel": "Que devez-vous noter et faire ?",
+    "todoNoteDescription": "Détails de note et description de tâche",
+    "addTodoNote": "Ajouter Note de Tâche",
+    "todoList": "Liste des Tâches",
+    "filter": "Filtre :",
+    "sortBy": "Trier par :",
+    "filters": {
+      "allTodos": "Toutes les Tâches",
+      "dueToday": "À Faire Aujourd'hui",
+      "overdue": "En Retard",
+      "noDueDate": "Sans Date d'Échéance"
+    },
+    "sorting": {
+      "newestFirst": "Plus Récent en Premier",
+      "oldestFirst": "Plus Ancien en Premier",
+      "dueDateEarliest": "Date d'Échéance (Plus Tôt)",
+      "dueDateLatest": "Date d'Échéance (Plus Tard)",
+      "activityAZ": "Activité A-Z",
+      "activityZA": "Activité Z-A"
+    },
+    "todoCount": "{count} tâche{count, plural, one {} other {s}}",
+    "noTodos": "Aucune tâche trouvée. Ajoutez des activités comme tâches pour les voir ici !",
+    "pagination": {
+      "previous": "← Précédent",
+      "next": "Suivant →",
+      "pageInfo": "Page {current} sur {total}"
+    },
+    "markCompleteHelp": "Cliquez sur \"Marquer comme terminé\" pour finir les tâches",
+    "placeholders": {
+      "todoActivity": "ex. Rechercher options de budget, Réviser ordre du jour de réunion #travail",
+      "todoDescription": "Capturez vos notes et décrivez ce qui doit être fait..."
+    }
+  },
+  "notes": {
+    "newNote": "Nouvelle Note",
+    "titleLabel": "Titre ou sujet de la note",
+    "titlePlaceholder": "ex. Notes de réunion, Idées pour projet #brainstorming",
+    "contentLabel": "Contenu de la note",
+    "contentPlaceholder": "Écrivez le contenu de votre note ici...",
+    "addNote": "Ajouter Note",
+    "notesTitle": "Notes",
+    "filters": {
+      "allNotes": "Toutes les Notes",
+      "today": "Aujourd'hui",
+      "thisWeek": "Cette Semaine",
+      "thisMonth": "Ce Mois"
+    },
+    "sort": "Trier :",
+    "sorting": {
+      "newestFirst": "Plus Récent en Premier",
+      "oldestFirst": "Plus Ancien en Premier",
+      "activityName": "Nom d'Activité"
+    },
+    "searchPlaceholder": "Rechercher dans les notes...",
+    "clear": "Effacer",
+    "noNotes": "Aucune note trouvée.",
+    "placeholders": {
+      "noteActivity": "ex. Notes de réunion, Idées pour projet #brainstorming",
+      "noteDescription": "Rédigez le contenu de votre note, idées, observations ou pensées ici..."
+    }
+  },
+  "reports": {
+    "title": "Rapports d'Activité",
+    "dateRange": "Plage de Dates",
+    "dateRangeDescription": "Sélectionnez la période pour votre rapport",
+    "startDateTitle": "Choisir la date de début pour votre rapport",
+    "startDateLabel": "Date de Début",
+    "endDateTitle": "Choisir la date de fin pour votre rapport",
+    "endDateLabel": "Date de Fin",
+    "generateReportTitle": "Générer un rapport pour la plage de dates sélectionnée",
+    "generateReport": "Générer Rapport",
+    "thisWeekTitle": "Définir la plage de dates sur la semaine actuelle",
+    "thisWeek": "Cette Semaine",
+    "templateOptions": "Modèle et Options",
+    "templateOptionsDescription": "Choisissez le format, les options et téléchargez votre rapport",
+    "reportTemplateTitle": "Sélectionner le format pour votre rapport",
+    "reportTemplateLabel": "Modèle de Rapport",
+    "todoItems": "Éléments de Tâches :",
+    "todoOptions": {
+      "excludeAll": "Exclure toutes les tâches",
+      "incompleteOnly": "Inclure seulement les tâches incomplètes",
+      "includeAll": "Inclure toutes les tâches"
+    },
+    "notes": "Notes :",
+    "noteOptions": {
+      "exclude": "Exclure les notes",
+      "include": "Inclure les notes"
+    },
+    "downloadReportTitle": "Télécharger le rapport généré",
+    "downloadReport": "Télécharger Rapport",
+    "openNewTabTitle": "Ouvrir le rapport généré dans un nouvel onglet",
+    "openNewTab": "Ouvrir dans Nouvel Onglet",
+    "weekNavigation": {
+      "previous": "← Semaine Précédente",
+      "next": "Semaine Suivante →",
+      "weekOf": "Semaine du {date}"
+    },
+    "reportPreview": "Aperçu du Rapport",
+    "viewFormattedTitle": "Voir la sortie formatée du rapport",
+    "rendered": "Rendu",
+    "viewSourceTitle": "Voir le code source brut du rapport",
+    "source": "Source",
+    "copyReportTitle": "Copier le contenu du rapport dans le presse-papiers",
+    "copyReport": "Copier Rapport",
+    "selectDateRange": "Sélectionnez une plage de dates et générez un rapport pour voir un aperçu.",
+    "reportTemplates": "Modèles de Rapport",
+    "templatesDescription": "Gérer les modèles pour la génération de rapports",
+    "manageTemplatesTitle": "Ouvrir l'éditeur de modèles pour créer et modifier les modèles de rapports",
+    "manageTemplates": "Gérer Modèles",
+    "resetDefaultTitle": "Restaurer tous les modèles à leurs versions par défaut originales",
+    "resetDefault": "Réinitialiser par Défaut",
+    "templateGuideTitle": "Voir la documentation d'aide pour la syntaxe des modèles et les données disponibles",
+    "templateGuide": "📋 Guide des Modèles"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "enableReminders": "Activer les Rappels",
+    "generalSettings": "Paramètres Généraux",
+    "generalDescription": "Paramètres qui s'appliquent à tous les modes de fonctionnement",
+    "colourThemeTitle": "Choisir votre préférence de thème de couleur",
+    "colourTheme": "Thème de Couleur",
+    "themeOptions": {
+      "system": "Suivre les paramètres système",
+      "light": "Mode clair",
+      "dark": "Mode sombre"
+    },
+    "soundSettingsTitle": "Choisir quels sons désactiver",
+    "soundSettings": "Paramètres Audio",
+    "soundOptions": {
+      "allEnabled": "Tous les sons activés",
+      "muteAll": "Couper tous les sons",
+      "mutePomodoroOnly": "Couper seulement les sons Pomodoro",
+      "muteNotificationOnly": "Couper seulement les sons de notification"
+    },
+    "itemsPerPageTitle": "Nombre d'éléments à afficher par page dans les listes",
+    "itemsPerPage": "Éléments par page",
+    "itemsPerPageOptions": {
+      "10": "10 éléments",
+      "20": "20 éléments",
+      "30": "30 éléments",
+      "50": "50 éléments",
+      "100": "100 éléments"
+    },
+    "systemNotificationsTitle": "Envoyer des notifications système vers votre système d'exploitation",
+    "systemNotifications": "Notifications Système",
+    "dateFormatTitle": "Choisissez votre format d'affichage de date préféré",
+    "dateFormat": "Format de date",
+    "dateFormatOptions": {
+      "default": "Par défaut (basé sur les paramètres régionaux)",
+      "iso": "ISO 8601 (AAAA-MM-JJ)",
+      "us": "Format US (MM/JJ/AAAA)",
+      "european": "Européen (JJ/MM/AAAA)",
+      "short": "Format court",
+      "long": "Format long"
+    },
+    "yesNo": {
+      "yes": "Oui",
+      "no": "Non"
+    },
+    "reminderSettings": "Paramètres de Rappel",
+    "reminderIntervalTitle": "À quelle fréquence vous recevrez des notifications de rappel d'activité",
+    "reminderInterval": "Intervalle de Rappel",
+    "intervals": {
+      "1min": "1 minute",
+      "2min": "2 minutes",
+      "5min": "5 minutes",
+      "15min": "15 minutes",
+      "30min": "30 minutes",
+      "1hour": "1 heure",
+      "1.5hour": "1,5 heure",
+      "2hour": "2 heures",
+      "3hour": "3 heures",
+      "4hour": "4 heures"
+    },
+    "pauseResumeTitle": "Combien de temps les alertes restent en pause avant de reprendre automatiquement",
+    "pauseResume": "Lors de la mise en pause, reprendre après",
+    "never": "Jamais",
+    "autoStartTitle": "Démarrer automatiquement les rappels lorsque l'application s'ouvre",
+    "autoStart": "Démarrage automatique des rappels à l'ouverture de l'app",
+    "reminderSoundTitle": "Choisir le son qui joue avec les rappels",
+    "reminderSound": "Son de Rappel"
+  },
+  "schedule": {
+    "title": "Planning d'Activité",
+    "description": "Définir vos heures et jours d'activité actifs pour les notifications",
+    "activityHours": "Heures d'Activité",
+    "complexScheduleTitle": "Activer la planification complexe avec plusieurs plages horaires par jour",
+    "complexSchedule": "Planning Complexe",
+    "startTimeTitle": "Quand votre période d'activité commence",
+    "startTime": "Heure de Début",
+    "endTimeTitle": "Quand votre période d'activité se termine",
+    "endTime": "Heure de Fin",
+    "complexDescription": "Définir plusieurs plages horaires pour chaque jour pour s'adapter aux plannings complexes.",
+    "days": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche"
+    },
+    "addRange": "+ Ajouter Plage",
+    "activityDays": "Jours d'Activité",
+    "datePreview": {
+      "prefix": "Aperçu : "
+    }
+  },
+  "pomodoro": {
+    "title": "Mode Pomodoro",
+    "description": "Intervalles de travail/pause structurés avec notifications automatiques",
+    "enableTitle": "Activer le mode de chronométrage Pomodoro avec alertes de travail et de pause",
+    "enable": "Activer le Mode Pomodoro",
+    "workDurationTitle": "Durée des périodes de travail en minutes",
+    "workDuration": "Durée de Travail (minutes)",
+    "workDurations": {
+      "15": "15 minutes",
+      "20": "20 minutes",
+      "25": "25 minutes",
+      "30": "30 minutes",
+      "45": "45 minutes",
+      "60": "60 minutes"
+    },
+    "shortBreakTitle": "Durée des courtes pauses en minutes",
+    "shortBreak": "Durée Courte Pause (minutes)",
+    "shortBreakDurations": {
+      "3": "3 minutes",
+      "5": "5 minutes",
+      "10": "10 minutes",
+      "15": "15 minutes"
+    },
+    "longBreakTitle": "Durée des longues pauses en minutes",
+    "longBreak": "Durée Longue Pause (minutes)",
+    "sessionsBeforeLongTitle": "Nombre de sessions de travail avant de prendre une longue pause",
+    "sessionsBeforeLong": "Sessions avant longue pause",
+    "sessionOptions": {
+      "2": "Toutes les 2 sessions",
+      "3": "Toutes les 3 sessions",
+      "4": "Toutes les 4 sessions",
+      "5": "Toutes les 5 sessions",
+      "6": "Toutes les 6 sessions"
+    },
+    "tickSounds": "Sons de Tic",
+    "tickSoundTitle": "Son de tic facultatif pour vous rappeler que vous êtes dans une session de travail",
+    "tickSoundType": "Type de Son de Tic",
+    "tickOptions": {
+      "none": "Pas de tic",
+      "soft": "Tic doux",
+      "classic": "Tic classique",
+      "digital": "Tic numérique"
+    },
+    "tickIntervalTitle": "À quelle fréquence jouer le son de tic en secondes",
+    "tickInterval": "Intervalle de Tic (secondes)",
+    "tickIntervals": {
+      "off": "Désactivé (pas de tic)",
+      "1": "Toutes les 1 seconde",
+      "2": "Toutes les 2 secondes",
+      "3": "Toutes les 3 secondes",
+      "5": "Toutes les 5 secondes",
+      "10": "Toutes les 10 secondes",
+      "15": "Toutes les 15 secondes",
+      "30": "Toutes les 30 secondes",
+      "60": "Toutes les 60 secondes"
+    },
+    "announceSounds": "Sons d'Annonce",
+    "shortBreakAnnounceTitle": "Son à jouer quand la courte pause commence",
+    "shortBreakAnnounce": "Annonce Courte Pause",
+    "longBreakAnnounceTitle": "Son à jouer quand la longue pause commence",
+    "longBreakAnnounce": "Annonce Longue Pause",
+    "resumeWorkAnnounceTitle": "Son à jouer lors de la reprise du travail après la pause",
+    "resumeWorkAnnounce": "Annonce Reprise Travail",
+    "options": "Options",
+    "autoStartTitle": "Démarrer automatiquement la session suivante sans intervention manuelle",
+    "autoStart": "Démarrer automatiquement la session suivante",
+    "promptDescriptionsTitle": "Demander une description d'activité et créer des entrées de journal pour les sessions de travail",
+    "promptDescriptions": "Demander des descriptions de session de travail",
+    "logBreaksTitle": "Enregistrer aussi les sessions de pause dans le suivi d'activité",
+    "logBreaks": "Enregistrer les sessions de pause aussi",
+    "enableLongBreaksTitle": "Activer les longues pauses après avoir terminé plusieurs sessions",
+    "enableLongBreaks": "Activer les longues pauses",
+    "allowPausingTitle": "Permettre la mise en pause des sessions Pomodoro depuis la bannière",
+    "allowPausing": "Permettre la mise en pause de session",
+    "autoResetDailyTitle": "Réinitialiser automatiquement le compteur de sessions à 1 quand le jour change",
+    "autoResetDaily": "Réinitialisation automatique quotidienne des sessions",
+    "sessionManagement": "Gestion des Sessions",
+    "resetCounterTitle": "Réinitialiser le compteur de sessions à 1",
+    "resetCounter": "Réinitialiser Compteur de Sessions"
+  },
+  "dataManagement": {
+    "backup": "Sauvegarde de Base de Données",
+    "backupDescription": "Exporter ou importer vos données d'activité",
+    "exportDatabase": "Exporter Base de Données",
+    "importDatabase": "Importer Base de Données",
+    "warningSettings": "Paramètres d'Avertissement",
+    "warningDescription": "Configurer les boîtes de dialogue de confirmation pour les actions destructrices",
+    "warnDeleteTitle": "Afficher la boîte de dialogue de confirmation lors de la suppression d'activités",
+    "warnDelete": "Avertir lors de la suppression d'activité",
+    "warnResetTitle": "Afficher la boîte de dialogue de confirmation lors de la réinitialisation du compteur de sessions Pomodoro",
+    "warnReset": "Avertir lors de la réinitialisation de session",
+    "forceManualSave": "Forcer Sauvegarde Manuelle"
+  },
+  "diagnostics": {
+    "title": "🔧 Diagnostics",
+    "systemTests": "Tests Système",
+    "systemTestsDescription": "Tester divers composants et fonctionnalités du système",
+    "notifications": "🔔 Notifications",
+    "testReminderTitle": "Envoyer un rappel de test",
+    "testReminder": "🧪 Test Rappel",
+    "testSoundTitle": "Jouer un son de rappel de test",
+    "testSound": "🔊 Test Son",
+    "refreshStatusTitle": "Actualiser l'affichage du statut d'autorisation de rappel",
+    "refreshStatus": "🔄 Actualiser Statut",
+    "forceEnableTitle": "Forcer l'affichage de la boîte de dialogue d'autorisation de notification",
+    "forceEnable": "⚡ Forcer Activation",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "Exécuter des diagnostics complets du service worker",
+    "runDiagnostics": "🔍 Exécuter Diagnostics",
+    "dataManagement": "⚠️ Gestion des Données",
+    "dataWarning": "Ces actions ne peuvent pas être annulées",
+    "clearAllData": "🗑️ Effacer Toutes les Données"
+  },
+  "modals": {
+    "edit": {
+      "title": "Modifier Entrée",
+      "activity": "Activité",
+      "description": "Description",
+      "time": "Heure",
+      "markTodo": "Marquer comme Tâche",
+      "markNote": "Marquer comme Note",
+      "dueDate": "Date d'Échéance (facultatif)",
+      "update": "Mettre à Jour Entrée",
+      "cancel": "Annuler"
+    },
+    "templateManager": {
+      "title": "Gestionnaire de Modèles",
+      "saveAll": "Sauvegarder Tous les Changements",
+      "close": "Fermer",
+      "templates": "Modèles",
+      "addTemplate": "Ajouter Modèle",
+      "resetAll": "Tout Réinitialiser",
+      "selectTemplate": "Sélectionner un modèle à modifier",
+      "save": "Sauvegarder",
+      "delete": "Supprimer",
+      "duplicate": "Dupliquer",
+      "editor": "Éditeur",
+      "preview": "Aperçu",
+      "templateName": "Nom du Modèle",
+      "templateNamePlaceholder": "ex. Mon Modèle Personnalisé",
+      "description": "Description",
+      "descriptionPlaceholder": "Brève description du modèle",
+      "outputType": "Type de Sortie",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Texte Brut"
+      },
+      "templateContent": "Contenu du Modèle",
+      "templateContentPlaceholder": "Entrez le contenu de votre modèle ici...",
+      "setDefault": "Définir comme modèle par défaut",
+      "previewTitle": "Aperçu",
+      "rendered": "Rendu",
+      "source": "Source",
+      "refresh": "Actualiser",
+      "selectTemplatePreview": "Sélectionner un modèle pour voir l'aperçu"
+    },
+    "templateGuide": {
+      "title": "Guide des Modèles",
+      "activityDescription": "Description de l'activité"
+    },
+    "pomodoroActivity": {
+      "title": "Activité de Session de Travail",
+      "activityLabel": "Sur quoi allez-vous travailler ?",
+      "activityPlaceholder": "ex. Rédaction de rapport, Préparation de réunion",
+      "usePrevious": "Utiliser Activité Précédente",
+      "descriptionLabel": "Description (facultatif)",
+      "descriptionPlaceholder": "Détails supplémentaires sur cette session de travail",
+      "startSession": "Démarrer Session de Travail",
+      "cancel": "Annuler"
+    },
+    "pomodoroAbandon": {
+      "title": "Abandon de Session",
+      "workedFor": "Vous avez travaillé pendant {minutes} minute{minutes, plural, one {} other {s}}",
+      "saveQuestion": "Souhaitez-vous sauvegarder ce que vous avez accompli pendant cette session partielle ?",
+      "activityLabel": "Activité accomplie",
+      "activityPlaceholder": "Sur quoi avez-vous travaillé pendant ce temps ?",
+      "descriptionLabel": "Description (facultatif)",
+      "descriptionPlaceholder": "Détails supplémentaires sur ce que vous avez accompli",
+      "saveAbandon": "Sauvegarder Travail & Abandonner",
+      "justAbandon": "Juste Abandonner"
+    },
+    "confirmation": {
+      "title": "Confirmer Action",
+      "defaultMessage": "Êtes-vous sûr de vouloir effectuer cette action ?",
+      "dontAskAgain": "Ne plus demander pour ce type d'action",
+      "confirm": "Confirmer",
+      "cancel": "Annuler"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Informations sur les Heures d'Activité",
+      "alertsOff": "Les alertes de rappel sont désactivées en dehors des heures d'activité.",
+      "configure": "⚙️ Configurer Heures d'Activité",
+      "gotIt": "Compris"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Éléments en Retard",
+      "message": "Les éléments suivants ont dépassé leur date d'échéance :",
+      "gotIt": "Compris"
+    },
+    "hashtagBrowser": {
+      "title": "Navigateur de Hashtags",
+      "count": "{count} hashtag{count, plural, one {} other {s}} trouvé{count, plural, one {} other {s}}",
+      "noHashtags": "Aucun hashtag trouvé. Ajoutez des activités avec des #hashtags pour les voir ici !"
+    },
+    "userGuide": {
+      "title": "Guide Utilisateur",
+      "settingsCustomization": "Paramètres et personnalisation"
+    },
+    "notificationSetup": {
+      "title": "Activer les Notifications Système ?",
+      "appName": "Suivi d'Activités",
+      "enableOption": "✅ Activer Notifications Système",
+      "soundOption": "🔊 Son Seulement",
+      "enableButton": "Activer Notifications Système",
+      "soundButton": "Son Seulement"
+    },
+    "about": {
+      "title": "À Propos du Suivi d'Activités",
+      "appInfo": "Informations sur l'Application",
+      "versionHistory": "Historique des Versions",
+      "loadingVersion": "Chargement de l'historique des versions...",
+      "appName": "Suivi d'Activités",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ Voir sur GitHub"
+    },
+    "workspaceManager": {
+      "title": "🏢 Gestionnaire d'Espaces de Travail",
+      "currentWorkspace": "Espace de Travail Actuel : {name}",
+      "description": "Chaque espace de travail maintient des activités, paramètres et état séparés...",
+      "availableWorkspaces": "Espaces de Travail Disponibles",
+      "enterName": "Entrez le nom de l'espace de travail...",
+      "createWorkspace": "Créer Espace de Travail",
+      "close": "Fermer"
+    },
+    "languagePicker": {
+      "title": "🌐 Sélectionner la langue"
+    }
+  },
+  "common": {
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "markComplete": "Marquer comme terminé",
+    "outsideActivityHours": "En dehors des heures d'activité",
+    "todoTag": "Tâche",
+    "noteTag": "Note",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "info": "Information",
+    "none": "Aucun",
+    "all": "Tout",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain",
+    "thisWeek": "Cette Semaine",
+    "thisMonth": "Ce Mois",
+    "minutes": "minute{count, plural, one {} other {s}}",
+    "hours": "heure{count, plural, one {} other {s}}",
+    "days": "jour{count, plural, one {} other {s}}",
+    "weeks": "semaine{count, plural, one {} other {s}}",
+    "months": "mois",
+    "daysOfWeek": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche"
+    }
+  }
+}

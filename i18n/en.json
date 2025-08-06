@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "English",
+    "languageCode": "en",
+    "locale": "en-US",
+    "filename": "index.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "MM/dd/yyyy",
+      "long": "MMMM d, yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM yyyy"
+    },
+    "time": {
+      "short": "h:mm a",
+      "long": "h:mm:ss a",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ".",
+      "thousands": ",",
+      "currency": "$"
+    }
+  },
+  "app": {
+    "title": "Activity Tracker",
+    "tagline": "Task diary, organiser and knowledge base",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "offline": "App offline"
+  },
+  "navigation": {
+    "tracker": "📝 Tracker",
+    "todo": "✅ To Do",
+    "notes": "📔 Notes",
+    "alert": "⚠️ Alert",
+    "alertTitle": "View overdue items",
+    "startReminders": "Start Reminders",
+    "startPomodoro": "🍅 Start Pomodoro",
+    "settingsMenu": "Settings menu",
+    "burgerMenu": {
+      "tracker": "Tracker",
+      "notes": "Notes",
+      "todo": "To Do", 
+      "reports": "Reports",
+      "workspaces": "Workspaces",
+      "settings": "Settings...",
+      "diagnostics": "Diagnostics",
+      "language": "Language",
+      "userGuide": "User Guide",
+      "about": "About"
+    },
+    "pauseMenu": {
+      "minutes5": "5 minutes",
+      "minutes15": "15 minutes",
+      "minutes30": "30 minutes",
+      "hour1": "1 hour",
+      "hours2": "2 hours",
+      "untilManualResume": "Until manually resumed"
+    }
+  },
+  "search": {
+    "placeholder": "Search activities, todos, and hashtags...",
+    "browseHashtags": "Browse hashtags",
+    "results": "Search Results",
+    "noResults": "Use the search box above to find activities, todos, and hashtags.",
+    "resultCount": "{count} result{count, plural, one {} other {s}}",
+    "sortBy": "Sort by:",
+    "show": "Show:",
+    "filters": {
+      "relevance": "Relevance",
+      "newestFirst": "Newest First",
+      "oldestFirst": "Oldest First",
+      "activityAZ": "Activity A-Z",
+      "activityZA": "Activity Z-A",
+      "allItems": "All Items",
+      "activitiesOnly": "Activities Only",
+      "todosOnly": "Todos Only",
+      "completedOnly": "Completed Only"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Pomodoro mode disabled",
+    "pause": "Pause",
+    "nextReminder": "Next activity logging reminder in:",
+    "checkingNotifications": "Checking notification status...",
+    "remindersActiveWithSystem": "Activity reminders active with system notifications",
+    "remindersActiveWithSound": "Activity reminders active with sound alerts",
+    "turnOffReminders": "Turn off activity reminders",
+    "remindersDisabled": "Activity reminders are disabled",
+    "turnOnReminders": "Turn on activity reminders",
+    "paused": "Paused",
+    "readyToStart": "Ready to start"
+  },
+  "tracker": {
+    "title": "Activity Entry",
+    "hideShowForm": "Hide/Show entry form",
+    "activityLabel": "What are you doing?",
+    "activityPlaceholder": "e.g., Writing report, Meeting with team #work",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Additional details about this activity",
+    "timeLabel": "Time",
+    "markTodoTitle": "Mark this as a todo item (Ctrl+T to toggle)",
+    "markTodo": "Mark as Todo",
+    "markNoteTitle": "Mark this as a note (Ctrl+N to toggle)",
+    "markNote": "Mark as Note",
+    "removeFromTodos": "Remove from Todos",
+    "removeFromNotes": "Remove from Notes",
+    "todoActive": "✓ Todo",
+    "noteActive": "✓ Note",
+    "dueDateLabel": "Due Date (optional)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1d",
+      "plus1d": "+1d",
+      "minus1w": "-1w",
+      "plus1w": "+1w",
+      "minus1m": "-1m",
+      "plus1m": "+1m"
+    },
+    "addEntry": "Add Entry",
+    "reset": "Reset",
+    "recentEntries": "Recent Entries",
+    "previous": "‹ Previous",
+    "next": "Next ›",
+    "placeholders": {
+      "trackerActivity": "e.g., Writing report, Meeting with team #work",
+      "trackerDescription": "Additional details about this activity..."
+    }
+  },
+  "todo": {
+    "newTodo": "New Todo Item",
+    "todoLabel": "What do you need to do?",
+    "todoPlaceholder": "e.g., Call client about project, Review budget #work",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Additional details about this todo item",
+    "markTodoTitle": "Mark this as a todo item",
+    "markNoteTitle": "Mark this as a note",
+    "addTodo": "Add Todo",
+    "newTodoNote": "New Todo Note",
+    "todoNoteLabel": "What do you need to note and do?",
+    "todoNoteDescription": "Note details and todo description",
+    "addTodoNote": "Add Todo Note",
+    "todoList": "To Do List",
+    "filter": "Filter:",
+    "sortBy": "Sort by:",
+    "filters": {
+      "allTodos": "All Todos",
+      "dueToday": "Due Today",
+      "overdue": "Overdue",
+      "noDueDate": "No Due Date"
+    },
+    "sorting": {
+      "newestFirst": "Newest First",
+      "oldestFirst": "Oldest First",
+      "dueDateEarliest": "Due Date (Earliest)",
+      "dueDateLatest": "Due Date (Latest)",
+      "activityAZ": "Activity A-Z",
+      "activityZA": "Activity Z-A"
+    },
+    "todoCount": "{count} todo{count, plural, one {} other {s}}",
+    "noTodos": "No todos found. Add activities as todos to see them here!",
+    "pagination": {
+      "previous": "← Previous",
+      "next": "Next →",
+      "pageInfo": "Page {current} of {total}"
+    },
+    "markCompleteHelp": "Click \"Mark Complete\" to finish todos",
+    "placeholders": {
+      "todoActivity": "e.g., Research budget options, Review meeting agenda #work",
+      "todoDescription": "Capture your notes and describe what needs to be done..."
+    }
+  },
+  "notes": {
+    "newNote": "New Note",
+    "titleLabel": "Note title or topic",
+    "titlePlaceholder": "e.g., Meeting notes, Ideas for project #brainstorm",
+    "contentLabel": "Note content",
+    "contentPlaceholder": "Write your note content here...",
+    "addNote": "Add Note",
+    "notesTitle": "Notes",
+    "filters": {
+      "allNotes": "All Notes",
+      "today": "Today",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month"
+    },
+    "sort": "Sort:",
+    "sorting": {
+      "newestFirst": "Newest First",
+      "oldestFirst": "Oldest First",
+      "activityName": "Activity Name"
+    },
+    "searchPlaceholder": "Search through notes...",
+    "clear": "Clear",
+    "noNotes": "No notes found.",
+    "placeholders": {
+      "noteActivity": "e.g., Meeting notes, Ideas for project #brainstorm",
+      "noteDescription": "Write your note content, ideas, observations, or thoughts here..."
+    }
+  },
+  "reports": {
+    "title": "Activity Reports",
+    "dateRange": "Date Range",
+    "dateRangeDescription": "Select the time period for your report",
+    "startDateTitle": "Choose the start date for your report",
+    "startDateLabel": "Start Date",
+    "endDateTitle": "Choose the end date for your report",
+    "endDateLabel": "End Date",
+    "generateReportTitle": "Generate report for the selected date range",
+    "generateReport": "Generate Report",
+    "thisWeekTitle": "Set date range to current week",
+    "thisWeek": "This Week",
+    "templateOptions": "Template & Options",
+    "templateOptionsDescription": "Choose format, options and download your report",
+    "reportTemplateTitle": "Select the format for your report",
+    "reportTemplateLabel": "Report Template",
+    "todoItems": "Todo Items:",
+    "todoOptions": {
+      "excludeAll": "Exclude all todos",
+      "incompleteOnly": "Include incomplete todos only",
+      "includeAll": "Include all todos"
+    },
+    "notes": "Notes:",
+    "noteOptions": {
+      "exclude": "Exclude notes",
+      "include": "Include notes"
+    },
+    "downloadReportTitle": "Download the generated report",
+    "downloadReport": "Download Report",
+    "openNewTabTitle": "Open the generated report in a new tab",
+    "openNewTab": "Open in New Tab",
+    "weekNavigation": {
+      "previous": "← Previous Week",
+      "next": "Next Week →",
+      "weekOf": "Week of {date}"
+    },
+    "reportPreview": "Report Preview",
+    "viewFormattedTitle": "View the formatted report output",
+    "rendered": "Rendered",
+    "viewSourceTitle": "View the raw source code of the report",
+    "source": "Source",
+    "copyReportTitle": "Copy report content to clipboard",
+    "copyReport": "Copy Report",
+    "selectDateRange": "Select a date range and generate a report to see a preview.",
+    "reportTemplates": "Report Templates",
+    "templatesDescription": "Manage templates for report generation",
+    "manageTemplatesTitle": "Open the template editor to create and modify report templates",
+    "manageTemplates": "Manage Templates",
+    "resetDefaultTitle": "Restore all templates to their original default versions",
+    "resetDefault": "Reset to Default",
+    "templateGuideTitle": "View help documentation for template syntax and available data",
+    "templateGuide": "📋 Template Guide"
+  },
+  "settings": {
+    "title": "Settings",
+    "enableReminders": "Enable Reminders",
+    "generalSettings": "General Settings",
+    "generalDescription": "Settings that apply to all modes of operation",
+    "colourThemeTitle": "Choose your colour theme preference",
+    "colourTheme": "Colour Theme",
+    "themeOptions": {
+      "system": "Follow system settings",
+      "light": "Light mode",
+      "dark": "Dark mode"
+    },
+    "soundSettingsTitle": "Choose which sounds to mute",
+    "soundSettings": "Sound Settings",
+    "soundOptions": {
+      "allEnabled": "All sounds enabled",
+      "muteAll": "Mute all sounds",
+      "mutePomodoroOnly": "Mute Pomodoro sounds only",
+      "muteNotificationOnly": "Mute notification sounds only"
+    },
+    "itemsPerPageTitle": "Number of items to show per page in lists",
+    "itemsPerPage": "Items per page",
+    "itemsPerPageOptions": {
+      "10": "10 items",
+      "20": "20 items",
+      "30": "30 items",
+      "50": "50 items",
+      "100": "100 items"
+    },
+    "systemNotificationsTitle": "Send system notifications to your operating system",
+    "systemNotifications": "System Notifications",
+    "dateFormatTitle": "Choose your preferred date display format",
+    "dateFormat": "Date Format",
+    "dateFormatOptions": {
+      "default": "Default (locale-based)",
+      "iso": "ISO 8601 (YYYY-MM-DD)",
+      "us": "US Format (MM/DD/YYYY)",
+      "european": "European (DD/MM/YYYY)",
+      "short": "Short Format",
+      "long": "Long Format"
+    },
+    "yesNo": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "reminderSettings": "Reminder Settings",
+    "reminderIntervalTitle": "How often you'll receive activity reminder notifications",
+    "reminderInterval": "Reminder Interval",
+    "intervals": {
+      "1min": "1 minute",
+      "2min": "2 minutes",
+      "5min": "5 minutes",
+      "15min": "15 minutes",
+      "30min": "30 minutes",
+      "1hour": "1 hour",
+      "1.5hour": "1.5 hours",
+      "2hour": "2 hours",
+      "3hour": "3 hours",
+      "4hour": "4 hours"
+    },
+    "pauseResumeTitle": "How long alerts remain paused before automatically resuming",
+    "pauseResume": "When pausing, resume after",
+    "never": "Never",
+    "autoStartTitle": "Automatically start reminders when the app opens",
+    "autoStart": "Auto start reminders upon opening app",
+    "reminderSoundTitle": "Choose the sound that plays with reminders",
+    "reminderSound": "Reminder Sound"
+  },
+  "schedule": {
+    "title": "Activity Schedule",
+    "description": "Set your active activity hours and days for notifications",
+    "activityHours": "Activity Hours",
+    "complexScheduleTitle": "Enable complex scheduling with multiple time ranges per day",
+    "complexSchedule": "Complex Schedule",
+    "startTimeTitle": "When your activity period starts",
+    "startTime": "Start Time",
+    "endTimeTitle": "When your activity period ends",
+    "endTime": "End Time",
+    "complexDescription": "Set multiple time ranges for each day to accommodate complex schedules.",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "addRange": "+ Add Range",
+    "activityDays": "Activity Days",
+    "datePreview": {
+      "prefix": "Preview: "
+    }
+  },
+  "pomodoro": {
+    "title": "Pomodoro Mode",
+    "description": "Structured work/break intervals with automatic notifications",
+    "enableTitle": "Enable Pomodoro timing mode with work and break alerts",
+    "enable": "Enable Pomodoro Mode",
+    "workDurationTitle": "Length of work periods in minutes",
+    "workDuration": "Work Duration (minutes)",
+    "workDurations": {
+      "15": "15 minutes",
+      "20": "20 minutes",
+      "25": "25 minutes",
+      "30": "30 minutes",
+      "45": "45 minutes",
+      "60": "60 minutes"
+    },
+    "shortBreakTitle": "Length of short break periods in minutes",
+    "shortBreak": "Short Break Duration (minutes)",
+    "shortBreakDurations": {
+      "3": "3 minutes",
+      "5": "5 minutes",
+      "10": "10 minutes",
+      "15": "15 minutes"
+    },
+    "longBreakTitle": "Length of long break periods in minutes",
+    "longBreak": "Long Break Duration (minutes)",
+    "sessionsBeforeLongTitle": "Number of work sessions before taking a long break",
+    "sessionsBeforeLong": "Sessions before long break",
+    "sessionOptions": {
+      "2": "Every 2 sessions",
+      "3": "Every 3 sessions",
+      "4": "Every 4 sessions",
+      "5": "Every 5 sessions",
+      "6": "Every 6 sessions"
+    },
+    "tickSounds": "Tick Sounds",
+    "tickSoundTitle": "Optional tick sound to remind you're in a work session",
+    "tickSoundType": "Tick Sound Type",
+    "tickOptions": {
+      "none": "No ticking",
+      "soft": "Soft tick",
+      "classic": "Classic tick",
+      "digital": "Digital tick"
+    },
+    "tickIntervalTitle": "How often to play the tick sound in seconds",
+    "tickInterval": "Tick Interval (seconds)",
+    "tickIntervals": {
+      "off": "Off (no ticking)",
+      "1": "Every 1 second",
+      "2": "Every 2 seconds",
+      "3": "Every 3 seconds",
+      "5": "Every 5 seconds",
+      "10": "Every 10 seconds",
+      "15": "Every 15 seconds",
+      "30": "Every 30 seconds",
+      "60": "Every 60 seconds"
+    },
+    "announceSounds": "Announce Sounds",
+    "shortBreakAnnounceTitle": "Sound to play when short break starts",
+    "shortBreakAnnounce": "Short Break Announce",
+    "longBreakAnnounceTitle": "Sound to play when long break starts",
+    "longBreakAnnounce": "Long Break Announce",
+    "resumeWorkAnnounceTitle": "Sound to play when resuming work after break",
+    "resumeWorkAnnounce": "Resume Work Announce",
+    "options": "Options",
+    "autoStartTitle": "Automatically start the next session without requiring manual intervention",
+    "autoStart": "Automatically start next session",
+    "promptDescriptionsTitle": "Prompt for activity description and create log entries for work sessions",
+    "promptDescriptions": "Prompt for work session descriptions",
+    "logBreaksTitle": "Also log break sessions in the activity tracker",
+    "logBreaks": "Log break sessions too",
+    "enableLongBreaksTitle": "Enable long breaks after completing multiple sessions",
+    "enableLongBreaks": "Enable long breaks",
+    "allowPausingTitle": "Allow pausing Pomodoro sessions from the banner",
+    "allowPausing": "Allow session pausing",
+    "autoResetDailyTitle": "Automatically reset session counter to 1 when the day changes",
+    "autoResetDaily": "Auto-reset sessions daily",
+    "sessionManagement": "Session Management",
+    "resetCounterTitle": "Reset session counter back to 1",
+    "resetCounter": "Reset Session Counter"
+  },
+  "dataManagement": {
+    "backup": "Database Backup",
+    "backupDescription": "Export or import your activity data",
+    "exportDatabase": "Export Database",
+    "importDatabase": "Import Database",
+    "warningSettings": "Warning Settings",
+    "warningDescription": "Configure confirmation dialogs for destructive actions",
+    "warnDeleteTitle": "Show confirmation dialog when deleting activities",
+    "warnDelete": "Warn on activity delete",
+    "warnResetTitle": "Show confirmation dialog when resetting Pomodoro session counter",
+    "warnReset": "Warn on session reset",
+    "forceManualSave": "Force Manual Save"
+  },
+  "diagnostics": {
+    "title": "🔧 Diagnostics",
+    "systemTests": "System Tests",
+    "systemTestsDescription": "Test various system components and functionality",
+    "notifications": "🔔 Notifications",
+    "testReminderTitle": "Send a test reminder",
+    "testReminder": "🧪 Test Reminder",
+    "testSoundTitle": "Play a test reminder sound",
+    "testSound": "🔊 Test Sound",
+    "refreshStatusTitle": "Refresh the reminder permission status display",
+    "refreshStatus": "🔄 Refresh Status",
+    "forceEnableTitle": "Force show notification permission dialog",
+    "forceEnable": "⚡ Force Enable",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "Run comprehensive service worker diagnostics",
+    "runDiagnostics": "🔍 Run Diagnostics",
+    "dataManagement": "⚠️ Data Management",
+    "dataWarning": "These actions cannot be undone",
+    "clearAllData": "🗑️ Clear All Data"
+  },
+  "modals": {
+    "edit": {
+      "title": "Edit Entry",
+      "activity": "Activity",
+      "description": "Description",
+      "time": "Time",
+      "markTodo": "Mark as Todo",
+      "markNote": "Mark as Note",
+      "dueDate": "Due Date (optional)",
+      "update": "Update Entry",
+      "cancel": "Cancel"
+    },
+    "templateManager": {
+      "title": "Template Manager",
+      "saveAll": "Save All Changes",
+      "close": "Close",
+      "templates": "Templates",
+      "addTemplate": "Add Template",
+      "resetAll": "Reset All",
+      "selectTemplate": "Select a template to edit",
+      "save": "Save",
+      "delete": "Delete",
+      "duplicate": "Duplicate",
+      "editor": "Editor",
+      "preview": "Preview",
+      "templateName": "Template Name",
+      "templateNamePlaceholder": "e.g., My Custom Template",
+      "description": "Description",
+      "descriptionPlaceholder": "Brief description of the template",
+      "outputType": "Output Type",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Plain Text"
+      },
+      "templateContent": "Template Content",
+      "templateContentPlaceholder": "Enter your template content here...",
+      "setDefault": "Set as default template",
+      "previewTitle": "Preview",
+      "rendered": "Rendered",
+      "source": "Source",
+      "refresh": "Refresh",
+      "selectTemplatePreview": "Select a template to see preview"
+    },
+    "templateGuide": {
+      "title": "Template Guide",
+      "activityDescription": "Activity description"
+    },
+    "pomodoroActivity": {
+      "title": "Work Session Activity",
+      "activityLabel": "What will you be working on?",
+      "activityPlaceholder": "e.g., Writing report, Meeting preparation",
+      "usePrevious": "Use Previous Activity",
+      "descriptionLabel": "Description (optional)",
+      "descriptionPlaceholder": "Additional details about this work session",
+      "startSession": "Start Work Session",
+      "cancel": "Cancel"
+    },
+    "pomodoroAbandon": {
+      "title": "Session Abandonment",
+      "workedFor": "You worked for {minutes} minute{minutes, plural, one {} other {s}}",
+      "saveQuestion": "Would you like to save what you accomplished during this partial session?",
+      "activityLabel": "Activity accomplished",
+      "activityPlaceholder": "What did you work on during this time?",
+      "descriptionLabel": "Description (optional)",
+      "descriptionPlaceholder": "Additional details about what you accomplished",
+      "saveAbandon": "Save Work & Abandon",
+      "justAbandon": "Just Abandon"
+    },
+    "confirmation": {
+      "title": "Confirm Action",
+      "defaultMessage": "Are you sure you want to perform this action?",
+      "dontAskAgain": "Don't ask again for this type of action",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Activity Hours Information",
+      "alertsOff": "Reminder alerts are switched off outside of activity hours.",
+      "configure": "⚙️ Configure Activity Hours",
+      "gotIt": "Got It"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Overdue Items",
+      "message": "The following items are past their due date:",
+      "gotIt": "Got It"
+    },
+    "hashtagBrowser": {
+      "title": "Hashtag Browser",
+      "count": "{count} hashtag{count, plural, one {} other {s}} found",
+      "noHashtags": "No hashtags found. Add activities with #hashtags to see them here!"
+    },
+    "userGuide": {
+      "title": "User Guide",
+      "settingsCustomization": "Settings & Customization"
+    },
+    "notificationSetup": {
+      "title": "Enable System Notifications?",
+      "appName": "Activity Tracker",
+      "enableOption": "✅ Enable System Notifications",
+      "soundOption": "🔊 Sound Only",
+      "enableButton": "Enable System Notifications",
+      "soundButton": "Sound Only"
+    },
+    "about": {
+      "title": "About Activity Tracker",
+      "appInfo": "Application Info",
+      "versionHistory": "Version History",
+      "loadingVersion": "Loading version history...",
+      "appName": "Activity Tracker",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ View on GitHub"
+    },
+    "workspaceManager": {
+      "title": "🏢 Workspace Manager",
+      "currentWorkspace": "Current Workspace: {name}",
+      "description": "Each workspace maintains separate activities, settings, and state...",
+      "availableWorkspaces": "Available Workspaces",
+      "enterName": "Enter workspace name...",
+      "createWorkspace": "Create Workspace",
+      "close": "Close"
+    },
+    "languagePicker": {
+      "title": "🌐 Select Language"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel", 
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "markComplete": "Mark Complete",
+    "outsideActivityHours": "Outside activity hours",
+    "todoTag": "Todo",
+    "noteTag": "Note",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "none": "None",
+    "all": "All",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "minutes": "minute{count, plural, one {} other {s}}",
+    "hours": "hour{count, plural, one {} other {s}}",
+    "days": "day{count, plural, one {} other {s}}",
+    "weeks": "week{count, plural, one {} other {s}}",
+    "months": "month{count, plural, one {} other {s}}",
+    "daysOfWeek": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  }
+}

@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Getting Started</h4>
+        <p>Templates use a simple variable substitution syntax with double curly braces to create dynamic reports.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Basic Syntax</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Simple variable substitution</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Loop through arrays</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Conditional content</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Pipe Syntax & Function Chaining</h4>
+        <p>Transform data using the pipe (<code>|</code>) syntax to chain multiple functions together:</p>
+        
+        <h5>Basic Pipe Syntax</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Apply a single transformation</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Chain multiple transformations</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Pass parameters to functions</li>
+        </ul>
+
+        <h5>Available Transformation Functions</h5>
+        <ul>
+            <li><code>date('format')</code> - Format timestamps as dates
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Extract time from timestamps
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Escape CSV special characters
+                <ul>
+                    <li>Wraps text in quotes if it contains commas, quotes, or newlines</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Remove line breaks from text
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>CSV Template Example with Chaining</h5>
+        <p>Here's how the CSV template uses chaining to create clean, properly escaped output:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>How this works:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Converts timestamp to YYYY-MM-DD format</li>
+            <li><code>entry.timestamp | time</code> - Extracts time portion</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - First removes line breaks, then escapes for CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Same process for descriptions</li>
+        </ul>
+
+        <h5>Order Matters in Chaining!</h5>
+        <p>Functions are applied left to right, so order is important:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Remove breaks first, then escape</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Escaping first may interfere with break removal</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Available Data</h4>
+        <p>The following data is available in your templates:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - The report title</li>
+            <li><code>{{startDate}}</code> - Report start date (formatted)</li>
+            <li><code>{{endDate}}</code> - Report end date (formatted)</li>
+            <li><code>{{totalEntries}}</code> - Total number of activity entries</li>
+            <li><code>{{entries}}</code> - Array of all activity entries</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Entry Properties</h4>
+        <p>Each entry in the <code>{{#each entries}}</code> loop has:</p>
+        <ul>
+            <li><code>{{activity}}</code> - The activity name</li>
+            <li><code>{{description}}</code> - Activity description</li>
+            <li><code>{{timestamp}}</code> - Raw ISO timestamp</li>
+            <li><code>{{formattedTime}}</code> - Nicely formatted time (e.g., "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Nicely formatted date (e.g., "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean: true if this is a todo item</li>
+            <li><code>{{tags}}</code> - Array of hashtags for this entry</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Common Transformations</h4>
+        <p>Transform timestamps and format data:</p>
+        <ul>
+            <li><strong>Date formats</strong>: Use <code>{{formattedDate}}</code> and <code>{{formattedTime}}</code> for human-readable formats</li>
+            <li><strong>Conditional content</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - only show if description exists</li>
+            <li><strong>Loop through tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - display all hashtags</li>
+            <li><strong>Todo filtering</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - mark todo items</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Markdown Formatting</h4>
+        <p>Use Markdown syntax for readable formatting:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Large heading</li>
+            <li><code>## {{activity}}</code> - Medium heading</li>
+            <li><code>**{{activity}}**</code> - Bold text</li>
+            <li><code>*{{description}}*</code> - Italic text</li>
+            <li><code>- {{activity}}</code> - Bullet point</li>
+            <li><code>`{{formattedTime}}`</code> - Code formatting</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Example Template</h4>
+        <pre><code># {{reportTitle}}
+From {{startDate}} to {{endDate}}
+
+Total activities: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**TODO ITEM**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Pro Tips</h4>
+        <ul>
+            <li><strong>HTML templates</strong>: Use for rich formatting with CSS styles and complex layouts</li>
+            <li><strong>Markdown templates</strong>: Perfect for simple, readable documentation</li>
+            <li><strong>CSV templates</strong>: Ideal for data analysis in spreadsheets</li>
+            <li><strong>Preview feature</strong>: Always test your templates before saving</li>
+            <li><strong>Custom formats</strong>: Combine multiple variables for unique layouts</li>
+        </ul>
+    </div>
+</div>

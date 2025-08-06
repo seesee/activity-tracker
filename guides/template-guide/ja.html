@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>はじめに</h4>
+        <p>テンプレートは二重波括弧を使ったシンプルな変数置換構文で動的レポートを作成します。</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>基本構文</h4>
+        <ul>
+            <li><code>{{variable}}</code> - シンプルな変数置換</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - 配列のループ</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - 条件付きコンテンツ</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>パイプ構文と関数チェーン</h4>
+        <p>パイプ構文（<code>|</code>）を使ってデータを変換し、複数の関数を連鎖させます：</p>
+        
+        <h5>基本パイプ構文</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - 単一の変換を適用</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - 複数の変換をチェーン</li>
+            <li><code>{{ variable | function('parameter') }}</code> - 関数にパラメータを渡す</li>
+        </ul>
+
+        <h5>利用可能な変換関数</h5>
+        <ul>
+            <li><code>date('format')</code> - タイムスタンプを日付としてフォーマット
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - タイムスタンプから時間を抽出
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - CSVの特殊文字をエスケープ
+                <ul>
+                    <li>コンマ、クォート、改行が含まれる場合テキストをクォートで囲む</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - テキストから改行を削除
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>チェーンを使ったCSVテンプレートの例</h5>
+        <p>CSVテンプレートがチェーンを使ってクリーンで適切にエスケープされた出力を作成する方法：</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>動作原理：</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - タイムスタンプをYYYY-MM-DD形式に変換</li>
+            <li><code>entry.timestamp | time</code> - 時間部分を抽出</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - まず改行を削除、次にCSV用エスケープ</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - 説明に同じ処理</li>
+        </ul>
+
+        <h5>チェーンでは順序が重要！</h5>
+        <p>関数は左から右に適用されるため、順序が重要です：</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - 改行削除を先に、エスケープは後</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - エスケープを先にすると改行削除に干渉する場合がある</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>利用可能データ</h4>
+        <p>テンプレートで使用できるデータ：</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - レポートタイトル</li>
+            <li><code>{{startDate}}</code> - レポート開始日（フォーマット済み）</li>
+            <li><code>{{endDate}}</code> - レポート終了日（フォーマット済み）</li>
+            <li><code>{{totalEntries}}</code> - アクティビティエントリの総数</li>
+            <li><code>{{entries}}</code> - 全アクティビティエントリの配列</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>エントリプロパティ</h4>
+        <p><code>{{#each entries}}</code>ループ内の各エントリには以下があります：</p>
+        <ul>
+            <li><code>{{activity}}</code> - アクティビティ名</li>
+            <li><code>{{description}}</code> - アクティビティの説明</li>
+            <li><code>{{timestamp}}</code> - 生のISOタイムスタンプ</li>
+            <li><code>{{formattedTime}}</code> - きれいにフォーマットされた時間（例：「2:30 PM」）</li>
+            <li><code>{{formattedDate}}</code> - きれいにフォーマットされた日付（例：「Jan 15, 2025」）</li>
+            <li><code>{{isTodo}}</code> - ブール値：TODOアイテムの場合true</li>
+            <li><code>{{tags}}</code> - このエントリのハッシュタグ配列</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>一般的な変換</h4>
+        <p>タイムスタンプを変換してデータをフォーマット：</p>
+        <ul>
+            <li><strong>日付フォーマット</strong>：人が読みやすい形式には<code>{{formattedDate}}</code>と<code>{{formattedTime}}</code>を使用</li>
+            <li><strong>条件付きコンテンツ</strong>：<code>{{#if description}}{{description}}{{/if}}</code> - 説明が存在する場合のみ表示</li>
+            <li><strong>タグのループ</strong>：<code>{{#each tags}}#{{this}} {{/each}}</code> - 全ハッシュタグを表示</li>
+            <li><strong>TODOフィルタリング</strong>：<code>{{#if isTodo}}TODO: {{/if}}</code> - TODOアイテムをマーク</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Markdownフォーマット</h4>
+        <p>読みやすいフォーマットにMarkdown構文を使用：</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - 大見出し</li>
+            <li><code>## {{activity}}</code> - 中見出し</li>
+            <li><code>**{{activity}}**</code> - 太字テキスト</li>
+            <li><code>*{{description}}*</code> - 斜体テキスト</li>
+            <li><code>- {{activity}}</code> - 箇条書き</li>
+            <li><code>`{{formattedTime}}`</code> - コードフォーマット</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>テンプレート例</h4>
+        <pre><code># {{reportTitle}}
+{{startDate}}から{{endDate}}まで
+
+総アクティビティ数：{{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+タグ：{{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**TODOアイテム**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>プロのコツ</h4>
+        <ul>
+            <li><strong>HTMLテンプレート</strong>：CSSスタイルと複雑なレイアウトでリッチなフォーマットに使用</li>
+            <li><strong>Markdownテンプレート</strong>：シンプルで読みやすいドキュメントに最適</li>
+            <li><strong>CSVテンプレート</strong>：スプレッドシートでのデータ分析に理想的</li>
+            <li><strong>プレビュー機能</strong>：保存前に必ずテンプレートをテスト</li>
+            <li><strong>カスタムフォーマット</strong>：ユニークなレイアウトのために複数の変数を組み合わせ</li>
+        </ul>
+    </div>
+</div>

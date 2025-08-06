@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Ξεκινώντας</h4>
+        <p>Τα πρότυπα χρησιμοποιούν μια απλή σύνταξη αντικατάστασης μεταβλητών με διπλές άγκιστρα για τη δημιουργία δυναμικών αναφορών.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Βασική σύνταξη</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Απλή αντικατάσταση μεταβλητής</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Βρόχος μέσω πινάκων</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Υπό συνθήκη περιεχόμενο</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Σύνταξη pipe και αλυσίδωση συναρτήσεων</h4>
+        <p>Μεταμορφώστε δεδομένα χρησιμοποιώντας τη σύνταξη pipe (<code>|</code>) για να αλυσιδώσετε πολλές συναρτήσεις μαζί:</p>
+        
+        <h5>Βασική σύνταξη pipe</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Εφαρμόστε ένα μετασχηματισμό</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Αλυσιδώστε πολλούς μετασχηματισμούς</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Περάστε παραμέτρους σε συναρτήσεις</li>
+        </ul>
+
+        <h5>Διαθέσιμες συναρτήσεις μετασχηματισμού</h5>
+        <ul>
+            <li><code>date('format')</code> - Μορφοποίηση χρονικών σημάνσεων ως ημερομηνίες
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Εξαγωγή ώρας από χρονικές σημάνσεις
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Διαφυγή ειδικών χαρακτήρων CSV
+                <ul>
+                    <li>Τυλίγει το κείμενο σε εισαγωγικά αν περιέχει κόμματα, εισαγωγικά ή αλλαγές γραμμής</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Αφαίρεση αλλαγών γραμμής από κείμενο
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>Παράδειγμα προτύπου CSV με αλυσίδωση</h5>
+        <p>Πώς το πρότυπο CSV χρησιμοποιεί αλυσίδωση για να δημιουργήσει καθαρό, σωστά escaped έξοδο:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Πώς λειτουργεί:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Μετατρέπει τη χρονική σήμανση σε μορφή YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Εξάγει το τμήμα της ώρας</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Πρώτα αφαιρεί αλλαγές γραμμής, στη συνέχεια escape για CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Ίδια διαδικασία για περιγραφές</li>
+        </ul>
+
+        <h5>Η σειρά είναι σημαντική στην αλυσίδωση!</h5>
+        <p>Οι συναρτήσεις εφαρμόζονται από αριστερά προς δεξιά, οπότε η σειρά είναι σημαντική:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Αφαιρέστε αλλαγές πρώτα, στη συνέχεια escape</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Το escape πρώτα μπορεί να παρεμβάλει στην αφαίρεση αλλαγών</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Διαθέσιμα δεδομένα</h4>
+        <p>Τα ακόλουθα δεδομένα είναι διαθέσιμα στα πρότυπά σας:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - Ο τίτλος της αναφοράς</li>
+            <li><code>{{startDate}}</code> - Ημερομηνία έναρξης αναφοράς (μορφοποιημένη)</li>
+            <li><code>{{endDate}}</code> - Ημερομηνία λήξης αναφοράς (μορφοποιημένη)</li>
+            <li><code>{{totalEntries}}</code> - Συνολικός αριθμός καταχωρήσεων δραστηριότητας</li>
+            <li><code>{{entries}}</code> - Πίνακας όλων των καταχωρήσεων δραστηριότητας</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Ιδιότητες καταχωρήσεων</h4>
+        <p>Κάθε καταχώρηση στον βρόχο <code>{{#each entries}}</code> έχει:</p>
+        <ul>
+            <li><code>{{activity}}</code> - Το όνομα της δραστηριότητας</li>
+            <li><code>{{description}}</code> - Περιγραφή δραστηριότητας</li>
+            <li><code>{{timestamp}}</code> - Ακατέργαστη χρονική σήμανση ISO</li>
+            <li><code>{{formattedTime}}</code> - Όμορφα μορφοποιημένη ώρα (π.χ. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Όμορφα μορφοποιημένη ημερομηνία (π.χ. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean: true αν αυτό είναι στοιχείο todo</li>
+            <li><code>{{tags}}</code> - Πίνακας hashtags για αυτή την καταχώρηση</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Συνήθεις μετασχηματισμοί</h4>
+        <p>Μεταμόρφωση χρονικών σημάνσεων και μορφοποίηση δεδομένων:</p>
+        <ul>
+            <li><strong>Μορφές ημερομηνίας</strong>: Χρησιμοποιήστε <code>{{formattedDate}}</code> και <code>{{formattedTime}}</code> για αναγνώσιμες μορφές</li>
+            <li><strong>Υπό συνθήκη περιεχόμενο</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - εμφάνιση μόνο αν υπάρχει περιγραφή</li>
+            <li><strong>Βρόχος μέσω tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - εμφάνιση όλων των hashtags</li>
+            <li><strong>Φιλτράρισμα todo</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - σήμανση στοιχείων todo</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Μορφοποίηση Markdown</h4>
+        <p>Χρησιμοποιήστε σύνταξη Markdown για αναγνώσιμη μορφοποίηση:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Μεγάλος τίτλος</li>
+            <li><code>## {{activity}}</code> - Μεσαίος τίτλος</li>
+            <li><code>**{{activity}}**</code> - Έντονο κείμενο</li>
+            <li><code>*{{description}}*</code> - Πλάγιο κείμενο</li>
+            <li><code>- {{activity}}</code> - Κουκκίδα</li>
+            <li><code>`{{formattedTime}}`</code> - Μορφοποίηση κώδικα</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Παράδειγμα προτύπου</h4>
+        <pre><code># {{reportTitle}}
+Από {{startDate}} έως {{endDate}}
+
+Συνολικές δραστηριότητες: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**ΣΤΟΙΧΕΙΟ TODO**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Συμβουλές επαγγελματία</h4>
+        <ul>
+            <li><strong>Πρότυπα HTML</strong>: Χρησιμοποιήστε για πλούσια μορφοποίηση με στυλ CSS και πολύπλοκες διατάξεις</li>
+            <li><strong>Πρότυπα Markdown</strong>: Τέλεια για απλή, αναγνώσιμη τεκμηρίωση</li>
+            <li><strong>Πρότυπα CSV</strong>: Ιδανικά για ανάλυση δεδομένων σε υπολογιστικά φύλλα</li>
+            <li><strong>Λειτουργία προεπισκόπησης</strong>: Πάντα δοκιμάζετε τα πρότυπά σας πριν αποθηκεύσετε</li>
+            <li><strong>Προσαρμοσμένες μορφές</strong>: Συνδυάστε πολλές μεταβλητές για μοναδικές διατάξεις</li>
+        </ul>
+    </div>
+</div>

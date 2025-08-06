@@ -575,14 +575,14 @@ function toggleTodoMode() {
     
     if (isActive) {
         btn.classList.remove('active');
-        btn.textContent = 'Mark as Todo';
+        btn.textContent = t('tracker.markTodo');
         // Hide due date section when not in todo mode
         if (dueDateSection) {
             dueDateSection.style.display = 'none';
         }
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Todo';
+        btn.textContent = t('tracker.todoActive');
         // Show due date section when in todo mode
         if (dueDateSection) {
             dueDateSection.style.display = 'block';
@@ -612,10 +612,10 @@ function toggleNoteMode() {
     
     if (isActive) {
         btn.classList.remove('active');
-        btn.textContent = 'Mark as Note';
+        btn.textContent = t('tracker.markNote');
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Note';
+        btn.textContent = t('tracker.noteActive');
     }
     
     // Update form labels and examples
@@ -671,36 +671,36 @@ function updateFormLabelsAndExamples(context = 'tracker') {
     // Update based on flag combinations
     if (isTodo && isNote) {
         // Both flags active - Todo Note
-        if (titleElement) titleElement.textContent = context === 'tracker' ? 'New Todo Note' : 'New Todo Note';
-        if (activityLabel) activityLabel.textContent = 'What do you need to note and do?';
-        if (activityInput) activityInput.placeholder = 'e.g., Research budget options, Review meeting agenda #work';
-        if (descriptionLabel) descriptionLabel.textContent = 'Note details and todo description';
-        if (descriptionInput) descriptionInput.placeholder = 'Capture your notes and describe what needs to be done...';
-        if (addButton) addButton.textContent = 'Add Todo Note';
+        if (titleElement) titleElement.textContent = t('todo.newTodoNote');
+        if (activityLabel) activityLabel.textContent = t('todo.todoNoteLabel');
+        if (activityInput) activityInput.placeholder = t('todo.todoActivity');
+        if (descriptionLabel) descriptionLabel.textContent = t('todo.todoNoteDescription');
+        if (descriptionInput) descriptionInput.placeholder = t('todo.todoDescription');
+        if (addButton) addButton.textContent = t('todo.addTodoNote');
     } else if (isTodo) {
         // Only todo flag active
-        if (titleElement) titleElement.textContent = context === 'tracker' ? 'New Todo Item' : 'New Todo Item';
-        if (activityLabel) activityLabel.textContent = 'What do you need to do?';
-        if (activityInput) activityInput.placeholder = 'e.g., Call client about project, Review budget #work';
-        if (descriptionLabel) descriptionLabel.textContent = 'Todo description (optional)';
-        if (descriptionInput) descriptionInput.placeholder = 'Additional details about this task, steps needed, context...';
-        if (addButton) addButton.textContent = 'Add Todo';
+        if (titleElement) titleElement.textContent = t('todo.newTodo');
+        if (activityLabel) activityLabel.textContent = t('todo.todoLabel');
+        if (activityInput) activityInput.placeholder = t('tracker.trackerActivity');
+        if (descriptionLabel) descriptionLabel.textContent = t('todo.descriptionLabel');
+        if (descriptionInput) descriptionInput.placeholder = t('tracker.trackerDescription');
+        if (addButton) addButton.textContent = t('todo.addTodo');
     } else if (isNote) {
         // Only note flag active
-        if (titleElement) titleElement.textContent = context === 'tracker' ? 'New Note' : 'New Note';
-        if (activityLabel) activityLabel.textContent = 'Note title or topic';
-        if (activityInput) activityInput.placeholder = 'e.g., Meeting notes, Ideas for project #brainstorm';
-        if (descriptionLabel) descriptionLabel.textContent = 'Note content';
-        if (descriptionInput) descriptionInput.placeholder = 'Write your note content, ideas, observations, or thoughts here...';
-        if (addButton) addButton.textContent = 'Add Note';
+        if (titleElement) titleElement.textContent = t('notes.newNote');
+        if (activityLabel) activityLabel.textContent = t('notes.titleLabel');
+        if (activityInput) activityInput.placeholder = t('notes.noteActivity');
+        if (descriptionLabel) descriptionLabel.textContent = t('notes.contentLabel');
+        if (descriptionInput) descriptionInput.placeholder = t('notes.noteDescription');
+        if (addButton) addButton.textContent = t('notes.addNote');
     } else {
         // Neither flag active - regular activity
-        if (titleElement) titleElement.textContent = context === 'tracker' ? 'Activity Entry' : 'New Activity';
-        if (activityLabel) activityLabel.textContent = 'What are you doing?';
-        if (activityInput) activityInput.placeholder = 'e.g., Writing report, Meeting with team #work';
-        if (descriptionLabel) descriptionLabel.textContent = 'Description (optional)';
-        if (descriptionInput) descriptionInput.placeholder = 'Additional details about this activity...';
-        if (addButton) addButton.textContent = 'Add Entry';
+        if (titleElement) titleElement.textContent = t('tracker.title');
+        if (activityLabel) activityLabel.textContent = t('tracker.activityLabel');
+        if (activityInput) activityInput.placeholder = t('tracker.activityPlaceholder');
+        if (descriptionLabel) descriptionLabel.textContent = t('tracker.descriptionLabel');
+        if (descriptionInput) descriptionInput.placeholder = t('tracker.descriptionPlaceholder');
+        if (addButton) addButton.textContent = t('tracker.addEntry');
     }
 }
 
@@ -718,11 +718,11 @@ function toggleTodoModeForTodo() {
     
     if (isActive) {
         btn.classList.remove('active');
-        btn.textContent = 'Mark as Todo';
+        btn.textContent = t('tracker.markTodo');
         if (dueDateSection) dueDateSection.style.display = 'none';
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Todo';
+        btn.textContent = t('tracker.todoActive');
         if (dueDateSection) dueDateSection.style.display = 'block';
     }
     
@@ -740,10 +740,10 @@ function toggleNoteModeForTodo() {
     
     if (isActive) {
         btn.classList.remove('active');
-        btn.textContent = 'Mark as Note';
+        btn.textContent = t('tracker.markNote');
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Note';
+        btn.textContent = t('tracker.noteActive');
     }
     
     updateFormLabelsAndExamples('todo');
@@ -763,11 +763,11 @@ function toggleTodoModeForNotes() {
     
     if (isActive) {
         btn.classList.remove('active');
-        btn.textContent = 'Mark as Todo';
+        btn.textContent = t('tracker.markTodo');
         if (dueDateSection) dueDateSection.style.display = 'none';
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Todo';
+        btn.textContent = t('tracker.todoActive');
         if (dueDateSection) dueDateSection.style.display = 'block';
     }
     
@@ -785,10 +785,10 @@ function toggleNoteModeForNotes() {
     
     if (isActive) {
         btn.classList.remove('active');
-        btn.textContent = 'Mark as Note';
+        btn.textContent = t('tracker.markNote');
     } else {
         btn.classList.add('active');
-        btn.textContent = '✓ Note';
+        btn.textContent = t('tracker.noteActive');
     }
     
     updateFormLabelsAndExamples('notes');
@@ -906,11 +906,11 @@ function resetActivityForm() {
         const noteBtn = document.getElementById('noteToggleBtn');
         if (todoBtn) {
             todoBtn.classList.remove('active');
-            todoBtn.textContent = 'Mark as Todo';
+            todoBtn.textContent = t('tracker.markTodo');
         }
         if (noteBtn) {
             noteBtn.classList.remove('active');
-            noteBtn.textContent = 'Mark as Note';
+            noteBtn.textContent = t('tracker.markNote');
         }
         // Reset due date section visibility
         updateDueDateSectionVisibility();
@@ -944,11 +944,11 @@ function resetTodoForm() {
         const noteBtn = document.getElementById('todoNoteToggleBtn');
         if (todoBtn) {
             todoBtn.classList.add('active');
-            todoBtn.textContent = 'Mark as Todo ✓';
+            todoBtn.textContent = t('tracker.markTodo') + ' ✓';
         }
         if (noteBtn) {
             noteBtn.classList.remove('active');
-            noteBtn.textContent = 'Mark as Note';
+            noteBtn.textContent = t('tracker.markNote');
         }
         // Keep due date section visible since todo mode is active
         const dueDateSection = document.getElementById('todoDueDateSection');
@@ -985,11 +985,11 @@ function resetNotesForm() {
         const noteBtn = document.getElementById('notesNoteToggleBtn');
         if (todoBtn) {
             todoBtn.classList.remove('active');
-            todoBtn.textContent = 'Mark as Todo';
+            todoBtn.textContent = t('tracker.markTodo');
         }
         if (noteBtn) {
             noteBtn.classList.add('active');
-            noteBtn.textContent = 'Mark as Note ✓';
+            noteBtn.textContent = t('tracker.markNote') + ' ✓';
         }
         // Hide due date section since notes don't use due dates by default
         const dueDateSection = document.getElementById('notesDueDateSection');
@@ -1715,6 +1715,11 @@ function showPomodoroActivityModal() {
     if (modal) {
         modal.style.display = 'block';
         updatePreviousActivityButton();
+        
+        // Initialize date formatters for the modal
+        setTimeout(() => {
+            initializeDateInputFormatters();
+        }, 50);
         setTimeout(() => {
             const activityInput = document.getElementById('pomodoroActivityName');
             if (activityInput) {
@@ -1732,7 +1737,7 @@ function togglePause() {
         const pauseButton = document.getElementById('pauseButton');
         
         // Check if button shows "Outside activity hours" and show info modal
-        if (pauseButton && pauseButton.textContent === 'Outside activity hours') {
+        if (pauseButton && pauseButton.textContent === "t('common.outsideActivityHours')") {
             showActivityHoursInfo();
             return;
         }
@@ -2012,7 +2017,7 @@ function showConfirmationDialog(title, message, onConfirm, options = {}) {
         messageElement.textContent = message;
         
         // Configure button
-        confirmBtn.textContent = options.confirmText || 'Confirm';
+        confirmBtn.textContent = options.confirmText || t('modals.confirmation.confirm');
         confirmBtn.className = `btn ${options.buttonClass || 'btn-danger'}`;
         
         // Show/hide skip option
@@ -2337,6 +2342,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize UI state
     initializeUIState();
+    
+    // Initialize modal close handlers
+    initializeModalCloseHandlers();
     
     // Initialize entry form toggle system
     initializeEntryFormToggle();
@@ -3129,6 +3137,79 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 }
 
+/**
+ * Show language picker modal
+ */
+function showLanguagePicker() {
+    const modal = document.getElementById('languagePickerModal');
+    if (!modal) return;
+    
+    // Detect current language from URL
+    const currentFile = window.location.pathname.split('/').pop();
+    let currentLang = 'en'; // default
+    
+    // Extract language code from filename (e.g., index.fr.html -> fr)
+    const langMatch = currentFile.match(/index\.([a-z]{2})\.html$/);
+    if (langMatch) {
+        currentLang = langMatch[1];
+    }
+    
+    // Highlight current language
+    modal.querySelectorAll('.language-option').forEach(option => {
+        option.classList.remove('current');
+        if (option.dataset.lang === currentLang) {
+            option.classList.add('current');
+        }
+    });
+    
+    // Show modal
+    modal.style.display = 'block';
+}
+
+/**
+ * Close language picker modal
+ */
+function closeLanguagePicker() {
+    const modal = document.getElementById('languagePickerModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Initialize modal close handlers for clicking outside
+ */
+function initializeModalCloseHandlers() {
+    // Close modals when clicking outside them
+    window.addEventListener('click', function(event) {
+        const languageModal = document.getElementById('languagePickerModal');
+        if (event.target === languageModal) {
+            closeLanguagePicker();
+        }
+    });
+}
+
+/**
+ * Change language by redirecting to the appropriate language-specific HTML file
+ * @param {string} languageCode - The language code to switch to
+ */
+function changeLanguage(languageCode) {
+    // Get current URL without the filename
+    const currentUrl = window.location;
+    const baseUrl = currentUrl.protocol + '//' + currentUrl.host + currentUrl.pathname.substring(0, currentUrl.pathname.lastIndexOf('/') + 1);
+    
+    // Determine target filename
+    let targetFile;
+    if (languageCode === 'en') {
+        targetFile = 'index.html'; // Default English version
+    } else {
+        targetFile = `index.${languageCode}.html`;
+    }
+    
+    // Redirect to the target language version
+    window.location.href = baseUrl + targetFile;
+}
+
 // Ensure critical functions are available globally for onclick handlers
 if (typeof window !== 'undefined') {
     window.resetActivityForm = resetActivityForm;
@@ -3146,4 +3227,7 @@ if (typeof window !== 'undefined') {
     window.addTimeRange = addTimeRange;
     window.updateTimeRange = updateTimeRange;
     window.removeTimeRange = removeTimeRange;
+    window.changeLanguage = changeLanguage;
+    window.showLanguagePicker = showLanguagePicker;
+    window.closeLanguagePicker = closeLanguagePicker;
 }

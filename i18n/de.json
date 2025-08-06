@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "Deutsch",
+    "languageCode": "de",
+    "locale": "de-DE",
+    "filename": "index.de.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "dd.MM.yyyy",
+      "long": "d. MMMM yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM yyyy"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ",",
+      "thousands": ".",
+      "currency": "€"
+    }
+  },
+  "app": {
+    "title": "Aktivitäts-Tracker",
+    "tagline": "Aufgabentagebuch, Organizer und Wissensbasis",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "offline": "App offline"
+  },
+  "navigation": {
+    "tracker": "📝 Tracker",
+    "todo": "✅ Aufgaben",
+    "notes": "📔 Notizen",
+    "alert": "⚠️ Warnung",
+    "alertTitle": "Überfällige Elemente anzeigen",
+    "startReminders": "Erinnerungen starten",
+    "startPomodoro": "🍅 Pomodoro starten",
+    "settingsMenu": "Einstellungsmenü",
+    "burgerMenu": {
+      "tracker": "Tracker",
+      "notes": "Notizen",
+      "todo": "Aufgaben",
+      "reports": "Berichte",
+      "workspaces": "Arbeitsbereiche",
+      "settings": "Einstellungen...",
+      "diagnostics": "Diagnose",
+      "language": "Sprache",
+      "userGuide": "Benutzerhandbuch",
+      "about": "Über"
+    },
+    "pauseMenu": {
+      "minutes5": "5 Minuten",
+      "minutes15": "15 Minuten",
+      "minutes30": "30 Minuten",
+      "hour1": "1 Stunde",
+      "hours2": "2 Stunden",
+      "untilManualResume": "Bis zur manuellen Fortsetzung"
+    }
+  },
+  "search": {
+    "placeholder": "Aktivitäten, Aufgaben und Hashtags suchen...",
+    "browseHashtags": "Hashtags durchsuchen",
+    "results": "Suchergebnisse",
+    "noResults": "Verwenden Sie die Suchleiste oben, um Aktivitäten, Aufgaben und Hashtags zu finden.",
+    "resultCount": "{count} Ergebnis{count, plural, one {} other {se}}",
+    "sortBy": "Sortieren nach:",
+    "show": "Anzeigen:",
+    "filters": {
+      "relevance": "Relevanz",
+      "newestFirst": "Neueste zuerst",
+      "oldestFirst": "Älteste zuerst",
+      "activityAZ": "Aktivität A-Z",
+      "activityZA": "Aktivität Z-A",
+      "allItems": "Alle Elemente",
+      "activitiesOnly": "Nur Aktivitäten",
+      "todosOnly": "Nur Aufgaben",
+      "completedOnly": "Nur Erledigte"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Pomodoro-Modus deaktiviert",
+    "pause": "Pause",
+    "nextReminder": "Nächste Aktivitätserinnerung in:",
+    "checkingNotifications": "Benachrichtigungsstatus wird überprüft...",
+    "remindersActiveWithSystem": "Aktivitätserinnerungen aktiv mit Systembenachrichtigungen",
+    "remindersActiveWithSound": "Aktivitätserinnerungen aktiv mit Tonalarmen",
+    "turnOffReminders": "Aktivitätserinnerungen ausschalten",
+    "remindersDisabled": "Aktivitätserinnerungen sind deaktiviert",
+    "turnOnReminders": "Aktivitätserinnerungen einschalten",
+    "paused": "Pausiert",
+    "readyToStart": "Bereit zu starten"
+  },
+  "tracker": {
+    "title": "Aktivitätseingabe",
+    "hideShowForm": "Formular ausblenden/anzeigen",
+    "activityLabel": "Was machen Sie?",
+    "activityPlaceholder": "z.B. Bericht schreiben, Team-Meeting #arbeit",
+    "descriptionLabel": "Beschreibung (optional)",
+    "descriptionPlaceholder": "Zusätzliche Details zu dieser Aktivität",
+    "timeLabel": "Zeit",
+    "markTodoTitle": "Als Aufgabe markieren (Strg+T zum Umschalten)",
+    "markTodo": "Als Aufgabe markieren",
+    "markNoteTitle": "Als Notiz markieren (Strg+N zum Umschalten)",
+    "markNote": "Als Notiz markieren",
+    "removeFromTodos": "Aus Aufgaben entfernen",
+    "removeFromNotes": "Aus Notizen entfernen",
+    "todoActive": "✓ Aufgabe",
+    "noteActive": "✓ Notiz",
+    "dueDateLabel": "Fälligkeitsdatum (optional)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1T",
+      "plus1d": "+1T",
+      "minus1w": "-1W",
+      "plus1w": "+1W",
+      "minus1m": "-1M",
+      "plus1m": "+1M"
+    },
+    "addEntry": "Eintrag hinzufügen",
+    "reset": "Zurücksetzen",
+    "recentEntries": "Neueste Einträge",
+    "previous": "‹ Vorherige",
+    "next": "Nächste ›",
+    "placeholders": {
+      "trackerActivity": "z.B. Bericht schreiben, Team-Meeting #arbeit",
+      "trackerDescription": "Zusätzliche Details zu dieser Aktivität..."
+    }
+  },
+  "todo": {
+    "newTodo": "Neue Aufgabe",
+    "todoLabel": "Was müssen Sie tun?",
+    "todoPlaceholder": "z.B. Kunde für Projekt anrufen, Budget überprüfen #arbeit",
+    "descriptionLabel": "Beschreibung (optional)",
+    "descriptionPlaceholder": "Zusätzliche Details zu dieser Aufgabe",
+    "markTodoTitle": "Als Aufgabe markieren",
+    "markNoteTitle": "Als Notiz markieren",
+    "addTodo": "Aufgabe hinzufügen",
+    "newTodoNote": "Neue Aufgaben-Notiz",
+    "todoNoteLabel": "Was müssen Sie notieren und erledigen?",
+    "todoNoteDescription": "Notizdetails und Aufgabenbeschreibung",
+    "addTodoNote": "Aufgaben-Notiz hinzufügen",
+    "todoList": "Aufgabenliste",
+    "filter": "Filter:",
+    "sortBy": "Sortieren nach:",
+    "filters": {
+      "allTodos": "Alle Aufgaben",
+      "dueToday": "Heute fällig",
+      "overdue": "Überfällig",
+      "noDueDate": "Kein Fälligkeitsdatum"
+    },
+    "sorting": {
+      "newestFirst": "Neueste zuerst",
+      "oldestFirst": "Älteste zuerst",
+      "dueDateEarliest": "Fälligkeitsdatum (Früheste)",
+      "dueDateLatest": "Fälligkeitsdatum (Späteste)",
+      "activityAZ": "Aktivität A-Z",
+      "activityZA": "Aktivität Z-A"
+    },
+    "todoCount": "{count} Aufgabe{count, plural, one {} other {n}}",
+    "noTodos": "Keine Aufgaben gefunden. Fügen Sie Aktivitäten als Aufgaben hinzu, um sie hier zu sehen!",
+    "pagination": {
+      "previous": "← Vorherige",
+      "next": "Nächste →",
+      "pageInfo": "Seite {current} von {total}"
+    },
+    "markCompleteHelp": "Klicken Sie auf \"Als erledigt markieren\", um Aufgaben zu beenden",
+    "placeholders": {
+      "todoActivity": "z.B. Budgetoptionen recherchieren, Meeting-Agenda überprüfen #arbeit",
+      "todoDescription": "Erfassen Sie Ihre Notizen und beschreiben Sie, was getan werden muss..."
+    }
+  },
+  "notes": {
+    "newNote": "Neue Notiz",
+    "titleLabel": "Notiztitel oder Thema",
+    "titlePlaceholder": "z.B. Meeting-Notizen, Projektideen #brainstorming",
+    "contentLabel": "Notizinhalt",
+    "contentPlaceholder": "Schreiben Sie hier Ihren Notizinhalt...",
+    "addNote": "Notiz hinzufügen",
+    "notesTitle": "Notizen",
+    "filters": {
+      "allNotes": "Alle Notizen",
+      "today": "Heute",
+      "thisWeek": "Diese Woche",
+      "thisMonth": "Dieser Monat"
+    },
+    "sort": "Sortieren:",
+    "sorting": {
+      "newestFirst": "Neueste zuerst",
+      "oldestFirst": "Älteste zuerst",
+      "activityName": "Aktivitätsname"
+    },
+    "searchPlaceholder": "In Notizen suchen...",
+    "clear": "Löschen",
+    "noNotes": "Keine Notizen gefunden.",
+    "placeholders": {
+      "noteActivity": "z.B. Meeting-Notizen, Projektideen #brainstorming",
+      "noteDescription": "Schreiben Sie hier Ihren Notizinhalt, Ideen, Beobachtungen oder Gedanken..."
+    }
+  },
+  "reports": {
+    "title": "Aktivitätsberichte",
+    "dateRange": "Datumsbereich",
+    "dateRangeDescription": "Wählen Sie den Zeitraum für Ihren Bericht aus",
+    "startDateTitle": "Startdatum für Ihren Bericht wählen",
+    "startDateLabel": "Startdatum",
+    "endDateTitle": "Enddatum für Ihren Bericht wählen",
+    "endDateLabel": "Enddatum",
+    "generateReportTitle": "Bericht für den ausgewählten Datumsbereich erstellen",
+    "generateReport": "Bericht erstellen",
+    "thisWeekTitle": "Datumsbereich auf aktuelle Woche setzen",
+    "thisWeek": "Diese Woche",
+    "templateOptions": "Vorlage & Optionen",
+    "templateOptionsDescription": "Format und Optionen wählen und Ihren Bericht herunterladen",
+    "reportTemplateTitle": "Format für Ihren Bericht auswählen",
+    "reportTemplateLabel": "Berichtsvorlage",
+    "todoItems": "Aufgaben-Elemente:",
+    "todoOptions": {
+      "excludeAll": "Alle Aufgaben ausschließen",
+      "incompleteOnly": "Nur unvollständige Aufgaben einschließen",
+      "includeAll": "Alle Aufgaben einschließen"
+    },
+    "notes": "Notizen:",
+    "noteOptions": {
+      "exclude": "Notizen ausschließen",
+      "include": "Notizen einschließen"
+    },
+    "downloadReportTitle": "Den erstellten Bericht herunterladen",
+    "downloadReport": "Bericht herunterladen",
+    "openNewTabTitle": "Den erstellten Bericht in einem neuen Tab öffnen",
+    "openNewTab": "In neuem Tab öffnen",
+    "weekNavigation": {
+      "previous": "← Vorherige Woche",
+      "next": "Nächste Woche →",
+      "weekOf": "Woche vom {date}"
+    },
+    "reportPreview": "Berichtsvorschau",
+    "viewFormattedTitle": "Die formatierte Berichtsausgabe anzeigen",
+    "rendered": "Gerendert",
+    "viewSourceTitle": "Den rohen Quellcode des Berichts anzeigen",
+    "source": "Quelle",
+    "copyReportTitle": "Berichtsinhalt in die Zwischenablage kopieren",
+    "copyReport": "Bericht kopieren",
+    "selectDateRange": "Wählen Sie einen Datumsbereich aus und erstellen Sie einen Bericht, um eine Vorschau zu sehen.",
+    "reportTemplates": "Berichtsvorlagen",
+    "templatesDescription": "Vorlagen für die Berichtserstellung verwalten",
+    "manageTemplatesTitle": "Den Vorlageneditor öffnen, um Berichtsvorlagen zu erstellen und zu ändern",
+    "manageTemplates": "Vorlagen verwalten",
+    "resetDefaultTitle": "Alle Vorlagen auf ihre ursprünglichen Standardversionen zurücksetzen",
+    "resetDefault": "Auf Standard zurücksetzen",
+    "templateGuideTitle": "Hilfedokumentation für Vorlagensyntax und verfügbare Daten anzeigen",
+    "templateGuide": "📋 Vorlagen-Leitfaden"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "enableReminders": "Erinnerungen aktivieren",
+    "generalSettings": "Allgemeine Einstellungen",
+    "generalDescription": "Einstellungen, die für alle Betriebsmodi gelten",
+    "colourThemeTitle": "Ihre Farbthemen-Präferenz wählen",
+    "colourTheme": "Farbthema",
+    "themeOptions": {
+      "system": "Systemeinstellungen folgen",
+      "light": "Heller Modus",
+      "dark": "Dunkler Modus"
+    },
+    "soundSettingsTitle": "Wählen, welche Töne stumm geschaltet werden sollen",
+    "soundSettings": "Ton-Einstellungen",
+    "soundOptions": {
+      "allEnabled": "Alle Töne aktiviert",
+      "muteAll": "Alle Töne stumm schalten",
+      "mutePomodoroOnly": "Nur Pomodoro-Töne stumm schalten",
+      "muteNotificationOnly": "Nur Benachrichtigungstöne stumm schalten"
+    },
+    "itemsPerPageTitle": "Anzahl der Elemente, die pro Seite in Listen angezeigt werden",
+    "itemsPerPage": "Elemente pro Seite",
+    "itemsPerPageOptions": {
+      "10": "10 Elemente",
+      "20": "20 Elemente",
+      "30": "30 Elemente",
+      "50": "50 Elemente",
+      "100": "100 Elemente"
+    },
+    "systemNotificationsTitle": "Systembenachrichtigungen an Ihr Betriebssystem senden",
+    "systemNotifications": "Systembenachrichtigungen",
+    "dateFormatTitle": "Wählen Sie Ihr bevorzugtes Datumsanzeigeformat",
+    "dateFormat": "Datumsformat",
+    "dateFormatOptions": {
+      "default": "Standard (regionalbasiert)",
+      "iso": "ISO 8601 (JJJJ-MM-TT)",
+      "us": "US-Format (MM/TT/JJJJ)",
+      "european": "Europäisch (TT/MM/JJJJ)",
+      "short": "Kurzes Format",
+      "long": "Langes Format"
+    },
+    "yesNo": {
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "reminderSettings": "Erinnerungseinstellungen",
+    "reminderIntervalTitle": "Wie oft Sie Aktivitätserinnerungsbenachrichtigungen erhalten",
+    "reminderInterval": "Erinnerungsintervall",
+    "intervals": {
+      "1min": "1 Minute",
+      "2min": "2 Minuten",
+      "5min": "5 Minuten",
+      "15min": "15 Minuten",
+      "30min": "30 Minuten",
+      "1hour": "1 Stunde",
+      "1.5hour": "1,5 Stunden",
+      "2hour": "2 Stunden",
+      "3hour": "3 Stunden",
+      "4hour": "4 Stunden"
+    },
+    "pauseResumeTitle": "Wie lange Warnungen pausiert bleiben, bevor sie automatisch fortgesetzt werden",
+    "pauseResume": "Beim Pausieren, fortsetzen nach",
+    "never": "Niemals",
+    "autoStartTitle": "Erinnerungen automatisch starten, wenn die App geöffnet wird",
+    "autoStart": "Erinnerungen automatisch beim Öffnen der App starten",
+    "reminderSoundTitle": "Den Ton wählen, der mit Erinnerungen abgespielt wird",
+    "reminderSound": "Erinnerungston"
+  },
+  "schedule": {
+    "title": "Aktivitätsplan",
+    "description": "Ihre aktiven Aktivitätsstunden und -tage für Benachrichtigungen festlegen",
+    "activityHours": "Aktivitätsstunden",
+    "complexScheduleTitle": "Komplexe Terminplanung mit mehreren Zeitbereichen pro Tag aktivieren",
+    "complexSchedule": "Komplexer Zeitplan",
+    "startTimeTitle": "Wann Ihre Aktivitätsperiode beginnt",
+    "startTime": "Startzeit",
+    "endTimeTitle": "Wann Ihre Aktivitätsperiode endet",
+    "endTime": "Endzeit",
+    "complexDescription": "Mehrere Zeitbereiche für jeden Tag festlegen, um komplexe Zeitpläne zu berücksichtigen.",
+    "days": {
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
+    },
+    "addRange": "+ Bereich hinzufügen",
+    "activityDays": "Aktivitätstage",
+    "datePreview": {
+      "prefix": "Vorschau: "
+    }
+  },
+  "pomodoro": {
+    "title": "Pomodoro-Modus",
+    "description": "Strukturierte Arbeits-/Pausenintervalle mit automatischen Benachrichtigungen",
+    "enableTitle": "Pomodoro-Zeitmodus mit Arbeits- und Pausenwarnungen aktivieren",
+    "enable": "Pomodoro-Modus aktivieren",
+    "workDurationTitle": "Länge der Arbeitsperioden in Minuten",
+    "workDuration": "Arbeitsdauer (Minuten)",
+    "workDurations": {
+      "15": "15 Minuten",
+      "20": "20 Minuten",
+      "25": "25 Minuten",
+      "30": "30 Minuten",
+      "45": "45 Minuten",
+      "60": "60 Minuten"
+    },
+    "shortBreakTitle": "Länge der kurzen Pausenperioden in Minuten",
+    "shortBreak": "Kurze Pausendauer (Minuten)",
+    "shortBreakDurations": {
+      "3": "3 Minuten",
+      "5": "5 Minuten",
+      "10": "10 Minuten",
+      "15": "15 Minuten"
+    },
+    "longBreakTitle": "Länge der langen Pausenperioden in Minuten",
+    "longBreak": "Lange Pausendauer (Minuten)",
+    "sessionsBeforeLongTitle": "Anzahl der Arbeitssitzungen vor einer langen Pause",
+    "sessionsBeforeLong": "Sitzungen vor langer Pause",
+    "sessionOptions": {
+      "2": "Alle 2 Sitzungen",
+      "3": "Alle 3 Sitzungen",
+      "4": "Alle 4 Sitzungen",
+      "5": "Alle 5 Sitzungen",
+      "6": "Alle 6 Sitzungen"
+    },
+    "tickSounds": "Tick-Töne",
+    "tickSoundTitle": "Optionaler Tick-Ton, um Sie daran zu erinnern, dass Sie sich in einer Arbeitssitzung befinden",
+    "tickSoundType": "Tick-Ton-Typ",
+    "tickOptions": {
+      "none": "Kein Ticken",
+      "soft": "Sanftes Ticken",
+      "classic": "Klassisches Ticken",
+      "digital": "Digitales Ticken"
+    },
+    "tickIntervalTitle": "Wie oft der Tick-Ton in Sekunden abgespielt wird",
+    "tickInterval": "Tick-Intervall (Sekunden)",
+    "tickIntervals": {
+      "off": "Aus (kein Ticken)",
+      "1": "Jede 1 Sekunde",
+      "2": "Alle 2 Sekunden",
+      "3": "Alle 3 Sekunden",
+      "5": "Alle 5 Sekunden",
+      "10": "Alle 10 Sekunden",
+      "15": "Alle 15 Sekunden",
+      "30": "Alle 30 Sekunden",
+      "60": "Alle 60 Sekunden"
+    },
+    "announceSounds": "Ansage-Töne",
+    "shortBreakAnnounceTitle": "Ton, der abgespielt wird, wenn die kurze Pause beginnt",
+    "shortBreakAnnounce": "Kurze Pause Ansage",
+    "longBreakAnnounceTitle": "Ton, der abgespielt wird, wenn die lange Pause beginnt",
+    "longBreakAnnounce": "Lange Pause Ansage",
+    "resumeWorkAnnounceTitle": "Ton, der beim Wiederaufnehmen der Arbeit nach der Pause abgespielt wird",
+    "resumeWorkAnnounce": "Arbeitsfortsetzung Ansage",
+    "options": "Optionen",
+    "autoStartTitle": "Die nächste Sitzung automatisch starten ohne manuelle Intervention",
+    "autoStart": "Nächste Sitzung automatisch starten",
+    "promptDescriptionsTitle": "Nach Aktivitätsbeschreibung fragen und Protokolleinträge für Arbeitssitzungen erstellen",
+    "promptDescriptions": "Nach Arbeitssitzungsbeschreibungen fragen",
+    "logBreaksTitle": "Auch Pausensitzungen im Aktivitäts-Tracker protokollieren",
+    "logBreaks": "Pausensitzungen auch protokollieren",
+    "enableLongBreaksTitle": "Lange Pausen nach Abschluss mehrerer Sitzungen aktivieren",
+    "enableLongBreaks": "Lange Pausen aktivieren",
+    "allowPausingTitle": "Pausieren von Pomodoro-Sitzungen über das Banner erlauben",
+    "allowPausing": "Sitzungspausen erlauben",
+    "autoResetDailyTitle": "Sitzungszähler automatisch auf 1 zurücksetzen, wenn der Tag wechselt",
+    "autoResetDaily": "Sitzungen täglich automatisch zurücksetzen",
+    "sessionManagement": "Sitzungsverwaltung",
+    "resetCounterTitle": "Sitzungszähler auf 1 zurücksetzen",
+    "resetCounter": "Sitzungszähler zurücksetzen"
+  },
+  "dataManagement": {
+    "backup": "Datenbank-Backup",
+    "backupDescription": "Ihre Aktivitätsdaten exportieren oder importieren",
+    "exportDatabase": "Datenbank exportieren",
+    "importDatabase": "Datenbank importieren",
+    "warningSettings": "Warnungseinstellungen",
+    "warningDescription": "Bestätigungsdialoge für destruktive Aktionen konfigurieren",
+    "warnDeleteTitle": "Bestätigungsdialog beim Löschen von Aktivitäten anzeigen",
+    "warnDelete": "Vor Aktivitätslöschung warnen",
+    "warnResetTitle": "Bestätigungsdialog beim Zurücksetzen des Pomodoro-Sitzungszählers anzeigen",
+    "warnReset": "Vor Sitzungsrücksetzung warnen",
+    "forceManualSave": "Manuelles Speichern erzwingen"
+  },
+  "diagnostics": {
+    "title": "🔧 Diagnose",
+    "systemTests": "Systemtests",
+    "systemTestsDescription": "Verschiedene Systemkomponenten und Funktionen testen",
+    "notifications": "🔔 Benachrichtigungen",
+    "testReminderTitle": "Eine Test-Erinnerung senden",
+    "testReminder": "🧪 Test-Erinnerung",
+    "testSoundTitle": "Einen Test-Erinnerungston abspielen",
+    "testSound": "🔊 Test-Ton",
+    "refreshStatusTitle": "Die Anzeige des Erinnerungsberechtigungsstatus aktualisieren",
+    "refreshStatus": "🔄 Status aktualisieren",
+    "forceEnableTitle": "Benachrichtigungsberechtigungsdialog erzwingen",
+    "forceEnable": "⚡ Erzwingen aktivieren",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "Umfassende Service Worker-Diagnose durchführen",
+    "runDiagnostics": "🔍 Diagnose durchführen",
+    "dataManagement": "⚠️ Datenverwaltung",
+    "dataWarning": "Diese Aktionen können nicht rückgängig gemacht werden",
+    "clearAllData": "🗑️ Alle Daten löschen"
+  },
+  "modals": {
+    "edit": {
+      "title": "Eintrag bearbeiten",
+      "activity": "Aktivität",
+      "description": "Beschreibung",
+      "time": "Zeit",
+      "markTodo": "Als Aufgabe markieren",
+      "markNote": "Als Notiz markieren",
+      "dueDate": "Fälligkeitsdatum (optional)",
+      "update": "Eintrag aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "templateManager": {
+      "title": "Vorlagen-Manager",
+      "saveAll": "Alle Änderungen speichern",
+      "close": "Schließen",
+      "templates": "Vorlagen",
+      "addTemplate": "Vorlage hinzufügen",
+      "resetAll": "Alle zurücksetzen",
+      "selectTemplate": "Eine Vorlage zum Bearbeiten auswählen",
+      "save": "Speichern",
+      "delete": "Löschen",
+      "duplicate": "Duplizieren",
+      "editor": "Editor",
+      "preview": "Vorschau",
+      "templateName": "Vorlagenname",
+      "templateNamePlaceholder": "z.B. Meine benutzerdefinierte Vorlage",
+      "description": "Beschreibung",
+      "descriptionPlaceholder": "Kurze Beschreibung der Vorlage",
+      "outputType": "Ausgabetyp",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Klartext"
+      },
+      "templateContent": "Vorlageninhalt",
+      "templateContentPlaceholder": "Geben Sie hier Ihren Vorlageninhalt ein...",
+      "setDefault": "Als Standardvorlage festlegen",
+      "previewTitle": "Vorschau",
+      "rendered": "Gerendert",
+      "source": "Quelle",
+      "refresh": "Aktualisieren",
+      "selectTemplatePreview": "Eine Vorlage auswählen, um die Vorschau zu sehen"
+    },
+    "templateGuide": {
+      "title": "Vorlagen-Leitfaden",
+      "activityDescription": "Aktivitätsbeschreibung"
+    },
+    "pomodoroActivity": {
+      "title": "Arbeitssitzungsaktivität",
+      "activityLabel": "Woran werden Sie arbeiten?",
+      "activityPlaceholder": "z.B. Bericht schreiben, Meeting-Vorbereitung",
+      "usePrevious": "Vorherige Aktivität verwenden",
+      "descriptionLabel": "Beschreibung (optional)",
+      "descriptionPlaceholder": "Zusätzliche Details zu dieser Arbeitssitzung",
+      "startSession": "Arbeitssitzung starten",
+      "cancel": "Abbrechen"
+    },
+    "pomodoroAbandon": {
+      "title": "Sitzungsabbruch",
+      "workedFor": "Sie haben {minutes} Minute{minutes, plural, one {} other {n}} gearbeitet",
+      "saveQuestion": "Möchten Sie speichern, was Sie während dieser teilweisen Sitzung erreicht haben?",
+      "activityLabel": "Erreichte Aktivität",
+      "activityPlaceholder": "Woran haben Sie während dieser Zeit gearbeitet?",
+      "descriptionLabel": "Beschreibung (optional)",
+      "descriptionPlaceholder": "Zusätzliche Details zu dem, was Sie erreicht haben",
+      "saveAbandon": "Arbeit speichern & Abbrechen",
+      "justAbandon": "Einfach abbrechen"
+    },
+    "confirmation": {
+      "title": "Aktion bestätigen",
+      "defaultMessage": "Sind Sie sicher, dass Sie diese Aktion durchführen möchten?",
+      "dontAskAgain": "Für diese Art von Aktion nicht mehr fragen",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Aktivitätsstunden-Informationen",
+      "alertsOff": "Erinnerungswarnungen sind außerhalb der Aktivitätsstunden deaktiviert.",
+      "configure": "⚙️ Aktivitätsstunden konfigurieren",
+      "gotIt": "Verstanden"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Überfällige Elemente",
+      "message": "Die folgenden Elemente haben ihr Fälligkeitsdatum überschritten:",
+      "gotIt": "Verstanden"
+    },
+    "hashtagBrowser": {
+      "title": "Hashtag-Browser",
+      "count": "{count} Hashtag{count, plural, one {} other {s}} gefunden",
+      "noHashtags": "Keine Hashtags gefunden. Fügen Sie Aktivitäten mit #Hashtags hinzu, um sie hier zu sehen!"
+    },
+    "userGuide": {
+      "title": "Benutzerhandbuch",
+      "settingsCustomization": "Einstellungen & Anpassung"
+    },
+    "notificationSetup": {
+      "title": "Systembenachrichtigungen aktivieren?",
+      "appName": "Aktivitäts-Tracker",
+      "enableOption": "✅ Systembenachrichtigungen aktivieren",
+      "soundOption": "🔊 Nur Ton",
+      "enableButton": "Systembenachrichtigungen aktivieren",
+      "soundButton": "Nur Ton"
+    },
+    "about": {
+      "title": "Über Aktivitäts-Tracker",
+      "appInfo": "Anwendungsinformationen",
+      "versionHistory": "Versionsgeschichte",
+      "loadingVersion": "Versionsgeschichte wird geladen...",
+      "appName": "Aktivitäts-Tracker",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ Auf GitHub anzeigen"
+    },
+    "workspaceManager": {
+      "title": "🏢 Arbeitsbereich-Manager",
+      "currentWorkspace": "Aktueller Arbeitsbereich: {name}",
+      "description": "Jeder Arbeitsbereich verwaltet separate Aktivitäten, Einstellungen und Zustände...",
+      "availableWorkspaces": "Verfügbare Arbeitsbereiche",
+      "enterName": "Arbeitsbereichsname eingeben...",
+      "createWorkspace": "Arbeitsbereich erstellen",
+      "close": "Schließen"
+    },
+    "languagePicker": {
+      "title": "🌐 Sprache auswählen"
+    }
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "markComplete": "Als erledigt markieren",
+    "outsideActivityHours": "Außerhalb der Aktivitätszeiten",
+    "todoTag": "Aufgabe",
+    "noteTag": "Notiz",
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "warning": "Warnung",
+    "info": "Information",
+    "none": "Keine",
+    "all": "Alle",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "tomorrow": "Morgen",
+    "thisWeek": "Diese Woche",
+    "thisMonth": "Dieser Monat",
+    "minutes": "Minute{count, plural, one {} other {n}}",
+    "hours": "Stunde{count, plural, one {} other {n}}",
+    "days": "Tag{count, plural, one {} other {e}}",
+    "weeks": "Woche{count, plural, one {} other {n}}",
+    "months": "Monat{count, plural, one {} other {e}}",
+    "daysOfWeek": {
+      "monday": "Montag",
+      "tuesday": "Dienstag",
+      "wednesday": "Mittwoch",
+      "thursday": "Donnerstag",
+      "friday": "Freitag",
+      "saturday": "Samstag",
+      "sunday": "Sonntag"
+    }
+  }
+}

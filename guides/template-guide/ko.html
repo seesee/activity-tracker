@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>시작하기</h4>
+        <p>템플릿은 이중 중괄호를 사용하는 간단한 변수 치환 구문으로 동적 리포트를 생성합니다.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>기본 구문</h4>
+        <ul>
+            <li><code>{{variable}}</code> - 간단한 변수 치환</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - 배열 반복</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - 조건부 콘텐츠</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>파이프 구문과 함수 체인</h4>
+        <p>파이프 구문(<code>|</code>)을 사용하여 여러 함수를 연결해서 데이터를 변환하세요:</p>
+        
+        <h5>기본 파이프 구문</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - 단일 변환 적용</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - 여러 변환 체인</li>
+            <li><code>{{ variable | function('parameter') }}</code> - 함수에 매개변수 전달</li>
+        </ul>
+
+        <h5>사용 가능한 변환 함수</h5>
+        <ul>
+            <li><code>date('format')</code> - 타임스탬프를 날짜로 형식 지정
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - 타임스탬프에서 시간 추출
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - CSV 특수 문자 이스케이프
+                <ul>
+                    <li>쉼표, 따옴표 또는 줄 바꿈이 포함된 경우 텍스트를 따옴표로 감쌉니다</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - 텍스트에서 줄 바꿈 제거
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>체인을 사용한 CSV 템플릿 예제</h5>
+        <p>CSV 템플릿이 체인을 사용하여 깨끗하고 올바르게 이스케이프된 출력을 만드는 방법:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>작동 원리:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - 타임스탬프를 YYYY-MM-DD 형식으로 변환</li>
+            <li><code>entry.timestamp | time</code> - 시간 부분 추출</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - 먼저 줄 바꿈을 제거한 다음 CSV용으로 이스케이프</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - 설명에 동일한 프로세스</li>
+        </ul>
+
+        <h5>체인에서 순서가 중요합니다!</h5>
+        <p>함수는 왼쪽에서 오른쪽으로 적용되므로 순서가 중요합니다:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - 먼저 줄 바꿈을 제거한 다음 이스케이프</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - 먼저 이스케이프하면 줄 바꿈 제거에 간섭할 수 있음</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>사용 가능한 데이터</h4>
+        <p>템플릿에서 사용할 수 있는 데이터:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - 리포트 제목</li>
+            <li><code>{{startDate}}</code> - 리포트 시작 날짜 (형식화됨)</li>
+            <li><code>{{endDate}}</code> - 리포트 종료 날짜 (형식화됨)</li>
+            <li><code>{{totalEntries}}</code> - 활동 항목의 총 개수</li>
+            <li><code>{{entries}}</code> - 모든 활동 항목의 배열</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>항목 속성</h4>
+        <p><code>{{#each entries}}</code> 루프의 각 항목은 다음을 포함합니다:</p>
+        <ul>
+            <li><code>{{activity}}</code> - 활동 이름</li>
+            <li><code>{{description}}</code> - 활동 설명</li>
+            <li><code>{{timestamp}}</code> - 원시 ISO 타임스탬프</li>
+            <li><code>{{formattedTime}}</code> - 깔끔하게 형식화된 시간 (예: "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - 깔끔하게 형식화된 날짜 (예: "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - 불린값: 할 일 항목인 경우 true</li>
+            <li><code>{{tags}}</code> - 이 항목의 해시태그 배열</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>일반적인 변환</h4>
+        <p>타임스탬프를 변환하고 데이터를 형식화:</p>
+        <ul>
+            <li><strong>날짜 형식</strong>: 사람이 읽기 쉬운 형식으로 <code>{{formattedDate}}</code>와 <code>{{formattedTime}}</code> 사용</li>
+            <li><strong>조건부 콘텐츠</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - 설명이 있을 때만 표시</li>
+            <li><strong>태그 반복</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - 모든 해시태그 표시</li>
+            <li><strong>할 일 필터링</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - 할 일 항목 표시</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Markdown 형식</h4>
+        <p>읽기 쉬운 형식을 위해 Markdown 구문 사용:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - 큰 제목</li>
+            <li><code>## {{activity}}</code> - 중간 제목</li>
+            <li><code>**{{activity}}**</code> - 굵은 텍스트</li>
+            <li><code>*{{description}}*</code> - 기울임 텍스트</li>
+            <li><code>- {{activity}}</code> - 불릿 포인트</li>
+            <li><code>`{{formattedTime}}`</code> - 코드 형식</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>템플릿 예제</h4>
+        <pre><code># {{reportTitle}}
+{{startDate}}부터 {{endDate}}까지
+
+총 활동 수: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+태그: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**할 일 항목**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>전문가 팁</h4>
+        <ul>
+            <li><strong>HTML 템플릿</strong>: CSS 스타일과 복잡한 레이아웃으로 풍부한 형식에 사용</li>
+            <li><strong>Markdown 템플릿</strong>: 간단하고 읽기 쉬운 문서에 완벽</li>
+            <li><strong>CSV 템플릿</strong>: 스프레드시트에서 데이터 분석에 이상적</li>
+            <li><strong>미리보기 기능</strong>: 저장하기 전에 항상 템플릿을 테스트</li>
+            <li><strong>사용자 정의 형식</strong>: 고유한 레이아웃을 위해 여러 변수를 결합</li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Prise en main</h4>
+        <p>Les modèles utilisent une syntaxe simple de substitution de variables avec des accolades doubles pour créer des rapports dynamiques.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Syntaxe de base</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Substitution de variable simple</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Boucle sur les tableaux</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Contenu conditionnel</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Syntaxe des pipes et chaînage de fonctions</h4>
+        <p>Transformez les données en utilisant la syntaxe des pipes (<code>|</code>) pour chaîner plusieurs fonctions ensemble :</p>
+        
+        <h5>Syntaxe de base des pipes</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Applique une seule transformation</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Chaîne plusieurs transformations</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Passe des paramètres aux fonctions</li>
+        </ul>
+
+        <h5>Fonctions de transformation disponibles</h5>
+        <ul>
+            <li><code>date('format')</code> - Formate les horodatages en dates
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Extrait l'heure des horodatages
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Échappe les caractères spéciaux CSV
+                <ul>
+                    <li>Entoure le texte de guillemets s'il contient des virgules, guillemets ou sauts de ligne</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Supprime les sauts de ligne du texte
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>Exemple de modèle CSV avec chaînage</h5>
+        <p>Voici comment le modèle CSV utilise le chaînage pour créer une sortie propre et correctement échappée :</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Comment cela fonctionne :</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Convertit l'horodatage au format YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Extrait la partie heure</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Supprime d'abord les sauts de ligne, puis échappe pour CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Même processus pour les descriptions</li>
+        </ul>
+
+        <h5>L'ordre compte dans le chaînage !</h5>
+        <p>Les fonctions sont appliquées de gauche à droite, l'ordre est donc important :</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Supprime d'abord les sauts, puis échappe</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Échapper d'abord peut interférer avec la suppression des sauts</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Données disponibles</h4>
+        <p>Les données suivantes sont disponibles dans vos modèles :</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - Le titre du rapport</li>
+            <li><code>{{startDate}}</code> - Date de début du rapport (formatée)</li>
+            <li><code>{{endDate}}</code> - Date de fin du rapport (formatée)</li>
+            <li><code>{{totalEntries}}</code> - Nombre total d'entrées d'activité</li>
+            <li><code>{{entries}}</code> - Tableau de toutes les entrées d'activité</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Propriétés des entrées</h4>
+        <p>Chaque entrée dans la boucle <code>{{#each entries}}</code> contient :</p>
+        <ul>
+            <li><code>{{activity}}</code> - Le nom de l'activité</li>
+            <li><code>{{description}}</code> - Description de l'activité</li>
+            <li><code>{{timestamp}}</code> - Horodatage ISO brut</li>
+            <li><code>{{formattedTime}}</code> - Heure joliment formatée (ex. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Date joliment formatée (ex. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean : true si c'est un élément de tâche</li>
+            <li><code>{{tags}}</code> - Tableau des hashtags pour cette entrée</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Transformations courantes</h4>
+        <p>Transformez les horodatages et formatez les données :</p>
+        <ul>
+            <li><strong>Formats de date</strong> : Utilisez <code>{{formattedDate}}</code> et <code>{{formattedTime}}</code> pour des formats lisibles</li>
+            <li><strong>Contenu conditionnel</strong> : <code>{{#if description}}{{description}}{{/if}}</code> - n'affiche que si la description existe</li>
+            <li><strong>Boucle sur les tags</strong> : <code>{{#each tags}}#{{this}} {{/each}}</code> - affiche tous les hashtags</li>
+            <li><strong>Filtrage des tâches</strong> : <code>{{#if isTodo}}TODO: {{/if}}</code> - marque les éléments de tâche</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Formatage Markdown</h4>
+        <p>Utilisez la syntaxe Markdown pour un formatage lisible :</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Grand titre</li>
+            <li><code>## {{activity}}</code> - Titre moyen</li>
+            <li><code>**{{activity}}**</code> - Texte gras</li>
+            <li><code>*{{description}}*</code> - Texte italique</li>
+            <li><code>- {{activity}}</code> - Puce</li>
+            <li><code>`{{formattedTime}}`</code> - Formatage de code</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Exemple de modèle</h4>
+        <pre><code># {{reportTitle}}
+De {{startDate}} à {{endDate}}
+
+Total d'activités : {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tags : {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**ÉLÉMENT TODO**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Conseils d'expert</h4>
+        <ul>
+            <li><strong>Modèles HTML</strong> : Utilisez pour un formatage riche avec des styles CSS et des mises en page complexes</li>
+            <li><strong>Modèles Markdown</strong> : Parfaits pour une documentation simple et lisible</li>
+            <li><strong>Modèles CSV</strong> : Idéaux pour l'analyse de données dans les tableurs</li>
+            <li><strong>Fonction d'aperçu</strong> : Testez toujours vos modèles avant de sauvegarder</li>
+            <li><strong>Formats personnalisés</strong> : Combinez plusieurs variables pour des mises en page uniques</li>
+        </ul>
+    </div>
+</div>

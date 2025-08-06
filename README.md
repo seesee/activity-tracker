@@ -6,13 +6,15 @@ A modern, offline-capable web application for tracking daily activities and todo
 
 ### Core Functionality
 - **Activity Logging**: Quick and easy activity entry with timestamps
-- **Todo list**: Add Todo items with due dates
-- **Tagging and Searching**: Categorise items and retrieve them through search
-- **Smart Notifications**: Configurable reminders during activity hours
-- **Pomodoro support**: Customisable Pomodoro sessions with optional tick simulation
+- **Todo Management**: Add todo items with due dates and completion tracking
+- **Note Taking**: Rich note-taking with markdown support
+- **Tagging and Searching**: Categorize items with hashtags and retrieve through powerful search
+- **Smart Notifications**: Configurable reminders during your active hours
+- **Pomodoro Timer**: Fully customizable Pomodoro sessions with work/break cycles
 - **Inline Replies**: Log activities directly from notifications
-- **Offline Support**: Works without internet connection
-- **Data Persistence**: All data stored privately and locally in your browser
+- **Multi-language Support**: Complete interface in 14 languages
+- **Offline Support**: Progressive Web App that works without internet
+- **Privacy First**: All data stored privately and locally in your browser
 
 ### Reporting & Analytics
 - **Flexible Reports**: Generate customisable reports for any date range using a powerful templating mechanism
@@ -30,11 +32,20 @@ A modern, offline-capable web application for tracking daily activities and todo
 - **Sound Settings**: Optional notification sounds
 - **Workspaces**: Organize different projects with isolated data and settings
 
+### Internationalization
+- **14 Languages Supported**: English, French, German, Spanish, Italian, Portuguese, Chinese, Japanese, Welsh, Russian, Dutch, Korean, Greek, Arabic
+- **Native Language Names**: Language picker shows flags and native names (e.g., "Français", "Deutsch")
+- **Complete Translation**: All UI elements, settings, modals, and documentation translated
+- **RTL Support**: Right-to-left text direction support for Arabic
+- **Locale-aware Formatting**: Dates, times, and numbers formatted per regional preferences
+- **Multilingual Documentation**: User guides and template documentation in all languages
+
 ### Technical Features
-- **Progressive Web App (PWA)**: Install on any device
-- **Service Worker**: Background notifications and offline support
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Modern UI**: Glass morphism design with smooth animations
+- **Progressive Web App (PWA)**: Install on any device like a native app
+- **Service Worker**: Background notifications and offline functionality
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Modern UI**: Glass morphism design with smooth animations and dark mode
+- **Build-time Internationalization**: Efficient translation processing with separate files per language
 
 ## Quick Start
 
@@ -45,26 +56,74 @@ A modern, offline-capable web application for tracking daily activities and todo
    ```bash
    npm install
    ```
-3. **Development build**:
+3. **Development build** (unminified with verbose output):
    ```bash
    npm run dev
+   # or
+   npm run build:dev
    ```
-4. **Production build**:
+4. **Production build** (minified for deployment):
    ```bash  
    npm run build
+   # or
+   npm run build:prod
    ```
-5. **Serve locally**:
-   ```bash
-   npm run serve
-   ```
+5. **Test locally**: Use your preferred local server to serve the `dist/` directory
 
 ### Production Deployment
 
-The application builds into a single HTML file for easy deployment:
+The application builds into multiple language-specific HTML files for global deployment:
 
-1. Run `npm run build`
-2. Deploy the `dist/index.html` file to any web server
-3. Optional: Copy `dist/sw.js` and `dist/favicon.ico` alongside
+1. **Build for production**:
+   ```bash
+   npm run build
+   ```
+2. **Deploy the entire `dist/` folder** to your web server, which contains:
+   - `index.html` (English version)
+   - `index.fr.html`, `index.de.html`, etc. (other languages)
+   - `sw.js` (Service Worker)
+   - `favicon.ico`
+3. **Optional**: Configure your web server to serve appropriate language versions based on user preferences
+
+### Language Selection
+
+**Accessing Different Languages:**
+- **Via URL**: Access specific languages directly (e.g., `index.fr.html` for French, `index.de.html` for German)
+- **Via UI**: Use the language picker in the burger menu (☰) → "Language" → select from 14 available languages
+- **Auto-detection**: The app can detect your browser's language preference
+
+**Available Languages:**
+- 🇬🇧 English (`index.html`)
+- 🇫🇷 French (`index.fr.html`) 
+- 🇩🇪 German (`index.de.html`)
+- 🇪🇸 Spanish (`index.es.html`)
+- 🇮🇹 Italian (`index.it.html`)
+- 🇵🇹 Portuguese (`index.pt.html`)
+- 🇨🇳 Chinese (`index.zh.html`)
+- 🇯🇵 Japanese (`index.ja.html`)
+- 🏴󠁧󠁢󠁷󠁬󠁳󠁿 Welsh (`index.cy.html`)
+- 🇷🇺 Russian (`index.ru.html`)
+- 🇳🇱 Dutch (`index.nl.html`)
+- 🇰🇷 Korean (`index.ko.html`)
+- 🇬🇷 Greek (`index.el.html`)
+- 🇸🇦 Arabic (`index.ar.html`) *with RTL support*
+
+### Build Options
+
+**Advanced Build Commands:**
+```bash
+# Build with verbose output
+npm run build:dev -- --verbose
+
+# Build without minification  
+npm run build -- --no-minify
+
+# Build without internationalization
+npm run build -- --no-i18n
+
+# Clean build directory
+npm run clean
+```
 
 ## User Guide
 
@@ -155,37 +214,87 @@ Generate detailed reports with custom templates:
 - **Long Break**: 1-60 minutes (default: 15)
 - **Sessions Until Long Break**: 2-10 sessions (default: 4)
 
-## Testing
+## Development & Contributing
 
-Run the test suite:
+### Project Structure
+
+```
+activity-tracker/
+├── src/
+│   ├── index.html          # Main HTML template with translation placeholders
+│   ├── styles/main.css     # All styles including dark mode and responsive design
+│   ├── scripts/            # JavaScript modules (loaded in specific order)
+│   └── sw.js              # Service Worker for PWA functionality
+├── i18n/                  # Translation files for 14 languages
+│   ├── en.json            # English (base language)
+│   ├── fr.json            # French translations
+│   └── ...                # Other language files
+├── guides/                # Multilingual documentation
+│   ├── user-guide/        # User guides in all languages
+│   └── template-guide/    # Template documentation in all languages
+├── build.cjs              # Custom build system with i18n support
+└── dist/                  # Built files (generated)
+    ├── index.html         # English version
+    ├── index.fr.html      # French version
+    └── ...                # Other language versions
+```
+
+### Adding Translations
+
+**For new translatable text:**
+1. Never hardcode English strings in HTML or JavaScript
+2. Use translation placeholder syntax: `t('section.key')`
+3. Add translation keys to `/i18n/en.json` first
+4. Add translations to all other language files
+5. Test with `npm run build:dev`
+
+**Translation key naming:**
+- Use hierarchical structure: `common.save`, `settings.theme`, `modals.confirm.title`
+- Be descriptive and context-specific
+- Group by UI section for maintainability
+
+### Testing
+
+Run the comprehensive test suite:
 
 ```bash
 npm test
 ```
 
-Run tests in watch mode:
-```bash
-npm run test:watch
-```
+**Test Coverage:**
+- Foundation tests (Jest setup, DOM, browser APIs)
+- Edit dialog functionality
+- Notes system and keyboard shortcuts
+- UI interactions and modal behaviors
 
-Generate coverage report:
-```bash
-npm run test:coverage
-```
+## Technical Details
 
-## Architecture
+### Build System
+- **Custom build process**: Combines all assets into optimized single-file-per-language output
+- **Translation processing**: Build-time replacement of `t('key')` placeholders with actual translations
+- **Minification**: Terser for JavaScript, CleanCSS for CSS, html-minifier-terser for HTML
+- **Version management**: Automatic version numbering with daily build increments
+- **PWA optimization**: Service Worker and manifest generation
 
-- **Frontend**: Vanilla JavaScript, HTML5, CSS3
-- **Build System**: Custom Node.js builder with minification
-- **Storage**: Browser localStorage for offline operation
-- **Service Worker**: Background notifications and caching
-- **PWA**: Installable with offline capabilities
+### Browser Support
+- **Modern browsers**: Chrome 80+, Firefox 80+, Safari 14+, Edge 80+
+- **PWA features**: Installation, offline support, background notifications
+- **Responsive design**: Mobile, tablet, and desktop optimized
+- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 
-## Browser Support
+### Privacy & Security
+- **Local storage only**: No external servers, all data stays on your device
+- **No tracking**: No analytics, cookies, or third-party scripts
+- **Offline capable**: Works completely without internet connection
+- **Open source**: Full transparency with auditable code
 
-- Chrome/Edge 80+
-- Firefox 75+  
-- Safari 13+
+## License
+
+This project is open source. See individual file headers for specific licensing terms.
+
+---
+
+**Activity Tracker** - A privacy-focused, multilingual personal productivity application built with modern web technologies.
 - Mobile browsers with PWA support
 
 ## License

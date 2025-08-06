@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <title>Activity Tracker</title>
+    <title>t('app.title')</title>
     <style>
         {{CSS}}
     </style>
@@ -13,28 +13,28 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Activity Tracker</h1>
-            <p>Task diary, organiser and knowledge base</p>
+            <h1>t('app.title')</h1>
+            <p>t('app.tagline')</p>
             
             <!-- Global Search -->
             <div class="global-search">
                 <div class="search-container">
-                    <input type="text" id="globalSearch" placeholder="Search activities, todos, and hashtags..." autocomplete="off">
-                    <button class="hashtag-browser-btn" onclick="showHashtagBrowser()" title="Browse hashtags">🏷️</button>
+                    <input type="text" id="globalSearch" placeholder="t('search.placeholder')" autocomplete="off">
+                    <button class="hashtag-browser-btn" onclick="showHashtagBrowser()" title="t('search.browseHashtags')">🏷️</button>
                     <div class="search-results" id="searchResults" style="display: none;"></div>
                 </div>
             </div>
             
             <div class="nav">
                 <div class="nav-left">
-                    <button class="nav-btn active" onclick="showSection('tracker', event)">📝 Tracker</button>
-                    <button class="nav-btn" onclick="showSection('todo', event)">✅ To Do</button>
-                    <button class="nav-btn" onclick="showSection('notes', event)">📔 Notes</button>
+                    <button class="nav-btn active" onclick="showSection('tracker', event)">t('navigation.tracker')</button>
+                    <button class="nav-btn" onclick="showSection('todo', event)">t('navigation.todo')</button>
+                    <button class="nav-btn" onclick="showSection('notes', event)">t('navigation.notes')</button>
                 </div>
                 <div class="nav-right">
-                    <button id="overdueAlertButton" class="nav-btn alert-btn" onclick="showOverdueAlert()" style="display: none;" title="View overdue items">⚠️ Alert</button>
-                    <button id="pauseButton" class="nav-btn" onclick="togglePause()">Start Reminders</button>
-                    <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">🍅 Start Pomodoro</button>
+                    <button id="overdueAlertButton" class="nav-btn alert-btn" onclick="showOverdueAlert()" style="display: none;" title="t('navigation.alertTitle')">t('navigation.alert')</button>
+                    <button id="pauseButton" class="nav-btn" onclick="togglePause()">t('navigation.startReminders')</button>
+                    <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">t('navigation.startPomodoro')</button>
                     <div id="burgerAnchor" class="burger-anchor"></div>
                 </div>
             </div>
@@ -42,24 +42,26 @@
         
         <!-- Burger Menu positioned outside header to avoid clipping -->
         <div class="burger-menu">
-            <button class="burger-btn" onclick="toggleBurgerMenu()" title="Settings menu">
+            <button class="burger-btn" onclick="toggleBurgerMenu()" title="t('navigation.settingsMenu')">
                 <span class="burger-line"></span>
                 <span class="burger-line"></span>
                 <span class="burger-line"></span>
             </button>
             <div class="burger-dropdown" id="burgerDropdown" style="display: none;">
-                <button class="burger-item" onclick="showSection('tracker', event); closeBurgerMenu()"><span class="burger-emoji">📝</span><span class="burger-text">Tracker</span></button>
-                <button class="burger-item" onclick="showSection('notes', event); closeBurgerMenu()"><span class="burger-emoji">📔</span><span class="burger-text">Notes</span></button>
-                <button class="burger-item" onclick="showSection('todo', event); closeBurgerMenu()"><span class="burger-emoji">✅</span><span class="burger-text">To Do</span></button>
+                <button class="burger-item" onclick="showSection('tracker', event); closeBurgerMenu()"><span class="burger-emoji">📝</span><span class="burger-text">t('navigation.burgerMenu.tracker')</span></button>
+                <button class="burger-item" onclick="showSection('notes', event); closeBurgerMenu()"><span class="burger-emoji">📔</span><span class="burger-text">t('navigation.burgerMenu.notes')</span></button>
+                <button class="burger-item" onclick="showSection('todo', event); closeBurgerMenu()"><span class="burger-emoji">✅</span><span class="burger-text">t('navigation.burgerMenu.todo')</span></button>
                 <div class="burger-separator"></div>
-                <button class="burger-item" onclick="showSection('reports', event); closeBurgerMenu()"><span class="burger-emoji">📊</span><span class="burger-text">Reports</span></button>
+                <button class="burger-item" onclick="showSection('reports', event); closeBurgerMenu()"><span class="burger-emoji">📊</span><span class="burger-text">t('navigation.burgerMenu.reports')</span></button>
                 <div class="burger-separator"></div>  
-                <button class="burger-item" onclick="openWorkspaceManager(); closeBurgerMenu()"><span class="burger-emoji">🏢</span><span class="burger-text">Workspaces</span></button>
+                <button class="burger-item" onclick="openWorkspaceManager(); closeBurgerMenu()"><span class="burger-emoji">🏢</span><span class="burger-text">t('navigation.burgerMenu.workspaces')</span></button>
                 <div class="burger-separator"></div>
-                <button class="burger-item" onclick="showSection('settings', event); closeBurgerMenu()"><span class="burger-emoji">⚙️</span><span class="burger-text">Settings...</span></button>
-                <button class="burger-item" onclick="showSection('diagnostics', event); closeBurgerMenu()"><span class="burger-emoji">🔧</span><span class="burger-text">Diagnostics</span></button>
-                <button class="burger-item" onclick="showUserGuide(); closeBurgerMenu()"><span class="burger-emoji">📖</span><span class="burger-text">User Guide</span></button>
-                <button class="burger-item" onclick="showAbout(); closeBurgerMenu()"><span class="burger-emoji">ℹ️</span><span class="burger-text">About</span></button>
+                <button class="burger-item" onclick="showSection('settings', event); closeBurgerMenu()"><span class="burger-emoji">⚙️</span><span class="burger-text">t('navigation.burgerMenu.settings')</span></button>
+                <button class="burger-item" onclick="showSection('diagnostics', event); closeBurgerMenu()"><span class="burger-emoji">🔧</span><span class="burger-text">t('navigation.burgerMenu.diagnostics')</span></button>
+                <div class="burger-separator"></div>
+                <button class="burger-item" onclick="showLanguagePicker(); closeBurgerMenu()"><span class="burger-emoji">🌐</span><span class="burger-text">t('navigation.burgerMenu.language')</span></button>
+                <button class="burger-item" onclick="showUserGuide(); closeBurgerMenu()"><span class="burger-emoji">📖</span><span class="burger-text">t('navigation.burgerMenu.userGuide')</span></button>
+                <button class="burger-item" onclick="showAbout(); closeBurgerMenu()"><span class="burger-emoji">ℹ️</span><span class="burger-text">t('navigation.burgerMenu.about')</span></button>
             </div>
         </div>
 
@@ -69,7 +71,7 @@
                 <!-- Pomodoro Status -->
                 <div id="pomodoroStatusSection" class="status-section" style="display: none;">
                     <div class="pomodoro-bar">
-                        <div id="pomodoroStatus" class="status-label">Pomodoro mode disabled</div>
+                        <div id="pomodoroStatus" class="status-label">t('status.pomodoroDisabled')</div>
                         <div id="pomodoroTimer" class="pomodoro-active-bar" style="display: none;">
                             <div class="pomodoro-tomato">🍅</div>
                             <div id="pomodoroPhase" class="session-number">#1</div>
@@ -81,14 +83,14 @@
                         </div>
                     </div>
                     <div id="pomodoroBannerControls" class="status-controls" style="display: none;">
-                        <button id="pomodoroPauseBtn" class="status-button" onclick="togglePomodoroPause()">Pause</button>
+                        <button id="pomodoroPauseBtn" class="status-button" onclick="togglePomodoroPause()">t('status.pause')</button>
                     </div>
                 </div>
                 
                 <!-- Reminder Status -->
                 <div id="reminderStatusSection" class="status-section" style="display: none;">
                     <div class="status-info">
-                        <div id="reminderStatus" class="status-label">Next activity logging reminder in:</div>
+                        <div id="reminderStatus" class="status-label">t('status.nextReminder')</div>
                         <div id="reminderTimer" class="status-timer">
                             <span id="reminderTimeRemaining">--:--</span>
                         </div>
@@ -102,51 +104,51 @@
             <!-- Activity Entry Component -->
             <div class="activity-entry-component" id="trackerEntryComponent">
                 <div class="entry-header">
-                    <h2 id="entryTitle">Activity Entry</h2>
-                    <button class="entry-toggle-btn" id="trackerToggleBtn" onclick="toggleEntryForm('tracker')" title="Hide/Show entry form">
+                    <h2 id="entryTitle">t('tracker.title')</h2>
+                    <button class="entry-toggle-btn" id="trackerToggleBtn" onclick="toggleEntryForm('tracker')" title="t('tracker.hideShowForm')">
                         <span class="toggle-icon">📝</span>
                     </button>
                 </div>
                 <form id="activityForm">
                     <div class="form-group">
-                        <label for="activity" id="activityLabel">What are you doing?</label>
-                        <input type="text" id="activity" required placeholder="e.g., Writing report, Meeting with team #work" autocomplete="off">
+                        <label for="activity" id="activityLabel">t('tracker.activityLabel')</label>
+                        <input type="text" id="activity" required placeholder="t('tracker.activityPlaceholder')" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="description" id="descriptionLabel">Description (optional)</label>
-                        <textarea id="description" rows="3" placeholder="Additional details about this activity"></textarea>
+                        <label for="description" id="descriptionLabel">t('tracker.descriptionLabel')</label>
+                        <textarea id="description" rows="3" placeholder="t('tracker.descriptionPlaceholder')"></textarea>
                     </div>
                     <div class="form-group form-group-row">
                         <div class="form-group">
-                            <label for="timestamp">Time</label>
+                            <label for="timestamp">t('tracker.timeLabel')</label>
                             <input type="datetime-local" id="timestamp" required>
                             <div class="todo-quick-set">
-                                <button type="button" class="btn-quick-set" id="todoToggleBtn" onclick="toggleTodoMode()" title="Mark this as a todo item (Ctrl+T to toggle)">Mark as Todo</button>
-                                <button type="button" class="btn-quick-set" id="noteToggleBtn" onclick="toggleNoteMode()" title="Mark this as a note (Ctrl+N to toggle)">Mark as Note</button>
+                                <button type="button" class="btn-quick-set" id="todoToggleBtn" onclick="toggleTodoMode()" title="t('tracker.markTodoTitle')">t('tracker.markTodo')</button>
+                                <button type="button" class="btn-quick-set" id="noteToggleBtn" onclick="toggleNoteMode()" title="t('tracker.markNoteTitle')">t('tracker.markNote')</button>
                             </div>
                         </div>
                         <div class="form-group" id="dueDateSection">
-                            <label for="dueDate">Due Date (optional)</label>
+                            <label for="dueDate">t('tracker.dueDateLabel')</label>
                             <input type="datetime-local" id="dueDate">
                             <div class="due-date-quick-sets">
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'day')">-1d</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'day')">+1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'day')">t('tracker.dueDateQuickButtons.minus1d')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'day')">t('tracker.dueDateQuickButtons.plus1d')</button>
                                 </div>
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'week')">-1w</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'week')">+1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'week')">t('tracker.dueDateQuickButtons.minus1w')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'week')">t('tracker.dueDateQuickButtons.plus1w')</button>
                                 </div>
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'month')">-1m</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'month')">+1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', -1, 'month')">t('tracker.dueDateQuickButtons.minus1m')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('dueDate', 1, 'month')">t('tracker.dueDateQuickButtons.plus1m')</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-actions-split">
-                        <button type="submit" class="btn btn-primary" id="addEntryBtn">Add Entry</button>
-                        <button type="button" class="btn btn-secondary" onclick="resetActivityForm()">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="addEntryBtn">t('tracker.addEntry')</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetActivityForm()">t('tracker.reset')</button>
                     </div>
                 </form>
                 
@@ -154,12 +156,12 @@
             </div>
 
             <div class="entries-list">
-                <h3>Recent Entries</h3>
+                <h3>t('tracker.recentEntries')</h3>
                 <div id="entriesList"></div>
                 <div class="entries-pagination" id="entriesPagination" style="display: none;">
-                    <button class="nav-btn" id="entriesPrevBtn" onclick="tracker.previousEntriesPage()">‹ Previous</button>
+                    <button class="nav-btn" id="entriesPrevBtn" onclick="tracker.previousEntriesPage()">t('tracker.previous')</button>
                     <span id="entriesPageInfo"></span>
-                    <button class="nav-btn" id="entriesNextBtn" onclick="tracker.nextEntriesPage()">Next ›</button>
+                    <button class="nav-btn" id="entriesNextBtn" onclick="tracker.nextEntriesPage()">t('tracker.next')</button>
                 </div>
             </div>
         </div>
@@ -169,95 +171,95 @@
             <!-- Activity Entry Component -->
             <div class="activity-entry-component" id="todoEntryComponent">
                 <div class="entry-header">
-                    <h2 id="todoEntryTitle">New Todo Item</h2>
-                    <button class="entry-toggle-btn" id="todoToggleBtn2" onclick="toggleEntryForm('todo')" title="Hide/Show entry form">
+                    <h2 id="todoEntryTitle">t('todo.newTodo')</h2>
+                    <button class="entry-toggle-btn" id="todoToggleBtn2" onclick="toggleEntryForm('todo')" title="t('tracker.hideShowForm')">
                         <span class="toggle-icon">✅</span>
                     </button>
                 </div>
                 <form id="todoActivityForm">
                     <div class="form-group">
-                        <label for="todoActivity" id="todoActivityLabel">What do you need to do?</label>
-                        <input type="text" id="todoActivity" required placeholder="e.g., Call client about project, Review budget #work" autocomplete="off">
+                        <label for="todoActivity" id="todoActivityLabel">t('todo.todoLabel')</label>
+                        <input type="text" id="todoActivity" required placeholder="t('todo.todoPlaceholder')" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="todoDescription" id="todoDescriptionLabel">Description (optional)</label>
-                        <textarea id="todoDescription" rows="3" placeholder="Additional details about this todo item"></textarea>
+                        <label for="todoDescription" id="todoDescriptionLabel">t('todo.descriptionLabel')</label>
+                        <textarea id="todoDescription" rows="3" placeholder="t('todo.descriptionPlaceholder')"></textarea>
                     </div>
                     <div class="form-group form-group-row">
                         <div class="form-group">
-                            <label for="todoTimestamp">Time</label>
+                            <label for="todoTimestamp">t('tracker.timeLabel')</label>
                             <input type="datetime-local" id="todoTimestamp" required>
                             <div class="todo-quick-set">
-                                <button type="button" class="btn-quick-set active" id="todoTodoToggleBtn" onclick="toggleTodoModeForTodo()" title="Mark this as a todo item">Mark as Todo</button>
-                                <button type="button" class="btn-quick-set" id="todoNoteToggleBtn" onclick="toggleNoteModeForTodo()" title="Mark this as a note">Mark as Note</button>
+                                <button type="button" class="btn-quick-set active" id="todoTodoToggleBtn" onclick="toggleTodoModeForTodo()" title="t('todo.markTodoTitle')">t('tracker.markTodo')</button>
+                                <button type="button" class="btn-quick-set" id="todoNoteToggleBtn" onclick="toggleNoteModeForTodo()" title="t('todo.markNoteTitle')">t('tracker.markNote')</button>
                             </div>
                         </div>
                         <div class="form-group" id="todoDueDateSection">
-                            <label for="todoDueDate">Due Date (optional)</label>
+                            <label for="todoDueDate">t('tracker.dueDateLabel')</label>
                             <input type="datetime-local" id="todoDueDate">
                             <div class="due-date-quick-sets">
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'day')">-1d</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'day')">+1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'day')">t('tracker.dueDateQuickButtons.minus1d')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'day')">t('tracker.dueDateQuickButtons.plus1d')</button>
                                 </div>
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'week')">-1w</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'week')">+1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'week')">t('tracker.dueDateQuickButtons.minus1w')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'week')">t('tracker.dueDateQuickButtons.plus1w')</button>
                                 </div>
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'month')">-1m</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'month')">+1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', -1, 'month')">t('tracker.dueDateQuickButtons.minus1m')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('todoDueDate', 1, 'month')">t('tracker.dueDateQuickButtons.plus1m')</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-actions-split">
-                        <button type="submit" class="btn btn-primary" id="todoAddEntryBtn">Add Todo</button>
-                        <button type="button" class="btn btn-secondary" onclick="resetTodoForm()">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="todoAddEntryBtn">t('todo.addTodo')</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetTodoForm()">t('tracker.reset')</button>
                     </div>
                 </form>
                 
                 <div class="section-separator"></div>
             </div>
 
-            <h3>To Do List</h3>
+            <h3>t('todo.todoList')</h3>
             <div class="todo-filters">
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label for="todoFilter">Filter:</label>
+                        <label for="todoFilter">t('todo.filter')</label>
                         <select id="todoFilter" onchange="tracker.filterTodos()">
-                            <option value="all">All Todos</option>
-                            <option value="due-today">Due Today</option>
-                            <option value="overdue">Overdue</option>
-                            <option value="no-due-date">No Due Date</option>
+                            <option value="all">t('todo.filters.allTodos')</option>
+                            <option value="due-today">t('todo.filters.dueToday')</option>
+                            <option value="overdue">t('todo.filters.overdue')</option>
+                            <option value="no-due-date">t('todo.filters.noDueDate')</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="todoSort">Sort by:</label>
+                        <label for="todoSort">t('todo.sortBy')</label>
                         <select id="todoSort" onchange="tracker.sortTodos()">
-                            <option value="created-desc">Newest First</option>
-                            <option value="created-asc">Oldest First</option>
-                            <option value="due-asc">Due Date (Earliest)</option>
-                            <option value="due-desc">Due Date (Latest)</option>
-                            <option value="activity-asc">Activity A-Z</option>
-                            <option value="activity-desc">Activity Z-A</option>
+                            <option value="created-desc">t('todo.sorting.newestFirst')</option>
+                            <option value="created-asc">t('todo.sorting.oldestFirst')</option>
+                            <option value="due-asc">t('todo.sorting.dueDateEarliest')</option>
+                            <option value="due-desc">t('todo.sorting.dueDateLatest')</option>
+                            <option value="activity-asc">t('todo.sorting.activityAZ')</option>
+                            <option value="activity-desc">t('todo.sorting.activityZA')</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="todo-stats" id="todoStats">
-                <span id="todoCount">0 todos</span>
+                <span id="todoCount">t('todo.todoCount', {count: 0})</span>
             </div>
 
             <div class="todo-list" id="todoList">
-                <p class="empty-state">No todos found. Add activities as todos to see them here!</p>
+                <p class="empty-state">t('todo.noTodos')</p>
             </div>
 
             <div class="todo-pagination" id="todoPagination" style="display: none;">
-                <button class="nav-btn" id="todoPrevBtn" onclick="tracker.previousTodoPage()">← Previous</button>
-                <span id="todoPageInfo">Page 1 of 1</span>
-                <button class="nav-btn" id="todoNextBtn" onclick="tracker.nextTodoPage()">Next →</button>
+                <button class="nav-btn" id="todoPrevBtn" onclick="tracker.previousTodoPage()">t('todo.pagination.previous')</button>
+                <span id="todoPageInfo">t('todo.pagination.pageInfo', {current: 1, total: 1})</span>
+                <button class="nav-btn" id="todoNextBtn" onclick="tracker.nextTodoPage()">t('todo.pagination.next')</button>
             </div>
         </div>
 
@@ -266,143 +268,143 @@
             <!-- Activity Entry Component -->
             <div class="activity-entry-component" id="notesEntryComponent">
                 <div class="entry-header">
-                    <h2 id="notesEntryTitle">New Note</h2>
-                    <button class="entry-toggle-btn" id="notesToggleBtn2" onclick="toggleEntryForm('notes')" title="Hide/Show entry form">
+                    <h2 id="notesEntryTitle">t('notes.newNote')</h2>
+                    <button class="entry-toggle-btn" id="notesToggleBtn2" onclick="toggleEntryForm('notes')" title="t('tracker.hideShowForm')">
                         <span class="toggle-icon">📔</span>
                     </button>
                 </div>
                 <form id="notesActivityForm">
                     <div class="form-group">
-                        <label for="notesActivity" id="notesActivityLabel">Note title or topic</label>
-                        <input type="text" id="notesActivity" required placeholder="e.g., Meeting notes, Ideas for project #brainstorm" autocomplete="off">
+                        <label for="notesActivity" id="notesActivityLabel">t('notes.titleLabel')</label>
+                        <input type="text" id="notesActivity" required placeholder="t('notes.titlePlaceholder')" autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="notesDescription" id="notesDescriptionLabel">Note content</label>
-                        <textarea id="notesDescription" rows="3" placeholder="Write your note content here..."></textarea>
+                        <label for="notesDescription" id="notesDescriptionLabel">t('notes.contentLabel')</label>
+                        <textarea id="notesDescription" rows="3" placeholder="t('notes.contentPlaceholder')"></textarea>
                     </div>
                     <div class="form-group form-group-row">
                         <div class="form-group">
-                            <label for="notesTimestamp">Time</label>
+                            <label for="notesTimestamp">t('tracker.timeLabel')</label>
                             <input type="datetime-local" id="notesTimestamp" required>
                             <div class="todo-quick-set">
-                                <button type="button" class="btn-quick-set" id="notesTodToggleBtn" onclick="toggleTodoModeForNotes()" title="Mark this as a todo item">Mark as Todo</button>
-                                <button type="button" class="btn-quick-set active" id="notesNoteToggleBtn" onclick="toggleNoteModeForNotes()" title="Mark this as a note">Mark as Note</button>
+                                <button type="button" class="btn-quick-set" id="notesTodToggleBtn" onclick="toggleTodoModeForNotes()" title="t('tracker.markTodoTitle')">t('tracker.markTodo')</button>
+                                <button type="button" class="btn-quick-set active" id="notesNoteToggleBtn" onclick="toggleNoteModeForNotes()" title="t('tracker.markNoteTitle')">t('tracker.markNote')</button>
                             </div>
                         </div>
                         <div class="form-group" id="notesDueDateSection" style="display: none;">
-                            <label for="notesDueDate">Due Date (optional)</label>
+                            <label for="notesDueDate">t('tracker.dueDateLabel')</label>
                             <input type="datetime-local" id="notesDueDate">
                             <div class="due-date-quick-sets">
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'day')">-1d</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'day')">+1d</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'day')">t('tracker.dueDateQuickButtons.minus1d')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'day')">t('tracker.dueDateQuickButtons.plus1d')</button>
                                 </div>
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'week')">-1w</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'week')">+1w</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'week')">t('tracker.dueDateQuickButtons.minus1w')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'week')">t('tracker.dueDateQuickButtons.plus1w')</button>
                                 </div>
                                 <div class="due-date-group">
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'month')">-1m</button>
-                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'month')">+1m</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', -1, 'month')">t('tracker.dueDateQuickButtons.minus1m')</button>
+                                    <button type="button" class="btn-quick-set" onclick="adjustDueDate('notesDueDate', 1, 'month')">t('tracker.dueDateQuickButtons.plus1m')</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-actions-split">
-                        <button type="submit" class="btn btn-primary" id="notesAddEntryBtn">Add Note</button>
-                        <button type="button" class="btn btn-secondary" onclick="resetNotesForm()">Reset</button>
+                        <button type="submit" class="btn btn-primary" id="notesAddEntryBtn">t('notes.addNote')</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetNotesForm()">t('tracker.reset')</button>
                     </div>
                 </form>
                 
                 <div class="section-separator"></div>
             </div>
 
-            <h3>Notes</h3>
+            <h3>t('notes.notesTitle')</h3>
             <div class="notes-filters">
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label for="noteFilter">Filter:</label>
+                        <label for="noteFilter">t('todo.filter')</label>
                         <select id="noteFilter" onchange="tracker.filterNotes()">
-                            <option value="all">All Notes</option>
-                            <option value="today">Today</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
+                            <option value="all">t('notes.filters.allNotes')</option>
+                            <option value="today">t('notes.filters.today')</option>
+                            <option value="week">t('notes.filters.thisWeek')</option>
+                            <option value="month">t('notes.filters.thisMonth')</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="noteSort">Sort:</label>
+                        <label for="noteSort">t('notes.sort')</label>
                         <select id="noteSort" onchange="tracker.sortNotes()">
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="activity">Activity Name</option>
+                            <option value="newest">t('notes.sorting.newestFirst')</option>
+                            <option value="oldest">t('notes.sorting.oldestFirst')</option>
+                            <option value="activity">t('notes.sorting.activityName')</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <input type="text" id="noteSearchInput" placeholder="Search through notes..." onkeyup="tracker.searchNotes()" oninput="tracker.toggleNoteClearButton()" autocomplete="off">
-                        <button class="btn btn-secondary btn-small" id="noteClearBtn" onclick="tracker.clearNoteSearch()" style="display: none;">Clear</button>
+                        <input type="text" id="noteSearchInput" placeholder="t('notes.searchPlaceholder')" onkeyup="tracker.searchNotes()" oninput="tracker.toggleNoteClearButton()" autocomplete="off">
+                        <button class="btn btn-secondary btn-small" id="noteClearBtn" onclick="tracker.clearNoteSearch()" style="display: none;">t('notes.clear')</button>
                     </div>
                 </div>
             </div>
             
             <div id="noteList" class="entry-list">
-                <p class="no-entries">No notes found.</p>
+                <p class="no-entries">t('notes.noNotes')</p>
             </div>
             
             <div class="notes-pagination" id="notesPagination" style="display: none;">
-                <button class="nav-btn" id="notesPrevBtn" onclick="tracker.previousNotePage()">← Previous</button>
-                <span id="notesPageInfo">Page 1 of 1</span>
-                <button class="nav-btn" id="notesNextBtn" onclick="tracker.nextNotePage()">Next →</button>
+                <button class="nav-btn" id="notesPrevBtn" onclick="tracker.previousNotePage()">t('todo.pagination.previous')</button>
+                <span id="notesPageInfo">t('todo.pagination.pageInfo', {current: 1, total: 1})</span>
+                <button class="nav-btn" id="notesNextBtn" onclick="tracker.nextNotePage()">t('todo.pagination.next')</button>
             </div>
         </div>
 
         <!-- Reports Section -->
         <div id="reports" class="section">
-            <h2>Activity Reports</h2>
+            <h2>t('reports.title')</h2>
 
             <!-- Report Generation -->
             <div class="reports-grid">
                 <div class="reports-section">
-                    <h3>Date Range</h3>
-                    <p class="settings-description">Select the time period for your report</p>
+                    <h3>t('reports.dateRange')</h3>
+                    <p class="settings-description">t('reports.dateRangeDescription')</p>
                     <div class="form-group">
-                        <label for="reportStartDate" title="Choose the start date for your report">Start Date</label>
+                        <label for="reportStartDate" title="t('reports.startDateTitle')">t('reports.startDateLabel')</label>
                         <input type="date" id="reportStartDate">
                     </div>
                     <div class="form-group">
-                        <label for="reportEndDate" title="Choose the end date for your report">End Date</label>
+                        <label for="reportEndDate" title="t('reports.endDateTitle')">t('reports.endDateLabel')</label>
                         <input type="date" id="reportEndDate">
                     </div>
                     <div class="report-actions">
-                        <button class="btn btn-primary" onclick="generateReport()" title="Generate report for the selected date range">Generate Report</button>
-                        <button class="btn btn-secondary" onclick="setWeeklyReport()" title="Set date range to current week">This Week</button>
+                        <button class="btn btn-primary" onclick="generateReport()" title="t('reports.generateReportTitle')">t('reports.generateReport')</button>
+                        <button class="btn btn-secondary" onclick="setWeeklyReport()" title="t('reports.thisWeekTitle')">t('reports.thisWeek')</button>
                     </div>
                 </div>
 
                 <div class="reports-section">
-                    <h3>Template & Options</h3>
-                    <p class="settings-description">Choose format, options and download your report</p>
+                    <h3>t('reports.templateOptions')</h3>
+                    <p class="settings-description">t('reports.templateOptionsDescription')</p>
                     <div class="form-group">
-                        <label for="reportTemplate" title="Select the format for your report">Report Template</label>
+                        <label for="reportTemplate" title="t('reports.reportTemplateTitle')">t('reports.reportTemplateLabel')</label>
                         <select id="reportTemplate" onchange="tracker.previewReport()"></select>
                     </div>
                     <div class="form-group">
-                        <label for="includeTodos">Todo Items:</label>
+                        <label for="includeTodos">t('reports.todoItems')</label>
                         <select id="includeTodos" onchange="tracker.generateReport()">
-                            <option value="exclude">Exclude all todos</option>
-                            <option value="incomplete">Include incomplete todos only</option>
-                            <option value="all">Include all todos</option>
+                            <option value="exclude">t('reports.todoOptions.excludeAll')</option>
+                            <option value="incomplete">t('reports.todoOptions.incompleteOnly')</option>
+                            <option value="all">t('reports.todoOptions.includeAll')</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="includeNotes">Notes:</label>
+                        <label for="includeNotes">t('reports.notes')</label>
                         <select id="includeNotes" onchange="tracker.generateReport()">
-                            <option value="exclude">Exclude notes</option>
-                            <option value="include">Include notes</option>
+                            <option value="exclude">t('reports.noteOptions.exclude')</option>
+                            <option value="include">t('reports.noteOptions.include')</option>
                         </select>
                     </div>
                     <div class="download-actions">
-                        <button class="btn btn-success" onclick="downloadReport()" title="Download the generated report">Download Report</button>
-                        <button class="btn btn-primary" onclick="openReportInNewTab()" title="Open the generated report in a new tab">Open in New Tab</button>
+                        <button class="btn btn-success" onclick="downloadReport()" title="t('reports.downloadReportTitle')">t('reports.downloadReport')</button>
+                        <button class="btn btn-primary" onclick="openReportInNewTab()" title="t('reports.openNewTabTitle')">t('reports.openNewTab')</button>
                     </div>
                 </div>
             </div>
@@ -410,37 +412,37 @@
             <!-- Week Navigation -->
             <div class="report-navigation-section">
                 <div class="report-navigation">
-                    <button class="nav-btn" onclick="previousWeek()">← Previous Week</button>
-                    <div class="week-display" id="weekDisplay">Week of ...</div>
-                    <button class="nav-btn" onclick="nextWeek()">Next Week →</button>
+                    <button class="nav-btn" onclick="previousWeek()">t('reports.weekNavigation.previous')</button>
+                    <div class="week-display" id="weekDisplay">t('reports.weekNavigation.weekOf', {date: '...'})</div>
+                    <button class="nav-btn" onclick="nextWeek()">t('reports.weekNavigation.next')</button>
                 </div>
             </div>
 
             <div id="reportPreviewContainer" class="report-preview-container">
                 <div class="report-preview-header">
-                    <h3>Report Preview</h3>
+                    <h3>t('reports.reportPreview')</h3>
                     <div class="preview-controls">
                         <div class="preview-format-tabs">
-                            <button class="preview-tab active" id="reportPreviewTabRendered" onclick="switchReportPreviewTab('rendered')" title="View the formatted report output">Rendered</button>
-                            <button class="preview-tab" id="reportPreviewTabSource" onclick="switchReportPreviewTab('source')" title="View the raw source code of the report">Source</button>
+                            <button class="preview-tab active" id="reportPreviewTabRendered" onclick="switchReportPreviewTab('rendered')" title="t('reports.viewFormattedTitle')">t('reports.rendered')</button>
+                            <button class="preview-tab" id="reportPreviewTabSource" onclick="switchReportPreviewTab('source')" title="t('reports.viewSourceTitle')">t('reports.source')</button>
                         </div>
-                        <button class="btn-copy-report" id="copyReportBtn" onclick="copyReportToClipboard()" title="Copy report content to clipboard" style="display: none;">Copy Report</button>
+                        <button class="btn-copy-report" id="copyReportBtn" onclick="copyReportToClipboard()" title="t('reports.copyReportTitle')" style="display: none;">t('reports.copyReport')</button>
                     </div>
                 </div>
                 <div id="reportPreview" class="report-preview-content">
-                    Select a date range and generate a report to see a preview.
+                    t('reports.selectDateRange')
                 </div>
             </div>
             
             <!-- Report Templates Management -->
             <div class="report-templates-section">
                 <div class="settings-card">
-                    <h3>Report Templates</h3>
-                    <p class="card-description">Manage templates for report generation</p>
+                    <h3>t('reports.reportTemplates')</h3>
+                    <p class="card-description">t('reports.templatesDescription')</p>
                     <div class="card-actions">
-                        <button class="btn btn-primary" onclick="openTemplateManager()" title="Open the template editor to create and modify report templates">Manage Templates</button>
-                        <button class="btn btn-secondary" onclick="resetReportTemplates()" title="Restore all templates to their original default versions">Reset to Default</button>
-                        <button class="btn btn-info" onclick="showTemplateGuide()" title="View help documentation for template syntax and available data">📋 Template Guide</button>
+                        <button class="btn btn-primary" onclick="openTemplateManager()" title="t('reports.manageTemplatesTitle')">t('reports.manageTemplates')</button>
+                        <button class="btn btn-secondary" onclick="resetReportTemplates()" title="t('reports.resetDefaultTitle')">t('reports.resetDefault')</button>
+                        <button class="btn btn-info" onclick="showTemplateGuide()" title="t('reports.templateGuideTitle')">t('reports.templateGuide')</button>
                     </div>
                 </div>
             </div>
@@ -448,7 +450,7 @@
 
         <!-- Settings Section -->
         <div id="settings" class="section">
-            <h2>Settings</h2>
+            <h2>t('settings.title')</h2>
             
             <div class="notification-status" id="notificationStatus">
                 <span class="status-indicator" id="statusIndicator"></span>
@@ -458,44 +460,55 @@
             <!-- Reminder Control Buttons -->
             <div class="settings-buttons-section">
                 <div class="reminder-buttons">
-                    <button class="btn btn-primary" onclick="enableNotifications()">Enable Reminders</button>
+                    <button class="btn btn-primary" onclick="enableNotifications()">t('settings.enableReminders')</button>
                 </div>
             </div>
 
             <!-- General Settings (Shared between all modes) -->
             <div class="settings-section general-settings">
-                <h3>General Settings</h3>
-                <p class="settings-description">Settings that apply to all modes of operation</p>
+                <h3>t('settings.generalSettings')</h3>
+                <p class="settings-description">t('settings.generalDescription')</p>
                 <div class="settings-grid settings-grid-four-col">
                     <div class="form-group">
-                        <label for="darkModePreference" title="Choose your colour theme preference">Colour Theme</label>
+                        <label for="darkModePreference" title="t('settings.colourThemeTitle')">t('settings.colourTheme')</label>
                         <select id="darkModePreference" onchange="saveSettings()">
-                            <option value="system">Follow system settings</option>
-                            <option value="light">Light mode</option>
-                            <option value="dark">Dark mode</option>
+                            <option value="system">t('settings.themeOptions.system')</option>
+                            <option value="light">t('settings.themeOptions.light')</option>
+                            <option value="dark">t('settings.themeOptions.dark')</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="soundMuteMode" title="Choose which sounds to mute">Sound Settings</label>
+                        <label for="soundMuteMode" title="t('settings.soundSettingsTitle')">t('settings.soundSettings')</label>
                         <select id="soundMuteMode" onchange="saveSettings()">
-                            <option value="none">All sounds enabled</option>
-                            <option value="all">Mute all sounds</option>
-                            <option value="pomodoro">Mute Pomodoro sounds only</option>
-                            <option value="notifications">Mute notification sounds only</option>
+                            <option value="none">t('settings.soundOptions.allEnabled')</option>
+                            <option value="all">t('settings.soundOptions.muteAll')</option>
+                            <option value="pomodoro">t('settings.soundOptions.mutePomodoroOnly')</option>
+                            <option value="notifications">t('settings.soundOptions.muteNotificationOnly')</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="paginationSize" title="Number of items to show per page in lists">Items per page</label>
+                        <label for="paginationSize" title="t('settings.itemsPerPageTitle')">t('settings.itemsPerPage')</label>
                         <select id="paginationSize" onchange="saveSettings()">
-                            <option value="10">10 items</option>
-                            <option value="20" selected>20 items</option>
-                            <option value="30">30 items</option>
-                            <option value="50">50 items</option>
-                            <option value="100">100 items</option>
+                            <option value="10">t('settings.itemsPerPageOptions.10')</option>
+                            <option value="20" selected>t('settings.itemsPerPageOptions.20')</option>
+                            <option value="30">t('settings.itemsPerPageOptions.30')</option>
+                            <option value="50">t('settings.itemsPerPageOptions.50')</option>
+                            <option value="100">t('settings.itemsPerPageOptions.100')</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateFormat" title="t('settings.dateFormatTitle')">t('settings.dateFormat')</label>
+                        <select id="dateFormat" onchange="saveSettings()">
+                            <option value="default">t('settings.dateFormatOptions.default')</option>
+                            <option value="iso">t('settings.dateFormatOptions.iso')</option>
+                            <option value="us">t('settings.dateFormatOptions.us')</option>
+                            <option value="european">t('settings.dateFormatOptions.european')</option>
+                            <option value="short">t('settings.dateFormatOptions.short')</option>
+                            <option value="long">t('settings.dateFormatOptions.long')</option>
                         </select>
                     </div>
                     <div class="form-group" id="systemNotificationsGroup" style="display: none;">
-                        <label for="sendSystemNotifications" title="Send system notifications to your operating system">System Notifications</label>
+                        <label for="sendSystemNotifications" title="t('settings.systemNotificationsTitle')">t('settings.systemNotifications')</label>
                         <select id="sendSystemNotifications" onchange="saveSettings()">
                             <option value="true" selected>Yes</option>
                             <option value="false">No</option>
@@ -507,9 +520,9 @@
             <!-- Main Settings Grid -->
             <div class="settings-grid settings-grid-two-col">
                 <div class="settings-section">
-                    <h3>Reminder Settings</h3>
+                    <h3>t('settings.reminderSettings')</h3>
                     <div class="form-group">
-                        <label for="notificationInterval" title="How often you'll receive activity reminder notifications">Reminder Interval</label>
+                        <label for="notificationInterval" title="t('settings.reminderIntervalTitle')">t('settings.reminderInterval')</label>
                         <select id="notificationInterval" onchange="saveSettings()">
                             <option value="1">1 minute</option>
                             <option value="2">2 minutes</option>
@@ -524,7 +537,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="pauseDuration" title="How long alerts remain paused before automatically resuming">When pausing, resume after</label>
+                        <label for="pauseDuration" title="t('settings.pauseResumeTitle')">t('settings.pauseResume')</label>
                         <select id="pauseDuration" onchange="saveSettings()">
                             <option value="1">1 minute</option>
                             <option value="2">2 minutes</option>
@@ -542,14 +555,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="autoStartAlerts" title="Automatically start reminders when the app opens">Auto start reminders upon opening app</label>
+                        <label for="autoStartAlerts" title="t('settings.autoStartTitle')">t('settings.autoStart')</label>
                         <select id="autoStartAlerts" onchange="saveSettings()">
                             <option value="false" selected>No</option>
                             <option value="true">Yes</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="notificationSoundType" title="Choose the sound that plays with reminders">Reminder Sound</label>
+                        <label for="notificationSoundType" title="t('settings.reminderSoundTitle')">t('settings.reminderSound')</label>
                         <select id="notificationSoundType" onchange="previewNotificationSound()">
                             <!-- Options will be populated by JavaScript -->
                         </select>
@@ -557,16 +570,16 @@
                 </div>
 
                 <div class="settings-section">
-                    <h3>Activity Schedule</h3>
+                    <h3>t('schedule.title')</h3>
                     <p class="settings-description">Set your active activity hours and days for notifications</p>
                     
                     <div class="schedule-section">
                         <div class="schedule-header">
-                            <h4>Activity Hours</h4>
+                            <h4>t('schedule.activityHours')</h4>
                             <div class="schedule-mode-toggle">
                                 <div class="checkbox-group inline">
                                     <input type="checkbox" id="useComplexSchedule" onchange="toggleScheduleMode()">
-                                    <label for="useComplexSchedule" title="Enable complex scheduling with multiple time ranges per day">Complex Schedule</label>
+                                    <label for="useComplexSchedule" title="t('schedule.complexScheduleTitle')">t('schedule.complexSchedule')</label>
                                 </div>
                             </div>
                         </div>
@@ -575,11 +588,11 @@
                         <div id="simpleSchedule" class="schedule-mode">
                             <div class="time-inputs">
                                 <div class="form-group">
-                                    <label for="startTime" title="When your activity period starts">Start Time</label>
+                                    <label for="startTime" title="t('schedule.startTimeTitle')">t('schedule.startTime')</label>
                                     <input type="time" id="startTime" value="08:00" onchange="saveSettings()">
                                 </div>
                                 <div class="form-group">
-                                    <label for="endTime" title="When your activity period ends">End Time</label>
+                                    <label for="endTime" title="t('schedule.endTimeTitle')">t('schedule.endTime')</label>
                                     <input type="time" id="endTime" value="18:00" onchange="saveSettings()">
                                 </div>
                             </div>
@@ -592,44 +605,44 @@
                                 <div class="day-schedule" data-day="monday">
                                     <h5>Monday</h5>
                                     <div class="time-ranges" id="monday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('monday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('monday')">t('schedule.addRange')</button>
                                 </div>
                                 <div class="day-schedule" data-day="tuesday">
                                     <h5>Tuesday</h5>
                                     <div class="time-ranges" id="tuesday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('tuesday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('tuesday')">t('schedule.addRange')</button>
                                 </div>
                                 <div class="day-schedule" data-day="wednesday">
                                     <h5>Wednesday</h5>
                                     <div class="time-ranges" id="wednesday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('wednesday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('wednesday')">t('schedule.addRange')</button>
                                 </div>
                                 <div class="day-schedule" data-day="thursday">
                                     <h5>Thursday</h5>
                                     <div class="time-ranges" id="thursday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('thursday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('thursday')">t('schedule.addRange')</button>
                                 </div>
                                 <div class="day-schedule" data-day="friday">
                                     <h5>Friday</h5>
                                     <div class="time-ranges" id="friday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('friday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('friday')">t('schedule.addRange')</button>
                                 </div>
                                 <div class="day-schedule" data-day="saturday">
                                     <h5>Saturday</h5>
                                     <div class="time-ranges" id="saturday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('saturday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('saturday')">t('schedule.addRange')</button>
                                 </div>
                                 <div class="day-schedule" data-day="sunday">
                                     <h5>Sunday</h5>
                                     <div class="time-ranges" id="sunday-ranges"></div>
-                                    <button type="button" class="btn btn-small" onclick="addTimeRange('sunday')">+ Add Range</button>
+                                    <button type="button" class="btn btn-small" onclick="addTimeRange('sunday')">t('schedule.addRange')</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="schedule-section">
-                        <h4>Activity Days</h4>
+                        <h4>t('schedule.activityDays')</h4>
                         <div class="activity-days-grid">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="monday" checked onchange="saveSettings()">
@@ -672,7 +685,7 @@
                     <div class="pomodoro-settings">
                         <div class="checkbox-group">
                             <input type="checkbox" id="pomodoroEnabled" onchange="saveSettings()">
-                            <label for="pomodoroEnabled" title="Enable Pomodoro timing mode with work and break alerts">Enable Pomodoro Mode</label>
+                            <label for="pomodoroEnabled" title="t('pomodoro.enableTitle')">t('pomodoro.enable')</label>
                         </div>
                         
                         <div class="pomodoro-config" id="pomodoroConfig" style="display: none;">
@@ -680,7 +693,7 @@
                             <!-- Timer Configuration -->
                             <div class="pomodoro-timers">
                                 <div class="form-group">
-                                    <label for="pomodoroWorkDuration" title="Length of work periods in minutes">Work Duration (minutes)</label>
+                                    <label for="pomodoroWorkDuration" title="t('pomodoro.workDurationTitle')">t('pomodoro.workDuration')</label>
                                     <select id="pomodoroWorkDuration" onchange="saveSettings()">
                                         <option value="15">15 minutes</option>
                                         <option value="20">20 minutes</option>
@@ -691,7 +704,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pomodoroBreakDuration" title="Length of short break periods in minutes">Short Break Duration (minutes)</label>
+                                    <label for="pomodoroBreakDuration" title="t('pomodoro.shortBreakTitle')">t('pomodoro.shortBreak')</label>
                                     <select id="pomodoroBreakDuration" onchange="saveSettings()">
                                         <option value="3">3 minutes</option>
                                         <option value="5" selected>5 minutes</option>
@@ -700,7 +713,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pomodoroLongBreakDuration" title="Length of long break periods in minutes">Long Break Duration (minutes)</label>
+                                    <label for="pomodoroLongBreakDuration" title="t('pomodoro.longBreakTitle')">t('pomodoro.longBreak')</label>
                                     <select id="pomodoroLongBreakDuration" onchange="saveSettings()">
                                         <option value="15" selected>15 minutes</option>
                                         <option value="20">20 minutes</option>
@@ -710,7 +723,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pomodoroLongBreakInterval" title="Number of work sessions before taking a long break">Sessions before long break</label>
+                                    <label for="pomodoroLongBreakInterval" title="t('pomodoro.sessionsBeforeLongTitle')">t('pomodoro.sessionsBeforeLong')</label>
                                     <select id="pomodoroLongBreakInterval" onchange="saveSettings()">
                                         <option value="2">Every 2 sessions</option>
                                         <option value="3">Every 3 sessions</option>
@@ -725,7 +738,7 @@
                             <div class="pomodoro-sounds">
                                 <h4>Tick Sounds</h4>
                                 <div class="form-group">
-                                    <label for="pomodoroTickSound" title="Optional tick sound to remind you're in a work session">Tick Sound Type</label>
+                                    <label for="pomodoroTickSound" title="t('pomodoro.tickSoundTitle')">t('pomodoro.tickSoundType')</label>
                                     <select id="pomodoroTickSound" onchange="saveSettings()">
                                         <option value="none" selected>No ticking</option>
                                         <option value="soft">Soft tick</option>
@@ -734,7 +747,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pomodoroTickInterval" title="How often to play the tick sound in seconds">Tick Interval (seconds)</label>
+                                    <label for="pomodoroTickInterval" title="t('pomodoro.tickIntervalTitle')">t('pomodoro.tickInterval')</label>
                                     <select id="pomodoroTickInterval" onchange="saveSettings()">
                                         <option value="0" selected>Off (no ticking)</option>
                                         <option value="1">Every 1 second</option>
@@ -754,19 +767,19 @@
                             <div class="pomodoro-announce-sounds">
                                 <h4>Announce Sounds</h4>
                                 <div class="form-group">
-                                    <label for="pomodoroShortBreakSound" title="Sound to play when short break starts">Short Break Announce</label>
+                                    <label for="pomodoroShortBreakSound" title="t('pomodoro.shortBreakAnnounceTitle')">t('pomodoro.shortBreakAnnounce')</label>
                                     <select id="pomodoroShortBreakSound" onchange="saveSettings()">
                                         <!-- Options will be populated by JavaScript -->
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pomodoroLongBreakSound" title="Sound to play when long break starts">Long Break Announce</label>
+                                    <label for="pomodoroLongBreakSound" title="t('pomodoro.longBreakAnnounceTitle')">t('pomodoro.longBreakAnnounce')</label>
                                     <select id="pomodoroLongBreakSound" onchange="saveSettings()">
                                         <!-- Options will be populated by JavaScript -->
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pomodoroResumeSound" title="Sound to play when resuming work after break">Resume Work Announce</label>
+                                    <label for="pomodoroResumeSound" title="t('pomodoro.resumeWorkAnnounceTitle')">t('pomodoro.resumeWorkAnnounce')</label>
                                     <select id="pomodoroResumeSound" onchange="saveSettings()">
                                         <!-- Options will be populated by JavaScript -->
                                     </select>
@@ -778,27 +791,27 @@
                                 <h4>Options</h4>
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pomodoroAutoStart" onchange="saveSettings()">
-                                    <label for="pomodoroAutoStart" title="Automatically start the next session without requiring manual intervention">Automatically start next session</label>
+                                    <label for="pomodoroAutoStart" title="t('pomodoro.autoStartTitle')">t('pomodoro.autoStart')</label>
                                 </div>
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pomodoroAutoLog" checked onchange="saveSettings()">
-                                    <label for="pomodoroAutoLog" title="Prompt for activity description and create log entries for work sessions">Prompt for work session descriptions</label>
+                                    <label for="pomodoroAutoLog" title="t('pomodoro.promptDescriptionsTitle')">t('pomodoro.promptDescriptions')</label>
                                 </div>
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pomodoroLogBreaks" onchange="saveSettings()">
-                                    <label for="pomodoroLogBreaks" title="Also log break sessions in the activity tracker">Log break sessions too</label>
+                                    <label for="pomodoroLogBreaks" title="t('pomodoro.logBreaksTitle')">t('pomodoro.logBreaks')</label>
                                 </div>
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pomodoroLongBreak" checked onchange="saveSettings()">
-                                    <label for="pomodoroLongBreak" title="Enable long breaks after completing multiple sessions">Enable long breaks</label>
+                                    <label for="pomodoroLongBreak" title="t('pomodoro.enableLongBreaksTitle')">t('pomodoro.enableLongBreaks')</label>
                                 </div>
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pomodoroPauseAllowed" checked onchange="saveSettings()">
-                                    <label for="pomodoroPauseAllowed" title="Allow pausing Pomodoro sessions from the banner">Allow session pausing</label>
+                                    <label for="pomodoroPauseAllowed" title="t('pomodoro.allowPausingTitle')">t('pomodoro.allowPausing')</label>
                                 </div>
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="pomodoroAutoResetDaily" onchange="saveSettings()">
-                                    <label for="pomodoroAutoResetDaily" title="Automatically reset session counter to 1 when the day changes">Auto-reset sessions daily</label>
+                                    <label for="pomodoroAutoResetDaily" title="t('pomodoro.autoResetDailyTitle')">t('pomodoro.autoResetDaily')</label>
                                 </div>
                             </div>
                             
@@ -806,7 +819,7 @@
                             <div class="pomodoro-session-management">
                                 <h5>Session Management</h5>
                                 <div class="session-actions">
-                                    <button type="button" class="btn btn-outline btn-warning" onclick="resetPomodoroSessions()" title="Reset session counter back to 1">
+                                    <button type="button" class="btn btn-outline btn-warning" onclick="resetPomodoroSessions()" title="t('pomodoro.resetCounterTitle')">
                                         Reset Session Counter
                                     </button>
                                 </div>
@@ -834,14 +847,14 @@
                         <p class="card-description">Configure confirmation dialogs for destructive actions</p>
                         <div class="warning-settings">
                             <div class="form-group">
-                                <label for="warnOnActivityDelete" title="Show confirmation dialog when deleting activities">Warn on activity delete</label>
+                                <label for="warnOnActivityDelete" title="t('dataManagement.warnDeleteTitle')">t('dataManagement.warnDelete')</label>
                                 <select id="warnOnActivityDelete" onchange="saveSettings()">
                                     <option value="true" selected>Yes</option>
                                     <option value="false">No</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="warnOnSessionReset" title="Show confirmation dialog when resetting Pomodoro session counter">Warn on session reset</label>
+                                <label for="warnOnSessionReset" title="t('dataManagement.warnResetTitle')">t('dataManagement.warnReset')</label>
                                 <select id="warnOnSessionReset" onchange="saveSettings()">
                                     <option value="true" selected>Yes</option>
                                     <option value="false">No</option>
@@ -868,16 +881,16 @@
                         <div class="diagnostic-card">
                             <h4>🔔 Notifications</h4>
                             <div class="diagnostic-buttons">
-                                <button class="btn btn-secondary diagnostic-btn" onclick="testNotification()" title="Send a test reminder">
+                                <button class="btn btn-secondary diagnostic-btn" onclick="testNotification()" title="t('diagnostics.testReminderTitle')">
                                     <span class="btn-icon">🧪</span>Test Reminder
                                 </button>
-                                <button class="btn btn-primary diagnostic-btn" onclick="testNotificationSound()" title="Play a test reminder sound">
+                                <button class="btn btn-primary diagnostic-btn" onclick="testNotificationSound()" title="t('diagnostics.testSoundTitle')">
                                     <span class="btn-icon">🔊</span>Test Sound
                                 </button>
-                                <button class="btn btn-secondary diagnostic-btn" onclick="refreshNotificationStatus()" title="Refresh the reminder permission status display">
+                                <button class="btn btn-secondary diagnostic-btn" onclick="refreshNotificationStatus()" title="t('diagnostics.refreshStatusTitle')">
                                     <span class="btn-icon">🔄</span>Refresh Status
                                 </button>
-                                <button class="btn btn-warning diagnostic-btn" onclick="forceEnableNotifications()" title="Force show notification permission dialog">
+                                <button class="btn btn-warning diagnostic-btn" onclick="forceEnableNotifications()" title="t('diagnostics.forceEnableTitle')">
                                     <span class="btn-icon">⚡</span>Force Enable
                                 </button>
                             </div>
@@ -886,7 +899,7 @@
                         <div class="diagnostic-card">
                             <h4>⚙️ Service Worker</h4>
                             <div class="diagnostic-buttons">
-                                <button class="btn btn-secondary diagnostic-btn" onclick="runServiceWorkerTest()" title="Run comprehensive service worker diagnostics">
+                                <button class="btn btn-secondary diagnostic-btn" onclick="runServiceWorkerTest()" title="t('diagnostics.runDiagnosticsTitle')">
                                     <span class="btn-icon">🔍</span>Run Diagnostics
                                 </button>
                             </div>
@@ -923,8 +936,8 @@
                             <option value="relevance">Relevance</option>
                             <option value="date-desc">Newest First</option>
                             <option value="date-asc">Oldest First</option>
-                            <option value="activity-asc">Activity A-Z</option>
-                            <option value="activity-desc">Activity Z-A</option>
+                            <option value="activity-asc">t('search.filters.activityAZ')</option>
+                            <option value="activity-desc">t('search.filters.activityZA')</option>
                         </select>
                     </div>
                     
@@ -945,9 +958,9 @@
             </div>
 
             <div class="search-pagination" id="searchPagination" style="display: none;">
-                <button class="nav-btn" id="searchPrevBtn" onclick="tracker.previousSearchPage()">← Previous</button>
-                <span id="searchPageInfo">Page 1 of 1</span>
-                <button class="nav-btn" id="searchNextBtn" onclick="tracker.nextSearchPage()">Next →</button>
+                <button class="nav-btn" id="searchPrevBtn" onclick="tracker.previousSearchPage()">t('todo.pagination.previous')</button>
+                <span id="searchPageInfo">t('todo.pagination.pageInfo', {current: 1, total: 1})</span>
+                <button class="nav-btn" id="searchNextBtn" onclick="tracker.nextSearchPage()">t('todo.pagination.next')</button>
             </div>
         </div>
     </div>
@@ -959,35 +972,35 @@
     <div id="editModal" class="modal">
         <div class="modal-content edit-modal-content">
             <div class="modal-header">
-                <h3>Edit Entry</h3>
+                <h3>t('modals.edit.title')</h3>
                 <button class="btn-close" onclick="closeEditModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editForm">
                     <input type="hidden" id="editId">
                     <div class="form-group">
-                        <label for="editActivity">Activity</label>
+                        <label for="editActivity">t('modals.edit.activity')</label>
                         <input type="text" id="editActivity" required>
                     </div>
                     <div class="form-group">
-                        <label for="editDescription">Description</label>
+                        <label for="editDescription">t('modals.edit.description')</label>
                         <textarea id="editDescription" rows="3"></textarea>
                     </div>
                     <div class="form-group form-group-row">
                         <div class="form-group">
-                            <label for="editTimestamp">Time</label>
+                            <label for="editTimestamp">t('modals.edit.time')</label>
                             <input type="datetime-local" id="editTimestamp" required>
                             <div class="todo-quick-set">
                                 <button type="button" id="editTodoButton" class="btn-quick-set" onclick="toggleEditTodo()">
-                                    <span id="editTodoButtonText">Mark as Todo</span>
+                                    <span id="editTodoButtonText">t('modals.edit.markTodo')</span>
                                 </button>
                                 <button type="button" id="editNoteButton" class="btn-quick-set" onclick="toggleEditNote()">
-                                    <span id="editNoteButtonText">Mark as Note</span>
+                                    <span id="editNoteButtonText">t('modals.edit.markNote')</span>
                                 </button>
                             </div>
                         </div>
                         <div class="form-group" id="editDueDateSection">
-                            <label for="editDueDate">Due Date (optional)</label>
+                            <label for="editDueDate">t('modals.edit.dueDate')</label>
                             <input type="datetime-local" id="editDueDate">
                             <div class="due-date-quick-sets">
                                 <div class="due-date-group">
@@ -1006,8 +1019,8 @@
                         </div>
                     </div>
                     <div class="modal-actions">
-                        <button type="submit" class="btn btn-primary">Update Entry</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">t('modals.edit.update')</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">t('modals.edit.cancel')</button>
                     </div>
                 </form>
             </div>
@@ -1039,17 +1052,17 @@
                 
                 <div class="template-editor-panel">
                     <div class="template-editor-header">
-                        <h3 id="templateEditorTitle">Select a template to edit</h3>
+                        <h3 id="templateEditorTitle">t('modals.templateManager.selectTemplate')</h3>
                         <div class="template-editor-actions" id="templateEditorActions" style="display: none;">
                             <button class="btn btn-success" onclick="saveCurrentTemplate()">Save</button>
-                            <button class="btn btn-danger" onclick="deleteCurrentTemplate()">Delete</button>
+                            <button class="btn btn-danger" onclick="deleteCurrentTemplate()">t('modals.templateManager.delete')</button>
                             <button class="btn btn-secondary" onclick="duplicateCurrentTemplate()">Duplicate</button>
                         </div>
                     </div>
                     
                     <div class="template-editor-tabs" id="templateEditorTabs" style="display: none;">
-                        <button class="template-tab active" id="tabEditor" onclick="switchTemplateTab('editor')">Editor</button>
-                        <button class="template-tab" id="tabPreview" onclick="switchTemplateTab('preview')">Preview</button>
+                        <button class="template-tab active" id="tabEditor" onclick="switchTemplateTab('editor')">t('modals.templateManager.editor')</button>
+                        <button class="template-tab" id="tabPreview" onclick="switchTemplateTab('preview')">t('modals.templateManager.preview')</button>
                     </div>
                     
                     <div class="template-editor-content">
@@ -1060,8 +1073,8 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="templateDescription">Description</label>
-                                <input type="text" id="templateDescription" placeholder="Brief description of the template">
+                                <label for="templateDescription">t('modals.templateManager.description')</label>
+                                <input type="text" id="templateDescription" placeholder="t('modals.templateManager.descriptionPlaceholder')">
                             </div>
                             
                             <div class="form-group">
@@ -1076,7 +1089,7 @@
                             
                             <div class="form-group">
                                 <label for="templateContent">Template Content</label>
-                                <textarea id="templateContent" rows="20" placeholder="Enter your template content here..."></textarea>
+                                <textarea id="templateContent" rows="20" placeholder="t('modals.templateManager.templateContentPlaceholder')"></textarea>
                             </div>
                             
                             <div class="checkbox-group">
@@ -1115,163 +1128,7 @@
                 <button class="btn-close" onclick="closeTemplateGuide()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="template-guide-content">
-                    <div class="guide-section">
-                        <h4>Getting Started</h4>
-                        <p>Templates use a simple variable substitution syntax with double curly braces to create dynamic reports.</p>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Basic Syntax</h4>
-                        <ul>
-                            <li><code>{{variable}}</code> - Simple variable substitution</li>
-                            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Loop through arrays</li>
-                            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Conditional content</li>
-                        </ul>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Pipe Syntax & Function Chaining</h4>
-                        <p>Transform data using the pipe (<code>|</code>) syntax to chain multiple functions together:</p>
-                        
-                        <h5>Basic Pipe Syntax</h5>
-                        <ul>
-                            <li><code>{{ variable | function }}</code> - Apply a single transformation</li>
-                            <li><code>{{ variable | function1 | function2 }}</code> - Chain multiple transformations</li>
-                            <li><code>{{ variable | function('parameter') }}</code> - Pass parameters to functions</li>
-                        </ul>
-
-                        <h5>Available Transformation Functions</h5>
-                        <ul>
-                            <li><code>date('format')</code> - Format timestamps as dates
-                                <ul>
-                                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
-                                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
-                                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
-                                </ul>
-                            </li>
-                            <li><code>time</code> - Extract time from timestamps
-                                <ul>
-                                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
-                                </ul>
-                            </li>
-                            <li><code>escapeCsv</code> - Escape CSV special characters
-                                <ul>
-                                    <li>Wraps text in quotes if it contains commas, quotes, or newlines</li>
-                                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
-                                </ul>
-                            </li>
-                            <li><code>stripLinebreaks</code> - Remove line breaks from text
-                                <ul>
-                                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                        <h5>CSV Template Example with Chaining</h5>
-                        <p>Here's how the CSV template uses chaining to create clean, properly escaped output:</p>
-                        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
-{{/each}}</code></pre>
-                        
-                        <p><strong>How this works:</strong></p>
-                        <ul>
-                            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Converts timestamp to YYYY-MM-DD format</li>
-                            <li><code>entry.timestamp | time</code> - Extracts time portion</li>
-                            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - First removes line breaks, then escapes for CSV</li>
-                            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Same process for descriptions</li>
-                        </ul>
-
-                        <h5>Order Matters in Chaining!</h5>
-                        <p>Functions are applied left to right, so order is important:</p>
-                        <ul>
-                            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Remove breaks first, then escape</li>
-                            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Escaping first may interfere with break removal</li>
-                        </ul>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Available Data</h4>
-                        <p>The following data is available in your templates:</p>
-                        <ul>
-                            <li><code>{{reportTitle}}</code> - The report title</li>
-                            <li><code>{{startDate}}</code> - Report start date (formatted)</li>
-                            <li><code>{{endDate}}</code> - Report end date (formatted)</li>
-                            <li><code>{{totalEntries}}</code> - Total number of activity entries</li>
-                            <li><code>{{entries}}</code> - Array of all activity entries</li>
-                        </ul>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Entry Properties</h4>
-                        <p>Each entry in the <code>{{#each entries}}</code> loop has:</p>
-                        <ul>
-                            <li><code>{{activity}}</code> - The activity name</li>
-                            <li><code>{{description}}</code> - Activity description</li>
-                            <li><code>{{timestamp}}</code> - Raw ISO timestamp</li>
-                            <li><code>{{formattedTime}}</code> - Nicely formatted time (e.g., "2:30 PM")</li>
-                            <li><code>{{formattedDate}}</code> - Nicely formatted date (e.g., "Jan 15, 2025")</li>
-                            <li><code>{{isTodo}}</code> - Boolean: true if this is a todo item</li>
-                            <li><code>{{tags}}</code> - Array of hashtags for this entry</li>
-                        </ul>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Common Transformations</h4>
-                        <p>Transform timestamps and format data:</p>
-                        <ul>
-                            <li><strong>Date formats</strong>: Use <code>{{formattedDate}}</code> and <code>{{formattedTime}}</code> for human-readable formats</li>
-                            <li><strong>Conditional content</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - only show if description exists</li>
-                            <li><strong>Loop through tags</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - display all hashtags</li>
-                            <li><strong>Todo filtering</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - mark todo items</li>
-                        </ul>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Markdown Formatting</h4>
-                        <p>Use Markdown syntax for readable formatting:</p>
-                        <ul>
-                            <li><code># {{reportTitle}}</code> - Large heading</li>
-                            <li><code>## {{activity}}</code> - Medium heading</li>
-                            <li><code>**{{activity}}**</code> - Bold text</li>
-                            <li><code>*{{description}}*</code> - Italic text</li>
-                            <li><code>- {{activity}}</code> - Bullet point</li>
-                            <li><code>`{{formattedTime}}`</code> - Code formatting</li>
-                        </ul>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Example Template</h4>
-                        <pre><code># {{reportTitle}}
-From {{startDate}} to {{endDate}}
-
-Total activities: {{totalEntries}}
-
-{{#each entries}}
-## {{formattedTime}} - {{activity}}
-{{#if description}}
-*{{description}}*
-{{/if}}
-{{#if tags}}
-Tags: {{#each tags}}#{{this}} {{/each}}
-{{/if}}
-{{#if isTodo}}
-**TODO ITEM**
-{{/if}}
-
-{{/each}}</code></pre>
-                    </div>
-
-                    <div class="guide-section">
-                        <h4>Pro Tips</h4>
-                        <ul>
-                            <li><strong>HTML templates</strong>: Use for rich formatting with CSS styles and complex layouts</li>
-                            <li><strong>Markdown templates</strong>: Perfect for simple, readable documentation</li>
-                            <li><strong>CSV templates</strong>: Ideal for data analysis in spreadsheets</li>
-                            <li><strong>Preview feature</strong>: Always test your templates before saving</li>
-                            <li><strong>Custom formats</strong>: Combine multiple variables for unique layouts</li>
-                        </ul>
-                    </div>
-                </div>
+                {{TEMPLATE_GUIDE_CONTENT}}
             </div>
         </div>
     </div>
@@ -1280,25 +1137,25 @@ Tags: {{#each tags}}#{{this}} {{/each}}
     <div id="pomodoroActivityModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Work Session Activity</h3>
+                <h3>t('modals.pomodoroActivity.title')</h3>
                 <button class="btn-close" onclick="closePomodoroActivityModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="pomodoroActivityForm">
                     <div class="form-group">
-                        <label for="pomodoroActivityName">What will you be working on?</label>
-                        <input type="text" id="pomodoroActivityName" required placeholder="e.g., Writing report, Meeting preparation">
+                        <label for="pomodoroActivityName">t('modals.pomodoroActivity.activityLabel')</label>
+                        <input type="text" id="pomodoroActivityName" required placeholder="t('modals.pomodoroActivity.activityPlaceholder')">
                         <div class="quick-actions" style="margin-top: 8px;">
-                            <button type="button" id="usePreviousActivityBtn" class="btn btn-small btn-outline" onclick="usePreviousActivity()">Use Previous Activity</button>
+                            <button type="button" id="usePreviousActivityBtn" class="btn btn-small btn-outline" onclick="usePreviousActivity()">t('modals.pomodoroActivity.usePrevious')</button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="pomodoroActivityDescription">Description (optional)</label>
-                        <textarea id="pomodoroActivityDescription" rows="3" placeholder="Additional details about this work session"></textarea>
+                        <label for="pomodoroActivityDescription">t('modals.pomodoroActivity.descriptionLabel')</label>
+                        <textarea id="pomodoroActivityDescription" rows="3" placeholder="t('modals.pomodoroActivity.descriptionPlaceholder')"></textarea>
                     </div>
                     <div class="modal-actions">
-                        <button type="submit" class="btn btn-primary">Start Work Session</button>
-                        <button type="button" class="btn btn-secondary" onclick="closePomodoroActivityModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">t('modals.pomodoroActivity.startSession')</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePomodoroActivityModal()">t('modals.pomodoroActivity.cancel')</button>
                     </div>
                 </form>
             </div>
@@ -1319,12 +1176,12 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 </div>
                 <form id="pomodoroAbandonForm">
                     <div class="form-group">
-                        <label for="pomodoroAbandonActivityName">Activity accomplished</label>
-                        <input type="text" id="pomodoroAbandonActivityName" placeholder="What did you work on during this time?">
+                        <label for="pomodoroAbandonActivityName">t('modals.pomodoroAbandon.activityLabel')</label>
+                        <input type="text" id="pomodoroAbandonActivityName" placeholder="t('modals.pomodoroAbandon.activityPlaceholder')">
                     </div>
                     <div class="form-group">
-                        <label for="pomodoroAbandonActivityDescription">Description (optional)</label>
-                        <textarea id="pomodoroAbandonActivityDescription" rows="2" placeholder="Additional details about what you accomplished"></textarea>
+                        <label for="pomodoroAbandonActivityDescription">t('modals.pomodoroAbandon.descriptionLabel')</label>
+                        <textarea id="pomodoroAbandonActivityDescription" rows="2" placeholder="t('modals.pomodoroAbandon.descriptionPlaceholder')"></textarea>
                     </div>
                     <div class="modal-actions">
                         <button type="button" class="btn btn-primary" onclick="handlePomodoroAbandonmentSave(true)">Save Work & Abandon</button>
@@ -1366,7 +1223,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
     <div id="activityHoursInfoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>⏰ Activity Hours Information</h3>
+                <h3>t('modals.activityHoursInfo.title')</h3>
                 <button class="btn-close" onclick="closeActivityHoursInfo()">&times;</button>
             </div>
             <div class="modal-body">
@@ -1385,7 +1242,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     <button type="button" class="btn btn-primary" onclick="goToActivityHoursSettings()">
                         ⚙️ Configure Activity Hours
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeActivityHoursInfo()">Got It</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeActivityHoursInfo()">t('modals.activityHoursInfo.gotIt')</button>
                 </div>
             </div>
         </div>
@@ -1440,105 +1297,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 <button class="btn-close" onclick="closeUserGuide()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="user-guide-content">
-                    <div class="guide-section">
-                        <h4>Getting Started</h4>
-                        <p>Activity Tracker is a personal activity tracking application with smart notifications, comprehensive reporting, and Pomodoro timer functionality.</p>
-                        
-                        <p><strong>Key Features:</strong></p>
-                        <ul>
-                            <li>Pomodoro Timer with configurable work/break cycles</li>
-                            <li>Smart notification system with customizable sounds</li>
-                            <li>Comprehensive activity reporting with custom templates</li>
-                            <li>Dark mode support</li>
-                            <li>Offline functionality with service worker</li>
-                            <li>Progressive Web App (PWA) support</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Keyboard Shortcuts</h4>
-                        <ul>
-                            <li><kbd>Shift</kbd> + <kbd>Space</kbd> - Focus activity input field</li>
-                            <li><kbd>Shift</kbd> + <kbd>Enter</kbd> - Submit activity form</li>
-                            <li><kbd>Ctrl</kbd> + <kbd>T</kbd> - Toggle todo/not todo status</li>
-                            <li><kbd>Ctrl</kbd> + <kbd>N</kbd> - Toggle note status</li>
-                            <li><kbd>Esc</kbd> - Close modals</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Adding Activities</h4>
-                        <ul>
-                            <li>Enter what you're doing in the activity field</li>
-                            <li>Add #hashtags for easy categorization</li>
-                            <li>Use the "Mark as Todo" button for tasks that need completion</li>
-                            <li>Use the "Mark as Note" button for reference items (excluded from reports)</li>
-                            <li>Set due dates for todos using quick-set buttons</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Search & Navigation</h4>
-                        <ul>
-                            <li>Use the global search to find activities, todos, and hashtags</li>
-                            <li>Click the 🏷️ button to browse hashtags in a visual cloud</li>
-                            <li>Click any hashtag to search for related items</li>
-                            <li>Use pagination controls to navigate through large lists</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Managing Todos</h4>
-                        <ul>
-                            <li>View all todos in the dedicated "To Do" section</li>
-                            <li>Filter by status, due date, or category</li>
-                            <li>Click "Mark Complete" to finish todos</li>
-                            <li>Overdue items are highlighted in red</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Reports</h4>
-                        <ul>
-                            <li>Generate weekly, custom date range, or template-based reports</li>
-                            <li>Export reports in HTML, Markdown, or CSV formats</li>
-                            <li>Create custom report templates with variables</li>
-                            <li>Include/exclude completed todos from reports</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Pomodoro Mode (Optional)</h4>
-                        <ul>
-                            <li>Enable Pomodoro technique with customizable work/break intervals</li>
-                            <li>Automatic activity logging during Pomodoro sessions</li>
-                            <li>Audio notifications for work/break transitions</li>
-                            <li>Focus timer to help maintain productivity</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Settings & Customization</h4>
-                        <ul>
-                            <li>Customize notification intervals and activity hours</li>
-                            <li>Choose from multiple notification sounds</li>
-                            <li>Switch between light/dark themes</li>
-                            <li>Set pagination size for better navigation</li>
-                            <li>All settings auto-save as you change them</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="guide-section">
-                        <h4>Data Management</h4>
-                        <ul>
-                            <li>Export your data as JSON backup</li>
-                            <li>Import previously exported data</li>
-                            <li>Data is stored locally in your browser</li>
-                            <li>Works offline after initial load</li>
-                        </ul>
-                    </div>
-                </div>
+                {{USER_GUIDE_CONTENT}}
             </div>
         </div>
     </div>
@@ -1548,7 +1307,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
     <div id="notificationPermissionModal" class="modal">
         <div class="modal-content notification-permission-content">
             <div class="modal-header">
-                <h3>Enable System Notifications?</h3>
+                <h3>t('modals.notificationSetup.title')</h3>
             </div>
             <div class="modal-body">
                 <div class="notification-permission-info">
@@ -1649,13 +1408,83 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 
                 <div class="workspace-actions">
                     <div class="create-workspace">
-                        <input type="text" id="newWorkspaceName" placeholder="Enter workspace name..." maxlength="50">
+                        <input type="text" id="newWorkspaceName" placeholder="t('modals.workspaceManager.enterName')" maxlength="50">
                         <button class="btn btn-primary" onclick="createNewWorkspace()">Create Workspace</button>
                     </div>
                 </div>
                 
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeWorkspaceManager()">Close</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeWorkspaceManager()">t('common.close')</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Picker Modal -->
+    <div id="languagePickerModal" class="modal">
+        <div class="modal-content language-picker-content">
+            <div class="modal-header">
+                <h3>t('modals.languagePicker.title')</h3>
+                <button class="btn-close" onclick="closeLanguagePicker()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="language-grid">
+                    <button class="language-option" onclick="changeLanguage('en')" data-lang="en">
+                        <span class="language-flag">🇬🇧</span>
+                        <span class="language-native">English</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('fr')" data-lang="fr">
+                        <span class="language-flag">🇫🇷</span>
+                        <span class="language-native">Français</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('de')" data-lang="de">
+                        <span class="language-flag">🇩🇪</span>
+                        <span class="language-native">Deutsch</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('es')" data-lang="es">
+                        <span class="language-flag">🇪🇸</span>
+                        <span class="language-native">Español</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('it')" data-lang="it">
+                        <span class="language-flag">🇮🇹</span>
+                        <span class="language-native">Italiano</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('pt')" data-lang="pt">
+                        <span class="language-flag">🇵🇹</span>
+                        <span class="language-native">Português</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('zh')" data-lang="zh">
+                        <span class="language-flag">🇨🇳</span>
+                        <span class="language-native">简体中文</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('ja')" data-lang="ja">
+                        <span class="language-flag">🇯🇵</span>
+                        <span class="language-native">日本語</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('cy')" data-lang="cy">
+                        <span class="language-flag">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>
+                        <span class="language-native">Cymraeg</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('ru')" data-lang="ru">
+                        <span class="language-flag">🇷🇺</span>
+                        <span class="language-native">Русский</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('nl')" data-lang="nl">
+                        <span class="language-flag">🇳🇱</span>
+                        <span class="language-native">Nederlands</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('ko')" data-lang="ko">
+                        <span class="language-flag">🇰🇷</span>
+                        <span class="language-native">한국어</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('el')" data-lang="el">
+                        <span class="language-flag">🇬🇷</span>
+                        <span class="language-native">Ελληνικά</span>
+                    </button>
+                    <button class="language-option" onclick="changeLanguage('ar')" data-lang="ar">
+                        <span class="language-flag">🇸🇦</span>
+                        <span class="language-native">العربية</span>
+                    </button>
                 </div>
             </div>
         </div>

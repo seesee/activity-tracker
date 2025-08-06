@@ -72,6 +72,7 @@ class ActivityTracker {
             notificationSoundType: "classic",
             darkModePreference: 'system', // 'light', 'dark', 'system'
             paginationSize: 20,
+            dateFormat: 'default',
             warnOnActivityDelete: true,
             warnOnSessionReset: true
         };
@@ -116,6 +117,11 @@ class ActivityTracker {
         this.updateDebugInfo();
         this.updatePauseButtonState();
         this.updateHeaderWorkspaceName();
+        
+        // Initialize date input formatters
+        setTimeout(() => {
+            initializeDateInputFormatters();
+        }, 100);
         
         // Only start notifications if auto-start is enabled
         if (this.settings.autoStartAlerts) {
@@ -506,14 +512,14 @@ class ActivityTracker {
             const todoBtn = document.getElementById('todoToggleBtn');
             if (todoBtn) {
                 todoBtn.classList.remove('active');
-                todoBtn.textContent = 'Mark as Todo';
+                todoBtn.textContent = t('tracker.markTodo');
             }
             
             // Reset note mode button
             const noteBtn = document.getElementById('noteToggleBtn');
             if (noteBtn) {
                 noteBtn.classList.remove('active');
-                noteBtn.textContent = 'Mark as Note';
+                noteBtn.textContent = t('tracker.markNote');
             }
             this.setCurrentTime();
             document.getElementById('activity').focus();
@@ -742,6 +748,11 @@ class ActivityTracker {
                 entry.dueDate ? new Date(entry.dueDate).toISOString().slice(0, 16) : '';
             
             document.getElementById('editModal').style.display = 'block';
+            
+            // Initialize date formatters for the modal
+            setTimeout(() => {
+                initializeDateInputFormatters();
+            }, 50);
         }
     }
     
@@ -757,14 +768,14 @@ class ActivityTracker {
             button.dataset.isTodo = isTodo.toString();
             if (isTodo) {
                 button.classList.add('active');
-                buttonText.textContent = 'Remove from Todos';
+                buttonText.textContent = t('tracker.removeFromTodos');
                 // Show due date section when in todo mode
                 if (editDueDateSection) {
                     editDueDateSection.style.display = 'block';
                 }
             } else {
                 button.classList.remove('active');
-                buttonText.textContent = 'Mark as Todo';
+                buttonText.textContent = t('tracker.markTodo');
                 // Hide due date section when not in todo mode
                 if (editDueDateSection) {
                     editDueDateSection.style.display = 'none';
@@ -784,10 +795,10 @@ class ActivityTracker {
             button.dataset.isNote = isNote.toString();
             if (isNote) {
                 button.classList.add('active');
-                buttonText.textContent = 'Remove from Notes';
+                buttonText.textContent = t('tracker.removeFromNotes');
             } else {
                 button.classList.remove('active');
-                buttonText.textContent = 'Mark as Note';
+                buttonText.textContent = t('tracker.markNote');
             }
         }
     }
@@ -890,8 +901,8 @@ class ActivityTracker {
 
         // For todo section, show created time instead of timestamp, and optionally show todo indicator
         const timeToShow = showCreatedTime && entry.created ? entry.created : entry.timestamp;
-        const todoIndicator = (showTodoIndicator && entry.isTodo) ? '<span class="entry-todo-indicator">📋 Todo</span>' : '';
-        const noteIndicator = (showNoteIndicator && entry.isNote) ? '<span class="entry-note-indicator">📝 Note</span>' : '';
+        const todoIndicator = (showTodoIndicator && entry.isTodo) ? '<span class="entry-todo-indicator">📋 t(\'common.todoTag\')</span>' : '';
+        const noteIndicator = (showNoteIndicator && entry.isNote) ? '<span class="entry-note-indicator">📝 t(\'common.noteTag\')</span>' : '';
 
         // Process description with inline hashtags
         const processedDescription = entry.description ? this.renderDescriptionWithInlineHashtags(entry.description, entry.tags) : '';
@@ -905,9 +916,9 @@ class ActivityTracker {
                     ${dueDateHtml}
                 </div>
                 <div class="entry-actions">
-                    ${entry.isTodo ? `<button class="btn btn-success btn-small" onclick="tracker.completeEntry('${entry.id}')" title="Mark as completed">Mark Complete</button>` : ''}
-                    <button class="btn btn-secondary btn-small" onclick="tracker.editEntry('${entry.id}')">Edit</button>
-                    <button class="btn btn-danger btn-small" onclick="tracker.deleteEntry('${entry.id}')">Delete</button>
+                    ${entry.isTodo ? `<button class="btn btn-success btn-small" onclick="tracker.completeEntry('${entry.id}')" title="t('common.markComplete')">t('common.markComplete')</button>` : ''}
+                    <button class="btn btn-secondary btn-small" onclick="tracker.editEntry('${entry.id}')">t('common.edit')</button>
+                    <button class="btn btn-danger btn-small" onclick="tracker.deleteEntry('${entry.id}')">t('common.delete')</button>
                 </div>
             </div>
         `;
@@ -994,6 +1005,7 @@ class ActivityTracker {
             hasRequestedNotificationPermission: this.settings.hasRequestedNotificationPermission, // Don't override this from form
             sendSystemNotifications: document.getElementById('sendSystemNotifications')?.value === 'true',
             paginationSize: parseInt(document.getElementById('paginationSize').value),
+            dateFormat: document.getElementById('dateFormat')?.value || 'default',
             warnOnActivityDelete: document.getElementById('warnOnActivityDelete')?.value === 'true',
             warnOnSessionReset: document.getElementById('warnOnSessionReset')?.value === 'true',
             workingDays: {
@@ -1019,6 +1031,9 @@ class ActivityTracker {
             localStorage.setItem('activitySettings', JSON.stringify(this.settings));
             this.applyTheme();
             this.startNotificationTimer();
+            
+            // If date format changed, refresh displayed entries
+            this.refreshDisplayedEntries();
             
             // Update Pomodoro manager if it exists
             if (this.pomodoroManager) {
@@ -1327,6 +1342,7 @@ class ActivityTracker {
         document.getElementById('darkModePreference').value = this.settings.darkModePreference;
         document.getElementById('autoStartAlerts').value = this.settings.autoStartAlerts.toString();
         document.getElementById('paginationSize').value = this.settings.paginationSize;
+        document.getElementById('dateFormat').value = this.settings.dateFormat || 'default';
         document.getElementById('sendSystemNotifications').value = this.settings.sendSystemNotifications.toString();
         document.getElementById('warnOnActivityDelete').value = this.settings.warnOnActivityDelete.toString();
         document.getElementById('warnOnSessionReset').value = this.settings.warnOnSessionReset.toString();
@@ -1388,6 +1404,43 @@ class ActivityTracker {
     /**
      * Apply the current theme (light/dark)
      */
+    /**
+     * Refresh displayed entries to reflect new date format
+     */
+    refreshDisplayedEntries() {
+        try {
+            // Refresh the current page of entries
+            this.displayEntries();
+            
+            // Also refresh todos and notes if they're currently displayed
+            const todosEl = document.getElementById('todos');
+            if (todosEl && todosEl.style.display !== 'none') {
+                this.displayTodos();
+            }
+            
+            const notesEl = document.getElementById('notes');
+            if (notesEl && notesEl.style.display !== 'none') {
+                this.displayNotes();
+            }
+            
+            // Refresh search results if they're displayed
+            const searchEl = document.getElementById('search');
+            const searchInputEl = document.getElementById('searchInput');
+            if (searchEl && searchEl.style.display !== 'none' && searchInputEl) {
+                const searchQuery = searchInputEl.value.trim();
+                if (searchQuery) {
+                    this.performSearch(searchQuery);
+                }
+            }
+            
+            // Update date input formatters to reflect new format
+            updateDateInputFormatters();
+        } catch (error) {
+            console.error('Error refreshing displayed entries:', error);
+            // Don't let this error break the settings save
+        }
+    }
+
     applyTheme() {
         let shouldUseDarkMode = false;
         
@@ -1626,26 +1679,26 @@ class ActivityTracker {
             indicatorEl.className = 'status-indicator status-active';
             
             if (this.settings.hasRequestedNotificationPermission && this.settings.sendSystemNotifications && Notification.permission === 'granted') {
-                textEl.textContent = 'Activity reminders active with system notifications';
+                textEl.textContent = t('status.remindersActiveWithSystem');
             } else {
-                textEl.textContent = 'Activity reminders active with sound alerts';
+                textEl.textContent = t('status.remindersActiveWithSound');
             }
             
-            if (enableBtn) enableBtn.textContent = 'Turn off activity reminders';
+            if (enableBtn) enableBtn.textContent = t('status.turnOffReminders');
         } else {
             // Activity reminders are OFF
             statusEl.className = 'notification-status notification-warning';
             indicatorEl.className = 'status-indicator status-inactive';
             textEl.textContent = 'Activity reminders are disabled';
-            if (enableBtn) enableBtn.textContent = 'Turn on activity reminders';
+            if (enableBtn) enableBtn.textContent = t('status.turnOnReminders');
         }
 
         // Special case for unsupported browsers
         if (!this.isNotificationSupported()) {
             if (this.settings.notificationsEnabled) {
-                textEl.textContent = 'Activity reminders active with sound alerts only';
+                textEl.textContent = t('status.remindersActiveWithSound');
             } else {
-                textEl.textContent = 'Activity reminders are disabled';
+                textEl.textContent = t('status.remindersDisabled');
             }
         }
     }
@@ -2412,7 +2465,7 @@ class ActivityTracker {
 
             // Confirm import action
             const entriesCount = backupData.entries.length;
-            const backupDate = backupData.timestamp ? new Date(backupData.timestamp).toLocaleDateString('en-GB') : 'unknown date';
+            const backupDate = backupData.timestamp ? formatDate(new Date(backupData.timestamp)) : 'unknown date';
             
             if (!confirm(`Import ${entriesCount} entries from backup created on ${backupDate}? This will replace all current data.`)) {
                 return;

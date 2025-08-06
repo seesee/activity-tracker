@@ -1,0 +1,622 @@
+{
+  "meta": {
+    "language": "한국어",
+    "languageCode": "ko",
+    "locale": "ko-KR",
+    "filename": "index.ko.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "yyyy. M. d.",
+      "long": "yyyy년 M월 d일",
+      "weekday": "EEEE",
+      "monthYear": "yyyy년 M월"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ".",
+      "thousands": ",",
+      "currency": "₩"
+    }
+  },
+  "app": {
+    "title": "활동 추적기",
+    "tagline": "작업 일기, 정리도구 및 지식베이스",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "offline": "앱 오프라인"
+  },
+  "navigation": {
+    "tracker": "📝 추적기",
+    "todo": "✅ 할 일",
+    "notes": "📔 메모",
+    "alert": "⚠️ 알림",
+    "alertTitle": "기한 지난 항목 보기",
+    "startReminders": "알림 시작",
+    "startPomodoro": "🍅 뽀모도로 시작",
+    "settingsMenu": "설정 메뉴",
+    "burgerMenu": {
+      "tracker": "추적기",
+      "notes": "메모",
+      "todo": "할 일",
+      "reports": "보고서",
+      "workspaces": "작업공간",
+      "settings": "설정...",
+      "diagnostics": "진단",
+      "language": "언어",
+      "userGuide": "사용자 가이드",
+      "about": "정보"
+    }
+  },
+  "search": {
+    "placeholder": "활동, 작업, 해시태그 검색...",
+    "browseHashtags": "해시태그 찾아보기",
+    "results": "검색 결과",
+    "noResults": "위의 검색창을 사용하여 활동, 작업, 해시태그를 찾아보세요.",
+    "resultCount": "{count}개 결과",
+    "sortBy": "정렬:",
+    "show": "표시:",
+    "filters": {
+      "relevance": "관련성",
+      "newestFirst": "최신순",
+      "oldestFirst": "오래된순",
+      "activityAZ": "활동 가나다순",
+      "activityZA": "활동 역순",
+      "allItems": "모든 항목",
+      "activitiesOnly": "활동만",
+      "todosOnly": "할 일만",
+      "completedOnly": "완료된 것만"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "뽀모도로 모드 비활성화됨",
+    "pause": "일시정지",
+    "nextReminder": "다음 활동 알림:",
+    "checkingNotifications": "알림 상태 확인 중...",
+    "remindersActiveWithSystem": "Reminders active with system notifications",
+    "remindersActiveWithSound": "Reminders active with sound alerts",
+    "turnOffReminders": "Turn off reminders",
+    "remindersDisabled": "Reminders are disabled",
+    "turnOnReminders": "Turn on reminders",
+    "paused": "Paused",
+    "readyToStart": "Ready to start"
+  },
+  "tracker": {
+    "title": "활동 입력",
+    "hideShowForm": "양식 숨기기/보이기",
+    "activityLabel": "무엇을 하고 계십니까?",
+    "activityPlaceholder": "예: 보고서 작성, 팀 회의 #업무",
+    "descriptionLabel": "설명 (선택사항)",
+    "descriptionPlaceholder": "이 활동에 대한 추가 세부사항",
+    "timeLabel": "시간",
+    "markTodoTitle": "할 일로 표시 (Ctrl+T로 전환)",
+    "markTodo": "할 일로 표시",
+    "markNoteTitle": "메모로 표시 (Ctrl+N으로 전환)",
+    "markNote": "메모로 표시",
+    "removeFromTodos": "할 일에서 제거",
+    "removeFromNotes": "메모에서 제거",
+    "todoActive": "✓ 할 일",
+    "noteActive": "✓ 메모",
+    "dueDateLabel": "마감일 (선택사항)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1일",
+      "plus1d": "+1일",
+      "minus1w": "-1주",
+      "plus1w": "+1주",
+      "minus1m": "-1월",
+      "plus1m": "+1월"
+    },
+    "addEntry": "항목 추가",
+    "reset": "리셋",
+    "recentEntries": "최근 항목",
+    "previous": "‹ 이전",
+    "next": "다음 ›",
+    "placeholders": {
+      "trackerActivity": "Activity placeholder",
+      "trackerDescription": "Description placeholder"
+    }
+  },
+  "todo": {
+    "newTodo": "새 할 일",
+    "todoLabel": "무엇을 해야 합니까?",
+    "todoPlaceholder": "예: 프로젝트 관련 고객 전화, 예산 검토 #업무",
+    "descriptionLabel": "설명 (선택사항)",
+    "descriptionPlaceholder": "이 할 일 항목에 대한 추가 세부사항",
+    "markTodoTitle": "할 일로 표시",
+    "markNoteTitle": "메모로 표시",
+    "addTodo": "할 일 추가",
+    "newTodoNote": "새 할 일 메모",
+    "todoNoteLabel": "무엇을 메모하고 수행해야 합니까?",
+    "todoNoteDescription": "메모 세부사항 및 할 일 설명",
+    "addTodoNote": "할 일 메모 추가",
+    "todoList": "할 일 목록",
+    "filter": "필터:",
+    "sortBy": "정렬:",
+    "filters": {
+      "allTodos": "모든 할 일",
+      "dueToday": "오늘 마감",
+      "overdue": "기한 지남",
+      "noDueDate": "마감일 없음"
+    },
+    "sorting": {
+      "newestFirst": "최신순",
+      "oldestFirst": "오래된순",
+      "dueDateEarliest": "마감일 (빠른순)",
+      "dueDateLatest": "마감일 (늦은순)",
+      "activityAZ": "활동 가나다순",
+      "activityZA": "활동 역순"
+    },
+    "todoCount": "{count}개 할 일",
+    "noTodos": "할 일이 없습니다. 활동을 할 일로 추가하여 여기서 확인하세요!",
+    "pagination": {
+      "previous": "← 이전",
+      "next": "다음 →",
+      "pageInfo": "{total} 중 {current} 페이지"
+    },
+    "markCompleteHelp": "\"완료로 표시\"를 클릭하여 할 일을 완료하세요",
+    "placeholders": {
+      "todoActivity": "Todo activity placeholder",
+      "todoDescription": "Todo description placeholder"
+    }
+  },
+  "notes": {
+    "newNote": "새 메모",
+    "titleLabel": "메모 제목 또는 주제",
+    "titlePlaceholder": "예: 회의 메모, 프로젝트 아이디어 #브레인스토밍",
+    "contentLabel": "메모 내용",
+    "contentPlaceholder": "여기에 메모 내용을 작성하세요...",
+    "addNote": "메모 추가",
+    "notesTitle": "메모",
+    "filters": {
+      "allNotes": "모든 메모",
+      "today": "오늘",
+      "thisWeek": "이번 주",
+      "thisMonth": "이번 달"
+    },
+    "sort": "정렬:",
+    "sorting": {
+      "newestFirst": "최신순",
+      "oldestFirst": "오래된순",
+      "activityName": "활동 이름"
+    },
+    "searchPlaceholder": "메모 검색...",
+    "clear": "지우기",
+    "noNotes": "메모가 없습니다.",
+    "placeholders": {
+      "noteActivity": "Note activity placeholder",
+      "noteDescription": "Note description placeholder"
+    }
+  },
+  "reports": {
+    "title": "활동 보고서",
+    "dateRange": "날짜 범위",
+    "dateRangeDescription": "보고서의 기간을 선택하세요",
+    "startDateTitle": "보고서의 시작일을 선택하세요",
+    "startDateLabel": "시작일",
+    "endDateTitle": "보고서의 종료일을 선택하세요",
+    "endDateLabel": "종료일",
+    "generateReportTitle": "선택한 날짜 범위에 대한 보고서 생성",
+    "generateReport": "보고서 생성",
+    "thisWeekTitle": "날짜 범위를 현재 주로 설정",
+    "thisWeek": "이번 주",
+    "templateOptions": "템플릿 및 옵션",
+    "templateOptionsDescription": "형식과 옵션을 선택하고 보고서를 다운로드하세요",
+    "reportTemplateTitle": "보고서의 형식을 선택하세요",
+    "reportTemplateLabel": "보고서 템플릿",
+    "todoItems": "할 일 항목:",
+    "todoOptions": {
+      "excludeAll": "모든 할 일 제외",
+      "incompleteOnly": "미완료 할 일만 포함",
+      "includeAll": "모든 할 일 포함"
+    },
+    "notes": "메모:",
+    "noteOptions": {
+      "exclude": "메모 제외",
+      "include": "메모 포함"
+    },
+    "downloadReportTitle": "생성된 보고서 다운로드",
+    "downloadReport": "보고서 다운로드",
+    "openNewTabTitle": "생성된 보고서를 새 탭에서 열기",
+    "openNewTab": "새 탭에서 열기",
+    "weekNavigation": {
+      "previous": "← 이전 주",
+      "next": "다음 주 →",
+      "weekOf": "{date} 주"
+    },
+    "reportPreview": "보고서 미리보기",
+    "viewFormattedTitle": "보고서의 형식화된 출력 보기",
+    "rendered": "렌더링됨",
+    "viewSourceTitle": "보고서의 원본 소스 코드 보기",
+    "source": "소스",
+    "copyReportTitle": "보고서 내용을 클립보드에 복사",
+    "copyReport": "보고서 복사",
+    "selectDateRange": "날짜 범위를 선택하고 보고서를 생성하여 미리보기를 확인하세요.",
+    "reportTemplates": "보고서 템플릿",
+    "templatesDescription": "보고서 생성을 위한 템플릿 관리",
+    "manageTemplatesTitle": "템플릿 편집기를 열어 보고서 템플릿을 생성하고 수정",
+    "manageTemplates": "템플릿 관리",
+    "resetDefaultTitle": "모든 템플릿을 원래 기본 버전으로 복원",
+    "resetDefault": "기본값으로 리셋",
+    "templateGuideTitle": "템플릿 구문 및 사용 가능한 데이터에 대한 도움말 문서 보기",
+    "templateGuide": "📋 템플릿 가이드"
+  },
+  "settings": {
+    "title": "설정",
+    "enableReminders": "알림 활성화",
+    "generalSettings": "일반 설정",
+    "generalDescription": "모든 작동 모드에 적용되는 설정",
+    "colourThemeTitle": "색상 테마 기본 설정 선택",
+    "colourTheme": "색상 테마",
+    "themeOptions": {
+      "system": "시스템 설정 따르기",
+      "light": "밝은 모드",
+      "dark": "어두운 모드"
+    },
+    "soundSettingsTitle": "음소거할 소리 선택",
+    "soundSettings": "소리 설정",
+    "soundOptions": {
+      "allEnabled": "모든 소리 활성화",
+      "muteAll": "모든 소리 음소거",
+      "mutePomodoroOnly": "뽀모도로 소리만 음소거",
+      "muteNotificationOnly": "알림 소리만 음소거"
+    },
+    "itemsPerPageTitle": "목록에서 페이지당 표시할 항목 수",
+    "itemsPerPage": "페이지당 항목",
+    "itemsPerPageOptions": {
+      "10": "10개 항목",
+      "20": "20개 항목",
+      "30": "30개 항목",
+      "50": "50개 항목",
+      "100": "100개 항목"
+    },
+    "systemNotificationsTitle": "운영체제에 시스템 알림 보내기",
+    "systemNotifications": "시스템 알림",
+    "dateFormatTitle": "선호하는 날짜 표시 형식을 선택하세요",
+    "dateFormat": "날짜 형식",
+    "dateFormatOptions": {
+      "default": "기본값 (로케일 기반)",
+      "iso": "ISO 8601 (YYYY-MM-DD)",
+      "us": "미국 형식 (MM/DD/YYYY)",
+      "european": "유럽식 (DD/MM/YYYY)",
+      "short": "간단한 형식",
+      "long": "긴 형식"
+    },
+    "yesNo": {
+      "yes": "예",
+      "no": "아니오"
+    },
+    "reminderSettings": "알림 설정",
+    "reminderIntervalTitle": "활동 알림을 받는 빈도",
+    "reminderInterval": "알림 간격",
+    "intervals": {
+      "1min": "1분",
+      "2min": "2분",
+      "5min": "5분",
+      "15min": "15분",
+      "30min": "30분",
+      "1hour": "1시간",
+      "1.5hour": "1.5시간",
+      "2hour": "2시간",
+      "3hour": "3시간",
+      "4hour": "4시간"
+    },
+    "pauseResumeTitle": "경고가 일시정지된 후 자동으로 재개되기까지의 시간",
+    "pauseResume": "일시정지 시, 다음 시간 후 재개",
+    "never": "안 함",
+    "autoStartTitle": "앱을 열 때 자동으로 알림 시작",
+    "autoStart": "앱 열 때 알림 자동 시작",
+    "reminderSoundTitle": "알림과 함께 재생될 소리 선택",
+    "reminderSound": "알림 소리"
+  },
+  "schedule": {
+    "title": "활동 일정",
+    "description": "알림을 위한 활성 활동 시간과 요일 설정",
+    "activityHours": "활동 시간",
+    "complexScheduleTitle": "하루에 여러 시간대를 가지는 복잡한 일정 활성화",
+    "complexSchedule": "복잡한 일정",
+    "startTimeTitle": "활동 기간 시작 시간",
+    "startTime": "시작 시간",
+    "endTimeTitle": "활동 기간 종료 시간",
+    "endTime": "종료 시간",
+    "complexDescription": "복잡한 일정을 수용하기 위해 각 날에 대해 여러 시간대를 설정하세요.",
+    "days": {
+      "monday": "월요일",
+      "tuesday": "화요일",
+      "wednesday": "수요일",
+      "thursday": "목요일",
+      "friday": "금요일",
+      "saturday": "토요일",
+      "sunday": "일요일"
+    },
+    "addRange": "+ 시간대 추가",
+    "activityDays": "활동 요일",
+    "datePreview": {
+      "prefix": "Preview: "
+    }
+  },
+  "pomodoro": {
+    "title": "뽀모도로 모드",
+    "description": "자동 알림이 있는 구조화된 작업/휴식 간격",
+    "enableTitle": "작업 및 휴식 경고가 있는 뽀모도로 타이밍 모드 활성화",
+    "enable": "뽀모도로 모드 활성화",
+    "workDurationTitle": "작업 기간의 분 단위 길이",
+    "workDuration": "작업 시간 (분)",
+    "workDurations": {
+      "15": "15분",
+      "20": "20분",
+      "25": "25분",
+      "30": "30분",
+      "45": "45분",
+      "60": "60분"
+    },
+    "shortBreakTitle": "짧은 휴식 기간의 분 단위 길이",
+    "shortBreak": "짧은 휴식 시간 (분)",
+    "shortBreakDurations": {
+      "3": "3분",
+      "5": "5분",
+      "10": "10분",
+      "15": "15분"
+    },
+    "longBreakTitle": "긴 휴식 기간의 분 단위 길이",
+    "longBreak": "긴 휴식 시간 (분)",
+    "sessionsBeforeLongTitle": "긴 휴식을 취하기 전의 작업 세션 수",
+    "sessionsBeforeLong": "긴 휴식 전 세션",
+    "sessionOptions": {
+      "2": "2세션마다",
+      "3": "3세션마다",
+      "4": "4세션마다",
+      "5": "5세션마다",
+      "6": "6세션마다"
+    },
+    "tickSounds": "틱 소리",
+    "tickSoundTitle": "작업 세션 중임을 알려주는 선택적 틱 소리",
+    "tickSoundType": "틱 소리 유형",
+    "tickOptions": {
+      "none": "틱 소리 없음",
+      "soft": "부드러운 틱",
+      "classic": "클래식 틱",
+      "digital": "디지털 틱"
+    },
+    "tickIntervalTitle": "틱 소리를 재생하는 간격 (초)",
+    "tickInterval": "틱 간격 (초)",
+    "tickIntervals": {
+      "off": "끄기 (틱 소리 없음)",
+      "1": "1초마다",
+      "2": "2초마다",
+      "3": "3초마다",
+      "5": "5초마다",
+      "10": "10초마다",
+      "15": "15초마다",
+      "30": "30초마다",
+      "60": "60초마다"
+    },
+    "announceSounds": "알림 소리",
+    "shortBreakAnnounceTitle": "짧은 휴식 시작 시 재생할 소리",
+    "shortBreakAnnounce": "짧은 휴식 알림",
+    "longBreakAnnounceTitle": "긴 휴식 시작 시 재생할 소리",
+    "longBreakAnnounce": "긴 휴식 알림",
+    "resumeWorkAnnounceTitle": "휴식 후 작업 재개 시 재생할 소리",
+    "resumeWorkAnnounce": "작업 재개 알림",
+    "options": "옵션",
+    "autoStartTitle": "수동 개입 없이 자동으로 다음 세션 시작",
+    "autoStart": "다음 세션 자동 시작",
+    "promptDescriptionsTitle": "활동 설명을 요청하고 작업 세션에 대한 로그 엔트리 생성",
+    "promptDescriptions": "작업 세션 설명 요청",
+    "logBreaksTitle": "활동 추적기에서 휴식 세션도 로그",
+    "logBreaks": "휴식 세션도 로그",
+    "enableLongBreaksTitle": "여러 세션 완료 후 긴 휴식 활성화",
+    "enableLongBreaks": "긴 휴식 활성화",
+    "allowPausingTitle": "배너에서 뽀모도로 세션 일시정지 허용",
+    "allowPausing": "세션 일시정지 허용",
+    "autoResetDailyTitle": "날이 바뀔 때 세션 카운터를 1로 자동 리셋",
+    "autoResetDaily": "매일 세션 자동 리셋",
+    "sessionManagement": "세션 관리",
+    "resetCounterTitle": "세션 카운터를 1로 리셋",
+    "resetCounter": "세션 카운터 리셋"
+  },
+  "dataManagement": {
+    "backup": "데이터베이스 백업",
+    "backupDescription": "활동 데이터를 내보내기 또는 가져오기",
+    "exportDatabase": "데이터베이스 내보내기",
+    "importDatabase": "데이터베이스 가져오기",
+    "warningSettings": "경고 설정",
+    "warningDescription": "파괴적 작업에 대한 확인 대화상자 구성",
+    "warnDeleteTitle": "활동 삭제 시 확인 대화상자 표시",
+    "warnDelete": "활동 삭제 시 경고",
+    "warnResetTitle": "뽀모도로 세션 카운터 리셋 시 확인 대화상자 표시",
+    "warnReset": "세션 리셋 시 경고",
+    "forceManualSave": "수동 저장 강제"
+  },
+  "diagnostics": {
+    "title": "🔧 진단",
+    "systemTests": "시스템 테스트",
+    "systemTestsDescription": "다양한 시스템 구성 요소와 기능 테스트",
+    "notifications": "🔔 알림",
+    "testReminderTitle": "테스트 알림 보내기",
+    "testReminder": "🧪 테스트 알림",
+    "testSoundTitle": "테스트 알림 소리 재생",
+    "testSound": "🔊 테스트 소리",
+    "refreshStatusTitle": "알림 권한 상태 표시 새로고침",
+    "refreshStatus": "🔄 상태 새로고침",
+    "forceEnableTitle": "알림 권한 대화상자 강제 표시",
+    "forceEnable": "⚡ 강제 활성화",
+    "serviceWorker": "⚙️ 서비스 워커",
+    "runDiagnosticsTitle": "포괄적인 서비스 워커 진단 실행",
+    "runDiagnostics": "🔍 진단 실행",
+    "dataManagement": "⚠️ 데이터 관리",
+    "dataWarning": "이 작업들은 되돌릴 수 없습니다",
+    "clearAllData": "🗑️ 모든 데이터 지우기"
+  },
+  "modals": {
+    "edit": {
+      "title": "항목 편집",
+      "activity": "활동",
+      "description": "설명",
+      "time": "시간",
+      "markTodo": "할 일로 표시",
+      "markNote": "메모로 표시",
+      "dueDate": "마감일 (선택사항)",
+      "update": "항목 업데이트",
+      "cancel": "취소"
+    },
+    "templateManager": {
+      "title": "템플릿 관리자",
+      "saveAll": "모든 변경사항 저장",
+      "close": "닫기",
+      "templates": "템플릿",
+      "addTemplate": "템플릿 추가",
+      "resetAll": "모두 리셋",
+      "selectTemplate": "편집할 템플릿 선택",
+      "save": "저장",
+      "delete": "삭제",
+      "duplicate": "복제",
+      "editor": "편집기",
+      "preview": "미리보기",
+      "templateName": "템플릿 이름",
+      "templateNamePlaceholder": "예: 내 사용자 정의 템플릿",
+      "description": "설명",
+      "descriptionPlaceholder": "템플릿에 대한 간단한 설명",
+      "outputType": "출력 유형",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "일반 텍스트"
+      },
+      "templateContent": "템플릿 내용",
+      "templateContentPlaceholder": "여기에 템플릿 내용을 입력하세요...",
+      "setDefault": "기본 템플릿으로 설정",
+      "previewTitle": "미리보기",
+      "rendered": "렌더링됨",
+      "source": "소스",
+      "refresh": "새로고침",
+      "selectTemplatePreview": "미리보기를 보려면 템플릿을 선택하세요"
+    },
+    "templateGuide": {
+      "title": "템플릿 가이드",
+      "activityDescription": "활동 설명"
+    },
+    "pomodoroActivity": {
+      "title": "작업 세션 활동",
+      "activityLabel": "무엇을 작업하시겠습니까?",
+      "activityPlaceholder": "예: 보고서 작성, 회의 준비",
+      "usePrevious": "이전 활동 사용",
+      "descriptionLabel": "설명 (선택사항)",
+      "descriptionPlaceholder": "이 작업 세션에 대한 추가 세부사항",
+      "startSession": "작업 세션 시작",
+      "cancel": "취소"
+    },
+    "pomodoroAbandon": {
+      "title": "세션 중단",
+      "workedFor": "{minutes}분 동안 작업했습니다",
+      "saveQuestion": "이 부분 세션 동안 달성한 것을 저장하시겠습니까?",
+      "activityLabel": "달성한 활동",
+      "activityPlaceholder": "이 시간 동안 무엇을 작업했습니까?",
+      "descriptionLabel": "설명 (선택사항)",
+      "descriptionPlaceholder": "달성한 것에 대한 추가 세부사항",
+      "saveAbandon": "작업 저장 & 중단",
+      "justAbandon": "그냥 중단"
+    },
+    "confirmation": {
+      "title": "작업 확인",
+      "defaultMessage": "이 작업을 수행하시겠습니까?",
+      "dontAskAgain": "이 유형의 작업에 대해 다시 묻지 않기",
+      "confirm": "확인",
+      "cancel": "취소"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ 활동 시간 정보",
+      "alertsOff": "활동 시간 외에는 알림이 꺼집니다.",
+      "configure": "⚙️ 활동 시간 구성",
+      "gotIt": "알겠습니다"
+    },
+    "overdueAlert": {
+      "title": "⚠️ 기한 넘은 항목",
+      "message": "다음 항목들이 마감일을 넘겼습니다:",
+      "gotIt": "알겠습니다"
+    },
+    "hashtagBrowser": {
+      "title": "해시태그 브라우저",
+      "count": "{count}개 해시태그 발견",
+      "noHashtags": "해시태그가 없습니다. #해시태그가 있는 활동을 추가하여 여기서 확인하세요!"
+    },
+    "userGuide": {
+      "title": "사용자 가이드",
+      "settingsCustomization": "설정 및 사용자 정의"
+    },
+    "notificationSetup": {
+      "title": "시스템 알림을 활성화하시겠습니까?",
+      "appName": "활동 추적기",
+      "enableOption": "✅ 시스템 알림 활성화",
+      "soundOption": "🔊 소리만",
+      "enableButton": "시스템 알림 활성화",
+      "soundButton": "소리만"
+    },
+    "about": {
+      "title": "활동 추적기 정보",
+      "appInfo": "애플리케이션 정보",
+      "versionHistory": "버전 히스토리",
+      "loadingVersion": "버전 히스토리 로딩 중...",
+      "appName": "활동 추적기",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ GitHub에서 보기"
+    },
+    "workspaceManager": {
+      "title": "🏢 작업공간 관리자",
+      "currentWorkspace": "현재 작업공간: {name}",
+      "description": "각 작업공간은 별도의 활동, 설정 및 상태를 유지합니다...",
+      "availableWorkspaces": "사용 가능한 작업공간",
+      "enterName": "작업공간 이름 입력...",
+      "createWorkspace": "작업공간 생성",
+      "close": "닫기"
+    },
+    "languagePicker": {
+      "title": "🌐 언어 선택"
+    }
+  },
+  "common": {
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기",
+    "yes": "예",
+    "no": "아니오",
+    "ok": "확인",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "warning": "경고",
+    "info": "정보",
+    "none": "없음",
+    "all": "모두",
+    "today": "오늘",
+    "yesterday": "어제",
+    "tomorrow": "내일",
+    "thisWeek": "이번 주",
+    "thisMonth": "이번 달",
+    "minutes": "{count}분",
+    "hours": "{count}시간",
+    "days": "{count}일",
+    "weeks": "{count}주",
+    "months": "{count}개월",
+    "daysOfWeek": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "markComplete": "완료로 표시",
+    "outsideActivityHours": "활동 시간 외",
+    "todoTag": "할 일",
+    "noteTag": "메모"
+  }
+}

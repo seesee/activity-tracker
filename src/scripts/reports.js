@@ -66,7 +66,7 @@ Object.assign(ActivityTracker.prototype, {
 
         const entriesByDate = {};
         processedEntries.forEach(entry => {
-            const date = new Date(entry.timestamp).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const date = formatDate(new Date(entry.timestamp));
             if (!entriesByDate[date]) {
                 entriesByDate[date] = { entries: [], totalDuration: 0 };
             }
@@ -408,7 +408,10 @@ ${content}
         const monday = new Date(this.currentWeekStart);
         const sunday = getWeekEnd(monday);
 
-        const weekText = `Week of ${monday.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} - ${sunday.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+        const format = getDateFormatOptions('date');
+        const startDate = monday.toLocaleDateString(format.locale, { day: 'numeric', month: 'short' });
+        const endDate = sunday.toLocaleDateString(format.locale, { day: 'numeric', month: 'short', year: 'numeric' });
+        const weekText = `Week of ${startDate} - ${endDate}`;
         
         document.getElementById('weekDisplay').textContent = weekText;
     }

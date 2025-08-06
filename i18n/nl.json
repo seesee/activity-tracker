@@ -1,0 +1,622 @@
+{
+  "meta": {
+    "language": "Nederlands",
+    "languageCode": "nl",
+    "locale": "nl-NL",
+    "filename": "index.nl.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "dd-MM-yyyy",
+      "long": "d MMMM yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM yyyy"
+    },
+    "time": {
+      "short": "HH:mm",
+      "long": "HH:mm:ss",
+      "24hour": "HH:mm"
+    },
+    "number": {
+      "decimal": ",",
+      "thousands": ".",
+      "currency": "€"
+    }
+  },
+  "app": {
+    "title": "Activiteiten Tracker",
+    "tagline": "Taakdagboek, organisator en kennisbank",
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden",
+    "offline": "App offline"
+  },
+  "navigation": {
+    "tracker": "📝 Tracker",
+    "todo": "✅ Te Doen",
+    "notes": "📔 Notities",
+    "alert": "⚠️ Waarschuwing",
+    "alertTitle": "Verlopen items bekijken",
+    "startReminders": "Herinneringen Starten",
+    "startPomodoro": "🍅 Pomodoro Starten",
+    "settingsMenu": "Instellingenmenu",
+    "burgerMenu": {
+      "tracker": "Tracker",
+      "notes": "Notities",
+      "todo": "Te Doen",
+      "reports": "Rapporten",
+      "workspaces": "Werkruimtes",
+      "settings": "Instellingen...",
+      "diagnostics": "Diagnostiek",
+      "language": "Taal",
+      "userGuide": "Gebruikershandleiding",
+      "about": "Over"
+    }
+  },
+  "search": {
+    "placeholder": "Zoek activiteiten, taken en hashtags...",
+    "browseHashtags": "Hashtags bladeren",
+    "results": "Zoekresultaten",
+    "noResults": "Gebruik de zoekbalk hierboven om activiteiten, taken en hashtags te vinden.",
+    "resultCount": "{count} resultaa{count, plural, one {t} other {t}}",
+    "sortBy": "Sorteren op:",
+    "show": "Tonen:",
+    "filters": {
+      "relevance": "Relevantie",
+      "newestFirst": "Nieuwste Eerst",
+      "oldestFirst": "Oudste Eerst",
+      "activityAZ": "Activiteit A-Z",
+      "activityZA": "Activiteit Z-A",
+      "allItems": "Alle Items",
+      "activitiesOnly": "Alleen Activiteiten",
+      "todosOnly": "Alleen Taken",
+      "completedOnly": "Alleen Voltooid"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Pomodoro modus uitgeschakeld",
+    "pause": "Pauzeren",
+    "nextReminder": "Volgende activiteitsherinnering over:",
+    "checkingNotifications": "Meldingsstatus controleren...",
+    "remindersActiveWithSystem": "Reminders active with system notifications",
+    "remindersActiveWithSound": "Reminders active with sound alerts",
+    "turnOffReminders": "Turn off reminders",
+    "remindersDisabled": "Reminders are disabled",
+    "turnOnReminders": "Turn on reminders",
+    "paused": "Paused",
+    "readyToStart": "Ready to start"
+  },
+  "tracker": {
+    "title": "Activiteit Invoer",
+    "hideShowForm": "Formulier verbergen/tonen",
+    "activityLabel": "Wat ben je aan het doen?",
+    "activityPlaceholder": "bijv. Rapport schrijven, Teamvergadering #werk",
+    "descriptionLabel": "Beschrijving (optioneel)",
+    "descriptionPlaceholder": "Aanvullende details over deze activiteit",
+    "timeLabel": "Tijd",
+    "markTodoTitle": "Markeren als taak (Ctrl+T om te wisselen)",
+    "markTodo": "Markeren als Taak",
+    "markNoteTitle": "Markeren als notitie (Ctrl+N om te wisselen)",
+    "markNote": "Markeren als Notitie",
+    "removeFromTodos": "Verwijderen uit Taken",
+    "removeFromNotes": "Verwijderen uit Notities",
+    "todoActive": "✓ Taak",
+    "noteActive": "✓ Notitie",
+    "dueDateLabel": "Vervaldatum (optioneel)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1d",
+      "plus1d": "+1d",
+      "minus1w": "-1w",
+      "plus1w": "+1w",
+      "minus1m": "-1m",
+      "plus1m": "+1m"
+    },
+    "addEntry": "Invoer Toevoegen",
+    "reset": "Resetten",
+    "recentEntries": "Recente Invoeren",
+    "previous": "‹ Vorige",
+    "next": "Volgende ›",
+    "placeholders": {
+      "trackerActivity": "Activity placeholder",
+      "trackerDescription": "Description placeholder"
+    }
+  },
+  "todo": {
+    "newTodo": "Nieuwe Taak",
+    "todoLabel": "Wat moet je doen?",
+    "todoPlaceholder": "bijv. Klant bellen over project, Budget herzien #werk",
+    "descriptionLabel": "Beschrijving (optioneel)",
+    "descriptionPlaceholder": "Aanvullende details over deze taak",
+    "markTodoTitle": "Markeren als taak",
+    "markNoteTitle": "Markeren als notitie",
+    "addTodo": "Taak Toevoegen",
+    "newTodoNote": "Nieuwe Taak Notitie",
+    "todoNoteLabel": "Wat moet je noteren en doen?",
+    "todoNoteDescription": "Notitiedetails en taakbeschrijving",
+    "addTodoNote": "Taak Notitie Toevoegen",
+    "todoList": "Takenlijst",
+    "filter": "Filter:",
+    "sortBy": "Sorteren op:",
+    "filters": {
+      "allTodos": "Alle Taken",
+      "dueToday": "Vandaag Vervallen",
+      "overdue": "Verlopen",
+      "noDueDate": "Geen Vervaldatum"
+    },
+    "sorting": {
+      "newestFirst": "Nieuwste Eerst",
+      "oldestFirst": "Oudste Eerst",
+      "dueDateEarliest": "Vervaldatum (Vroegste)",
+      "dueDateLatest": "Vervaldatum (Laatste)",
+      "activityAZ": "Activiteit A-Z",
+      "activityZA": "Activiteit Z-A"
+    },
+    "todoCount": "{count} taa{count, plural, one {k} other {ken}}",
+    "noTodos": "Geen taken gevonden. Voeg activiteiten toe als taken om ze hier te zien!",
+    "pagination": {
+      "previous": "← Vorige",
+      "next": "Volgende →",
+      "pageInfo": "Pagina {current} van {total}"
+    },
+    "markCompleteHelp": "Klik op \"Markeren als Voltooid\" om taken te voltooien",
+    "placeholders": {
+      "todoActivity": "Todo activity placeholder",
+      "todoDescription": "Todo description placeholder"
+    }
+  },
+  "notes": {
+    "newNote": "Nieuwe Notitie",
+    "titleLabel": "Notitietitel of onderwerp",
+    "titlePlaceholder": "bijv. Vergadernotities, Projectideeën #brainstorm",
+    "contentLabel": "Notitie-inhoud",
+    "contentPlaceholder": "Schrijf hier je notitie-inhoud...",
+    "addNote": "Notitie Toevoegen",
+    "notesTitle": "Notities",
+    "filters": {
+      "allNotes": "Alle Notities",
+      "today": "Vandaag",
+      "thisWeek": "Deze Week",
+      "thisMonth": "Deze Maand"
+    },
+    "sort": "Sorteren:",
+    "sorting": {
+      "newestFirst": "Nieuwste Eerst",
+      "oldestFirst": "Oudste Eerst",
+      "activityName": "Activiteitsnaam"
+    },
+    "searchPlaceholder": "Zoeken in notities...",
+    "clear": "Wissen",
+    "noNotes": "Geen notities gevonden.",
+    "placeholders": {
+      "noteActivity": "Note activity placeholder",
+      "noteDescription": "Note description placeholder"
+    }
+  },
+  "reports": {
+    "title": "Activiteitenrapporten",
+    "dateRange": "Datumbereik",
+    "dateRangeDescription": "Selecteer de tijdsperiode voor uw rapport",
+    "startDateTitle": "Kies de startdatum voor uw rapport",
+    "startDateLabel": "Startdatum",
+    "endDateTitle": "Kies de einddatum voor uw rapport",
+    "endDateLabel": "Einddatum",
+    "generateReportTitle": "Rapport genereren voor het geselecteerde datumbereik",
+    "generateReport": "Rapport Genereren",
+    "thisWeekTitle": "Datumbereik instellen op huidige week",
+    "thisWeek": "Deze Week",
+    "templateOptions": "Sjabloon & Opties",
+    "templateOptionsDescription": "Kies formaat, opties en download uw rapport",
+    "reportTemplateTitle": "Selecteer het formaat voor uw rapport",
+    "reportTemplateLabel": "Rapportsjabloon",
+    "todoItems": "Taakitems:",
+    "todoOptions": {
+      "excludeAll": "Alle taken uitsluiten",
+      "incompleteOnly": "Alleen onvolledige taken opnemen",
+      "includeAll": "Alle taken opnemen"
+    },
+    "notes": "Notities:",
+    "noteOptions": {
+      "exclude": "Notities uitsluiten",
+      "include": "Notities opnemen"
+    },
+    "downloadReportTitle": "Het gegenereerde rapport downloaden",
+    "downloadReport": "Rapport Downloaden",
+    "openNewTabTitle": "Het gegenereerde rapport openen in een nieuw tabblad",
+    "openNewTab": "Openen in Nieuw Tabblad",
+    "weekNavigation": {
+      "previous": "← Vorige Week",
+      "next": "Volgende Week →",
+      "weekOf": "Week van {date}"
+    },
+    "reportPreview": "Rapportvoorbeeld",
+    "viewFormattedTitle": "De geformatteerde rapportuitvoer bekijken",
+    "rendered": "Gerenderd",
+    "viewSourceTitle": "De ruwe broncode van het rapport bekijken",
+    "source": "Bron",
+    "copyReportTitle": "Rapportinhoud naar klembord kopiëren",
+    "copyReport": "Rapport Kopiëren",
+    "selectDateRange": "Selecteer een datumbereik en genereer een rapport om een voorbeeld te zien.",
+    "reportTemplates": "Rapportsjablonen",
+    "templatesDescription": "Sjablonen beheren voor rapportgeneratie",
+    "manageTemplatesTitle": "De sjablooneditor openen om rapportsjablonen te maken en wijzigen",
+    "manageTemplates": "Sjablonen Beheren",
+    "resetDefaultTitle": "Alle sjablonen herstellen naar hun oorspronkelijke standaardversies",
+    "resetDefault": "Resetten naar Standaard",
+    "templateGuideTitle": "Helpdocumentatie bekijken voor sjabloonsyntax en beschikbare gegevens",
+    "templateGuide": "📋 Sjabloonhandleiding"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "enableReminders": "Herinneringen Inschakelen",
+    "generalSettings": "Algemene Instellingen",
+    "generalDescription": "Instellingen die van toepassing zijn op alle bedieningsmodi",
+    "colourThemeTitle": "Kies uw kleurthemavoorkeur",
+    "colourTheme": "Kleurthema",
+    "themeOptions": {
+      "system": "Systeeminstellingen volgen",
+      "light": "Lichte modus",
+      "dark": "Donkere modus"
+    },
+    "soundSettingsTitle": "Kies welke geluiden te dempen",
+    "soundSettings": "Geluidsinstellingen",
+    "soundOptions": {
+      "allEnabled": "Alle geluiden ingeschakeld",
+      "muteAll": "Alle geluiden dempen",
+      "mutePomodoroOnly": "Alleen Pomodoro-geluiden dempen",
+      "muteNotificationOnly": "Alleen meldingsgeluiden dempen"
+    },
+    "itemsPerPageTitle": "Aantal items per pagina in lijsten",
+    "itemsPerPage": "Items per pagina",
+    "itemsPerPageOptions": {
+      "10": "10 items",
+      "20": "20 items",
+      "30": "30 items",
+      "50": "50 items",
+      "100": "100 items"
+    },
+    "systemNotificationsTitle": "Systeemmeldingen naar uw besturingssysteem sturen",
+    "systemNotifications": "Systeemmeldingen",
+    "dateFormatTitle": "Kies uw voorkeur voor datumweergaveformaat",
+    "dateFormat": "Datumformaat",
+    "dateFormatOptions": {
+      "default": "Standaard (locale-gebaseerd)",
+      "iso": "ISO 8601 (JJJJ-MM-DD)",
+      "us": "VS-formaat (MM/DD/JJJJ)",
+      "european": "Europees (DD/MM/JJJJ)",
+      "short": "Kort Formaat",
+      "long": "Lang Formaat"
+    },
+    "yesNo": {
+      "yes": "Ja",
+      "no": "Nee"
+    },
+    "reminderSettings": "Herinneringsinstellingen",
+    "reminderIntervalTitle": "Hoe vaak u activiteitsherinneringsmeldingen ontvangt",
+    "reminderInterval": "Herinneringsinterval",
+    "intervals": {
+      "1min": "1 minuut",
+      "2min": "2 minuten",
+      "5min": "5 minuten",
+      "15min": "15 minuten",
+      "30min": "30 minuten",
+      "1hour": "1 uur",
+      "1.5hour": "1,5 uur",
+      "2hour": "2 uur",
+      "3hour": "3 uur",
+      "4hour": "4 uur"
+    },
+    "pauseResumeTitle": "Hoe lang waarschuwingen gepauzeerd blijven voordat ze automatisch hervatten",
+    "pauseResume": "Bij pauzeren, hervatten na",
+    "never": "Nooit",
+    "autoStartTitle": "Herinneringen automatisch starten wanneer de app opent",
+    "autoStart": "Auto-start herinneringen bij het openen van de app",
+    "reminderSoundTitle": "Kies het geluid dat afspeelt bij herinneringen",
+    "reminderSound": "Herinneringsgeluid"
+  },
+  "schedule": {
+    "title": "Activiteitenschema",
+    "description": "Stel uw actieve activiteitsuren en -dagen in voor meldingen",
+    "activityHours": "Activiteitsuren",
+    "complexScheduleTitle": "Complexe planning inschakelen met meerdere tijdsperiodes per dag",
+    "complexSchedule": "Complex Schema",
+    "startTimeTitle": "Wanneer uw activiteitsperiode begint",
+    "startTime": "Starttijd",
+    "endTimeTitle": "Wanneer uw activiteitsperiode eindigt",
+    "endTime": "Eindtijd",
+    "complexDescription": "Stel meerdere tijdsperiodes in voor elke dag om complexe schema's te accommoderen.",
+    "days": {
+      "monday": "Maandag",
+      "tuesday": "Dinsdag",
+      "wednesday": "Woensdag",
+      "thursday": "Donderdag",
+      "friday": "Vrijdag",
+      "saturday": "Zaterdag",
+      "sunday": "Zondag"
+    },
+    "addRange": "+ Bereik Toevoegen",
+    "activityDays": "Activiteitsdagen",
+    "datePreview": {
+      "prefix": "Preview: "
+    }
+  },
+  "pomodoro": {
+    "title": "Pomodoro Modus",
+    "description": "Gestructureerde werk/pauze-intervallen met automatische meldingen",
+    "enableTitle": "Pomodoro-timingmodus inschakelen met werk- en pauzewaarschuwingen",
+    "enable": "Pomodoro Modus Inschakelen",
+    "workDurationTitle": "Lengte van werkperiodes in minuten",
+    "workDuration": "Werkduur (minuten)",
+    "workDurations": {
+      "15": "15 minuten",
+      "20": "20 minuten",
+      "25": "25 minuten",
+      "30": "30 minuten",
+      "45": "45 minuten",
+      "60": "60 minuten"
+    },
+    "shortBreakTitle": "Lengte van korte pauzeperiodes in minuten",
+    "shortBreak": "Korte Pauzeduur (minuten)",
+    "shortBreakDurations": {
+      "3": "3 minuten",
+      "5": "5 minuten",
+      "10": "10 minuten",
+      "15": "15 minuten"
+    },
+    "longBreakTitle": "Lengte van lange pauzeperiodes in minuten",
+    "longBreak": "Lange Pauzeduur (minuten)",
+    "sessionsBeforeLongTitle": "Aantal werksessies voordat u een lange pauze neemt",
+    "sessionsBeforeLong": "Sessies voor lange pauze",
+    "sessionOptions": {
+      "2": "Elke 2 sessies",
+      "3": "Elke 3 sessies",
+      "4": "Elke 4 sessies",
+      "5": "Elke 5 sessies",
+      "6": "Elke 6 sessies"
+    },
+    "tickSounds": "Tikgeluiden",
+    "tickSoundTitle": "Optioneel tikgeluid om u eraan te herinneren dat u in een werksessie bent",
+    "tickSoundType": "Tikgeluidtype",
+    "tickOptions": {
+      "none": "Geen tikken",
+      "soft": "Zachte tik",
+      "classic": "Klassieke tik",
+      "digital": "Digitale tik"
+    },
+    "tickIntervalTitle": "Hoe vaak het tikgeluid in seconden af te spelen",
+    "tickInterval": "Tikinterval (seconden)",
+    "tickIntervals": {
+      "off": "Uit (geen tikken)",
+      "1": "Elke 1 seconde",
+      "2": "Elke 2 seconden",
+      "3": "Elke 3 seconden",
+      "5": "Elke 5 seconden",
+      "10": "Elke 10 seconden",
+      "15": "Elke 15 seconden",
+      "30": "Elke 30 seconden",
+      "60": "Elke 60 seconden"
+    },
+    "announceSounds": "Aankondigingsgeluiden",
+    "shortBreakAnnounceTitle": "Geluid om af te spelen wanneer korte pauze begint",
+    "shortBreakAnnounce": "Korte Pauze Aankondiging",
+    "longBreakAnnounceTitle": "Geluid om af te spelen wanneer lange pauze begint",
+    "longBreakAnnounce": "Lange Pauze Aankondiging",
+    "resumeWorkAnnounceTitle": "Geluid om af te spelen bij hervatten van werk na pauze",
+    "resumeWorkAnnounce": "Werk Hervatten Aankondiging",
+    "options": "Opties",
+    "autoStartTitle": "Automatisch de volgende sessie starten zonder handmatige tussenkomst",
+    "autoStart": "Automatisch volgende sessie starten",
+    "promptDescriptionsTitle": "Vragen om activiteitsbeschrijving en logboekitems maken voor werksessies",
+    "promptDescriptions": "Vragen om werksessiebeschrijvingen",
+    "logBreaksTitle": "Ook pauzesessies loggen in de activiteitentracker",
+    "logBreaks": "Pauzesessies ook loggen",
+    "enableLongBreaksTitle": "Lange pauzes inschakelen na het voltooien van meerdere sessies",
+    "enableLongBreaks": "Lange pauzes inschakelen",
+    "allowPausingTitle": "Pauzeren van Pomodoro-sessies vanuit de banner toestaan",
+    "allowPausing": "Sessiepauzering toestaan",
+    "autoResetDailyTitle": "Sessieteller automatisch resetten naar 1 wanneer de dag verandert",
+    "autoResetDaily": "Sessies dagelijks automatisch resetten",
+    "sessionManagement": "Sessiebeheer",
+    "resetCounterTitle": "Sessieteller resetten naar 1",
+    "resetCounter": "Sessieteller Resetten"
+  },
+  "dataManagement": {
+    "backup": "Database Backup",
+    "backupDescription": "Uw activiteitsgegevens exporteren of importeren",
+    "exportDatabase": "Database Exporteren",
+    "importDatabase": "Database Importeren",
+    "warningSettings": "Waarschuwingsinstellingen",
+    "warningDescription": "Bevestigingsdialogen configureren voor destructieve acties",
+    "warnDeleteTitle": "Bevestigingsdialoog tonen bij verwijderen van activiteiten",
+    "warnDelete": "Waarschuwen bij activiteitsverwijdering",
+    "warnResetTitle": "Bevestigingsdialoog tonen bij resetten van Pomodoro-sessieteller",
+    "warnReset": "Waarschuwen bij sessiereset",
+    "forceManualSave": "Handmatig Opslaan Forceren"
+  },
+  "diagnostics": {
+    "title": "🔧 Diagnostiek",
+    "systemTests": "Systeemtests",
+    "systemTestsDescription": "Verschillende systeemcomponenten en functionaliteit testen",
+    "notifications": "🔔 Meldingen",
+    "testReminderTitle": "Een testherinnering sturen",
+    "testReminder": "🧪 Testherinnering",
+    "testSoundTitle": "Een testherinneringsgeluid afspelen",
+    "testSound": "🔊 Testgeluid",
+    "refreshStatusTitle": "De weergave van herinneringstoestemmingsstatus vernieuwen",
+    "refreshStatus": "🔄 Status Vernieuwen",
+    "forceEnableTitle": "Meldingstoestemmingsdialoog forceren",
+    "forceEnable": "⚡ Forceren Inschakelen",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "Uitgebreide service worker diagnostiek uitvoeren",
+    "runDiagnostics": "🔍 Diagnostiek Uitvoeren",
+    "dataManagement": "⚠️ Gegevensbeheer",
+    "dataWarning": "Deze acties kunnen niet ongedaan worden gemaakt",
+    "clearAllData": "🗑️ Alle Gegevens Wissen"
+  },
+  "modals": {
+    "edit": {
+      "title": "Invoer Bewerken",
+      "activity": "Activiteit",
+      "description": "Beschrijving",
+      "time": "Tijd",
+      "markTodo": "Markeren als Taak",
+      "markNote": "Markeren als Notitie",
+      "dueDate": "Vervaldatum (optioneel)",
+      "update": "Invoer Bijwerken",
+      "cancel": "Annuleren"
+    },
+    "templateManager": {
+      "title": "Sjabloonbeheerder",
+      "saveAll": "Alle Wijzigingen Opslaan",
+      "close": "Sluiten",
+      "templates": "Sjablonen",
+      "addTemplate": "Sjabloon Toevoegen",
+      "resetAll": "Alles Resetten",
+      "selectTemplate": "Selecteer een sjabloon om te bewerken",
+      "save": "Opslaan",
+      "delete": "Verwijderen",
+      "duplicate": "Dupliceren",
+      "editor": "Editor",
+      "preview": "Voorvertoning",
+      "templateName": "Sjabloonnaam",
+      "templateNamePlaceholder": "bijv. Mijn Aangepaste Sjabloon",
+      "description": "Beschrijving",
+      "descriptionPlaceholder": "Korte beschrijving van het sjabloon",
+      "outputType": "Uitvoertype",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Platte Tekst"
+      },
+      "templateContent": "Sjablooninhoud",
+      "templateContentPlaceholder": "Voer hier uw sjablooninhoud in...",
+      "setDefault": "Instellen als standaardsjabloon",
+      "previewTitle": "Voorvertoning",
+      "rendered": "Gerenderd",
+      "source": "Bron",
+      "refresh": "Vernieuwen",
+      "selectTemplatePreview": "Selecteer een sjabloon om voorvertoning te zien"
+    },
+    "templateGuide": {
+      "title": "Sjabloonhandleiding",
+      "activityDescription": "Activiteitsbeschrijving"
+    },
+    "pomodoroActivity": {
+      "title": "Werksessie Activiteit",
+      "activityLabel": "Waaraan ga je werken?",
+      "activityPlaceholder": "bijv. Rapport schrijven, Vergadervoorbereiding",
+      "usePrevious": "Vorige Activiteit Gebruiken",
+      "descriptionLabel": "Beschrijving (optioneel)",
+      "descriptionPlaceholder": "Aanvullende details over deze werksessie",
+      "startSession": "Werksessie Starten",
+      "cancel": "Annuleren"
+    },
+    "pomodoroAbandon": {
+      "title": "Sessie Onderbreking",
+      "workedFor": "Je hebt {minutes} minuu{minutes, plural, one {t} other {t}} gewerkt",
+      "saveQuestion": "Wil je opslaan wat je hebt bereikt tijdens deze gedeeltelijke sessie?",
+      "activityLabel": "Behaalde activiteit",
+      "activityPlaceholder": "Waaraan heb je gewerkt tijdens deze tijd?",
+      "descriptionLabel": "Beschrijving (optioneel)",
+      "descriptionPlaceholder": "Aanvullende details over wat je hebt bereikt",
+      "saveAbandon": "Werk Opslaan & Onderbreken",
+      "justAbandon": "Gewoon Onderbreken"
+    },
+    "confirmation": {
+      "title": "Actie Bevestigen",
+      "defaultMessage": "Weet je zeker dat je deze actie wilt uitvoeren?",
+      "dontAskAgain": "Niet opnieuw vragen voor dit type actie",
+      "confirm": "Bevestigen",
+      "cancel": "Annuleren"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Activiteitsuren Informatie",
+      "alertsOff": "Herinneringswaarschuwingen zijn uitgeschakeld buiten activiteitsuren.",
+      "configure": "⚙️ Activiteitsuren Configureren",
+      "gotIt": "Begrepen"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Verlopen Items",
+      "message": "De volgende items hebben hun vervaldatum overschreden:",
+      "gotIt": "Begrepen"
+    },
+    "hashtagBrowser": {
+      "title": "Hashtag Browser",
+      "count": "{count} hashtag{count, plural, one {} other {s}} gevonden",
+      "noHashtags": "Geen hashtags gevonden. Voeg activiteiten toe met #hashtags om ze hier te zien!"
+    },
+    "userGuide": {
+      "title": "Gebruikershandleiding",
+      "settingsCustomization": "Instellingen en aanpassing"
+    },
+    "notificationSetup": {
+      "title": "Systeemmeldingen Inschakelen?",
+      "appName": "Activiteiten Tracker",
+      "enableOption": "✅ Systeemmeldingen Inschakelen",
+      "soundOption": "🔊 Alleen Geluid",
+      "enableButton": "Systeemmeldingen Inschakelen",
+      "soundButton": "Alleen Geluid"
+    },
+    "about": {
+      "title": "Over Activiteiten Tracker",
+      "appInfo": "Applicatie-informatie",
+      "versionHistory": "Versiegeschiedenis",
+      "loadingVersion": "Versiegeschiedenis laden...",
+      "appName": "Activiteiten Tracker",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ Bekijken op GitHub"
+    },
+    "workspaceManager": {
+      "title": "🏢 Werkruimtebeheerder",
+      "currentWorkspace": "Huidige Werkruimte: {name}",
+      "description": "Elke werkruimte houdt aparte activiteiten, instellingen en status bij...",
+      "availableWorkspaces": "Beschikbare Werkruimtes",
+      "enterName": "Voer werkruimtenaam in...",
+      "createWorkspace": "Werkruimte Maken",
+      "close": "Sluiten"
+    },
+    "languagePicker": {
+      "title": "🌐 Taal selecteren"
+    }
+  },
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "close": "Sluiten",
+    "yes": "Ja",
+    "no": "Nee",
+    "ok": "OK",
+    "loading": "Laden...",
+    "error": "Fout",
+    "success": "Succes",
+    "warning": "Waarschuwing",
+    "info": "Informatie",
+    "none": "Geen",
+    "all": "Alle",
+    "today": "Vandaag",
+    "yesterday": "Gisteren",
+    "tomorrow": "Morgen",
+    "thisWeek": "Deze Week",
+    "thisMonth": "Deze Maand",
+    "minutes": "{count} minuu{count, plural, one {t} other {t}}",
+    "hours": "{count} u{count, plural, one {ur} other {ur}}",
+    "days": "{count} dag{count, plural, one {} other {en}}",
+    "weeks": "{count} we{count, plural, one {ek} other {ken}}",
+    "months": "{count} maand{count, plural, one {} other {en}}",
+    "daysOfWeek": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "markComplete": "Markeer als voltooid",
+    "outsideActivityHours": "Buiten activiteitsuren",
+    "todoTag": "Taak",
+    "noteTag": "Notitie"
+  }
+}

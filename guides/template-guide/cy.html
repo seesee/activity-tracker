@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Cychwyn</h4>
+        <p>Mae templedi'n defnyddio cystrawen amnewid newidyn syml gyda bracedi cyrliog dwbl i greu adroddiadau deinamig.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Cystrawen sylfaenol</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Amnewid newidyn syml</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Dolennu drwy araeau</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Cynnwys amodol</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Cystrawen bibell a chadwyno swyddogaethau</h4>
+        <p>Trawsnewidiwch ddata gan ddefnyddio cystrawen pibell (<code>|</code>) i gadwyno swyddogaethau lluosog gyda'i gilydd:</p>
+        
+        <h5>Cystrawen bibell sylfaenol</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Rhoi un trawsnewidiad ar waith</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Cadwyno trawsnewidiadau lluosog</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Trosglwyddo paramedrau i swyddogaethau</li>
+        </ul>
+
+        <h5>Swyddogaethau trawsnewid sydd ar gael</h5>
+        <ul>
+            <li><code>date('format')</code> - Fformatio stampiau amser fel dyddiadau
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Echdynnu amser o stampiau amser
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Dianc cymeriadau arbennig CSV
+                <ul>
+                    <li>Lapio testun mewn dyfynodau os yw'n cynnwys atalnodau, dyfynodau neu doriadau llinell</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Tynnu toriadau llinell o destun
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>Enghraifft templed CSV gyda chadwyno</h5>
+        <p>Dyma sut mae'r templed CSV yn defnyddio cadwyno i greu allbwn glân wedi'i ddianc yn gywir:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Sut mae hyn yn gweithio:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Trosi'r stamp amser i fformat YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Echdynnu rhan yr amser</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Tynnu toriadau llinell gyntaf, yna dianc ar gyfer CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Yr un broses ar gyfer disgrifiadau</li>
+        </ul>
+
+        <h5>Mae trefn yn bwysig mewn cadwyno!</h5>
+        <p>Mae swyddogaethau'n cael eu cymhwyso o'r chwith i'r dde, felly mae trefn yn bwysig:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Tynnu toriadau gyntaf, yna dianc</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Dianc gyntaf gall ymyrryd â thynnu toriadau</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Data sydd ar gael</h4>
+        <p>Mae'r data canlynol ar gael yn eich templedi:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - Teitl yr adroddiad</li>
+            <li><code>{{startDate}}</code> - Dyddiad dechrau'r adroddiad (wedi'i fformatio)</li>
+            <li><code>{{endDate}}</code> - Dyddiad diwedd yr adroddiad (wedi'i fformatio)</li>
+            <li><code>{{totalEntries}}</code> - Cyfanswm nifer cofnodion gweithgaredd</li>
+            <li><code>{{entries}}</code> - Arae o holl gofnodion gweithgaredd</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Priodweddau cofnod</h4>
+        <p>Mae gan bob cofnod yn y ddolen <code>{{#each entries}}</code>:</p>
+        <ul>
+            <li><code>{{activity}}</code> - Enw'r gweithgaredd</li>
+            <li><code>{{description}}</code> - Disgrifiad y gweithgaredd</li>
+            <li><code>{{timestamp}}</code> - Stamp amser ISO crai</li>
+            <li><code>{{formattedTime}}</code> - Amser wedi'i fformatio'n daclus (e.e. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Dyddiad wedi'i fformatio'n daclus (e.e. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Booleaidd: true os yw hwn yn eitem todo</li>
+            <li><code>{{tags}}</code> - Arae o hashnodau ar gyfer y cofnod hwn</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Trawsnewidiadau cyffredin</h4>
+        <p>Trawsnewid stampiau amser a fformatio data:</p>
+        <ul>
+            <li><strong>Fformatau dyddiad</strong>: Defnyddiwch <code>{{formattedDate}}</code> a <code>{{formattedTime}}</code> ar gyfer fformatau darllenadwy</li>
+            <li><strong>Cynnwys amodol</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - dangos dim ond os oes disgrifiad</li>
+            <li><strong>Dolennu drwy dagiau</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - dangos pob hashnod</li>
+            <li><strong>Hidlo todo</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - marcio eitemau todo</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Fformatio Markdown</h4>
+        <p>Defnyddiwch gystrawen Markdown ar gyfer fformatio darllenadwy:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Pennawd mawr</li>
+            <li><code>## {{activity}}</code> - Pennawd canolig</li>
+            <li><code>**{{activity}}**</code> - Testun trwm</li>
+            <li><code>*{{description}}*</code> - Testun italig</li>
+            <li><code>- {{activity}}</code> - Pwynt bwled</li>
+            <li><code>`{{formattedTime}}`</code> - Fformatio cod</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Enghraifft templed</h4>
+        <pre><code># {{reportTitle}}
+O {{startDate}} i {{endDate}}
+
+Cyfanswm gweithgareddau: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Tagiau: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**EITEM TODO**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Awgrymiadau proffesiynol</h4>
+        <ul>
+            <li><strong>Templedi HTML</strong>: Defnyddiwch ar gyfer fformatio cyfoethog gydag arddulliau CSS a chynlluniau cymhleth</li>
+            <li><strong>Templedi Markdown</strong>: Perffaith ar gyfer dogfennaeth syml a darllenadwy</li>
+            <li><strong>Templedi CSV</strong>: Delfrydol ar gyfer dadansoddi data mewn taenlenni</li>
+            <li><strong>Nodwedd rhagolwg</strong>: Profwch eich templedi bob tro cyn cadw</li>
+            <li><strong>Fformatau cyfaddas</strong>: Cyfunwch newidynnau lluosog ar gyfer cynlluniau unigryw</li>
+        </ul>
+    </div>
+</div>

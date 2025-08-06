@@ -1,0 +1,157 @@
+<div class="template-guide-content">
+    <div class="guide-section">
+        <h4>Primeros pasos</h4>
+        <p>Las plantillas utilizan una sintaxis simple de sustitución de variables con llaves dobles para crear informes dinámicos.</p>
+    </div>
+
+    <div class="guide-section">
+        <h4>Sintaxis básica</h4>
+        <ul>
+            <li><code>{{variable}}</code> - Sustitución de variable simple</li>
+            <li><code>{{#each array}}</code> ... <code>{{/each}}</code> - Bucle sobre arrays</li>
+            <li><code>{{#if condition}}</code> ... <code>{{/if}}</code> - Contenido condicional</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Sintaxis de pipes y encadenamiento de funciones</h4>
+        <p>Transforma datos usando la sintaxis de pipes (<code>|</code>) para encadenar múltiples funciones juntas:</p>
+        
+        <h5>Sintaxis básica de pipes</h5>
+        <ul>
+            <li><code>{{ variable | function }}</code> - Aplica una sola transformación</li>
+            <li><code>{{ variable | function1 | function2 }}</code> - Encadena múltiples transformaciones</li>
+            <li><code>{{ variable | function('parameter') }}</code> - Pasa parámetros a las funciones</li>
+        </ul>
+
+        <h5>Funciones de transformación disponibles</h5>
+        <ul>
+            <li><code>date('format')</code> - Formatea marcas de tiempo como fechas
+                <ul>
+                    <li><code>{{ timestamp | date('yyyy-mm-dd') }}</code> → "2025-08-02"</li>
+                    <li><code>{{ timestamp | date('mm/dd/yyyy') }}</code> → "08/02/2025"</li>
+                    <li><code>{{ timestamp | date('dd mmm yyyy') }}</code> → "02 Aug 2025"</li>
+                </ul>
+            </li>
+            <li><code>time</code> - Extrae tiempo de las marcas de tiempo
+                <ul>
+                    <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
+                </ul>
+            </li>
+            <li><code>escapeCsv</code> - Escapa caracteres especiales de CSV
+                <ul>
+                    <li>Envuelve texto entre comillas si contiene comas, comillas o saltos de línea</li>
+                    <li><code>{{ "Hello, World" | escapeCsv }}</code> → "\"Hello, World\""</li>
+                </ul>
+            </li>
+            <li><code>stripLinebreaks</code> - Elimina saltos de línea del texto
+                <ul>
+                    <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h5>Ejemplo de plantilla CSV con encadenamiento</h5>
+        <p>Así es como la plantilla CSV usa el encadenamiento para crear una salida limpia y correctamente escapada:</p>
+        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+{{/each}}</code></pre>
+        
+        <p><strong>Cómo funciona esto:</strong></p>
+        <ul>
+            <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Convierte la marca de tiempo al formato YYYY-MM-DD</li>
+            <li><code>entry.timestamp | time</code> - Extrae la porción de tiempo</li>
+            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - Primero elimina saltos de línea, luego escapa para CSV</li>
+            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Mismo proceso para las descripciones</li>
+        </ul>
+
+        <h5>¡El orden importa en el encadenamiento!</h5>
+        <p>Las funciones se aplican de izquierda a derecha, por lo que el orden es importante:</p>
+        <ul>
+            <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Eliminar saltos primero, luego escapar</li>
+            <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Escapar primero puede interferir con la eliminación de saltos</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Datos disponibles</h4>
+        <p>Los siguientes datos están disponibles en sus plantillas:</p>
+        <ul>
+            <li><code>{{reportTitle}}</code> - El título del informe</li>
+            <li><code>{{startDate}}</code> - Fecha de inicio del informe (formateada)</li>
+            <li><code>{{endDate}}</code> - Fecha de fin del informe (formateada)</li>
+            <li><code>{{totalEntries}}</code> - Número total de entradas de actividad</li>
+            <li><code>{{entries}}</code> - Array de todas las entradas de actividad</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Propiedades de las entradas</h4>
+        <p>Cada entrada en el bucle <code>{{#each entries}}</code> tiene:</p>
+        <ul>
+            <li><code>{{activity}}</code> - El nombre de la actividad</li>
+            <li><code>{{description}}</code> - Descripción de la actividad</li>
+            <li><code>{{timestamp}}</code> - Marca de tiempo ISO sin procesar</li>
+            <li><code>{{formattedTime}}</code> - Tiempo formateado de manera elegante (ej. "2:30 PM")</li>
+            <li><code>{{formattedDate}}</code> - Fecha formateada de manera elegante (ej. "Jan 15, 2025")</li>
+            <li><code>{{isTodo}}</code> - Boolean: true si esto es un elemento de tarea</li>
+            <li><code>{{tags}}</code> - Array de hashtags para esta entrada</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Transformaciones comunes</h4>
+        <p>Transformar marcas de tiempo y formatear datos:</p>
+        <ul>
+            <li><strong>Formatos de fecha</strong>: Use <code>{{formattedDate}}</code> y <code>{{formattedTime}}</code> para formatos legibles por humanos</li>
+            <li><strong>Contenido condicional</strong>: <code>{{#if description}}{{description}}{{/if}}</code> - solo mostrar si existe descripción</li>
+            <li><strong>Bucle sobre etiquetas</strong>: <code>{{#each tags}}#{{this}} {{/each}}</code> - mostrar todos los hashtags</li>
+            <li><strong>Filtrado de tareas</strong>: <code>{{#if isTodo}}TODO: {{/if}}</code> - marcar elementos de tarea</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Formato Markdown</h4>
+        <p>Use sintaxis Markdown para formato legible:</p>
+        <ul>
+            <li><code># {{reportTitle}}</code> - Encabezado grande</li>
+            <li><code>## {{activity}}</code> - Encabezado mediano</li>
+            <li><code>**{{activity}}**</code> - Texto en negrita</li>
+            <li><code>*{{description}}*</code> - Texto en cursiva</li>
+            <li><code>- {{activity}}</code> - Punto de viñeta</li>
+            <li><code>`{{formattedTime}}`</code> - Formato de código</li>
+        </ul>
+    </div>
+
+    <div class="guide-section">
+        <h4>Ejemplo de plantilla</h4>
+        <pre><code># {{reportTitle}}
+Desde {{startDate}} hasta {{endDate}}
+
+Total de actividades: {{totalEntries}}
+
+{{#each entries}}
+## {{formattedTime}} - {{activity}}
+{{#if description}}
+*{{description}}*
+{{/if}}
+{{#if tags}}
+Etiquetas: {{#each tags}}#{{this}} {{/each}}
+{{/if}}
+{{#if isTodo}}
+**ELEMENTO TODO**
+{{/if}}
+
+{{/each}}</code></pre>
+    </div>
+
+    <div class="guide-section">
+        <h4>Consejos profesionales</h4>
+        <ul>
+            <li><strong>Plantillas HTML</strong>: Use para formato rico con estilos CSS y diseños complejos</li>
+            <li><strong>Plantillas Markdown</strong>: Perfectas para documentación simple y legible</li>
+            <li><strong>Plantillas CSV</strong>: Ideales para análisis de datos en hojas de cálculo</li>
+            <li><strong>Función de vista previa</strong>: Siempre pruebe sus plantillas antes de guardar</li>
+            <li><strong>Formatos personalizados</strong>: Combine múltiples variables para diseños únicos</li>
+        </ul>
+    </div>
+</div>

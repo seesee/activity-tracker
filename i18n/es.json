@@ -1,0 +1,630 @@
+{
+  "meta": {
+    "language": "Español",
+    "languageCode": "es",
+    "locale": "es-ES",
+    "filename": "index.es.html",
+    "direction": "ltr"
+  },
+  "formats": {
+    "date": {
+      "short": "dd/MM/yyyy",
+      "long": "d 'de' MMMM 'de' yyyy",
+      "weekday": "EEEE",
+      "monthYear": "MMMM 'de' yyyy"
+    },
+    "time": {
+      "short": "H:mm",
+      "long": "H:mm:ss",
+      "24hour": "H:mm"
+    },
+    "number": {
+      "decimal": ",",
+      "thousands": ".",
+      "currency": "€"
+    }
+  },
+  "app": {
+    "title": "Seguimiento de Actividades",
+    "tagline": "Diario de tareas, organizador y base de conocimiento",
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "offline": "Aplicación sin conexión"
+  },
+  "navigation": {
+    "tracker": "📝 Seguimiento",
+    "todo": "✅ Tareas",
+    "notes": "📔 Notas",
+    "alert": "⚠️ Alerta",
+    "alertTitle": "Ver elementos vencidos",
+    "startReminders": "Iniciar Recordatorios",
+    "startPomodoro": "🍅 Iniciar Pomodoro",
+    "settingsMenu": "Menú de configuración",
+    "burgerMenu": {
+      "tracker": "Seguimiento",
+      "notes": "Notas",
+      "todo": "Tareas",
+      "reports": "Informes",
+      "workspaces": "Espacios de Trabajo",
+      "settings": "Configuración...",
+      "diagnostics": "Diagnósticos",
+      "language": "Idioma",
+      "userGuide": "Guía del Usuario",
+      "about": "Acerca de"
+    },
+    "pauseMenu": {
+      "minutes5": "5 minutos",
+      "minutes15": "15 minutos",
+      "minutes30": "30 minutos",
+      "hour1": "1 hora",
+      "hours2": "2 horas",
+      "untilManualResume": "Hasta reanudar manualmente"
+    }
+  },
+  "search": {
+    "placeholder": "Buscar actividades, tareas y hashtags...",
+    "browseHashtags": "Explorar hashtags",
+    "results": "Resultados de Búsqueda",
+    "noResults": "Use la barra de búsqueda de arriba para encontrar actividades, tareas y hashtags.",
+    "resultCount": "{count} resultado{count, plural, one {} other {s}}",
+    "sortBy": "Ordenar por:",
+    "show": "Mostrar:",
+    "filters": {
+      "relevance": "Relevancia",
+      "newestFirst": "Más Reciente Primero",
+      "oldestFirst": "Más Antiguo Primero",
+      "activityAZ": "Actividad A-Z",
+      "activityZA": "Actividad Z-A",
+      "allItems": "Todos los Elementos",
+      "activitiesOnly": "Solo Actividades",
+      "todosOnly": "Solo Tareas",
+      "completedOnly": "Solo Completadas"
+    }
+  },
+  "status": {
+    "pomodoroDisabled": "Modo Pomodoro desactivado",
+    "pause": "Pausa",
+    "nextReminder": "Próximo recordatorio de actividad en:",
+    "checkingNotifications": "Verificando estado de notificaciones...",
+    "remindersActiveWithSystem": "Recordatorios de actividad activos con notificaciones del sistema",
+    "remindersActiveWithSound": "Recordatorios de actividad activos con alertas de sonido",
+    "turnOffReminders": "Desactivar recordatorios de actividad",
+    "remindersDisabled": "Los recordatorios de actividad están desactivados",
+    "turnOnReminders": "Activar recordatorios de actividad",
+    "paused": "Pausado",
+    "readyToStart": "Listo para comenzar"
+  },
+  "tracker": {
+    "title": "Entrada de Actividad",
+    "hideShowForm": "Ocultar/Mostrar formulario",
+    "activityLabel": "¿Qué está haciendo?",
+    "activityPlaceholder": "ej. Escribiendo informe, Reunión de equipo #trabajo",
+    "descriptionLabel": "Descripción (opcional)",
+    "descriptionPlaceholder": "Detalles adicionales sobre esta actividad",
+    "timeLabel": "Hora",
+    "markTodoTitle": "Marcar como tarea pendiente (Ctrl+T para alternar)",
+    "markTodo": "Marcar como Tarea",
+    "markNoteTitle": "Marcar como nota (Ctrl+N para alternar)",
+    "markNote": "Marcar como Nota",
+    "removeFromTodos": "Quitar de Tareas",
+    "removeFromNotes": "Quitar de Notas",
+    "todoActive": "✓ Tarea",
+    "noteActive": "✓ Nota",
+    "dueDateLabel": "Fecha de Vencimiento (opcional)",
+    "dueDateQuickButtons": {
+      "minus1d": "-1d",
+      "plus1d": "+1d",
+      "minus1w": "-1s",
+      "plus1w": "+1s",
+      "minus1m": "-1m",
+      "plus1m": "+1m"
+    },
+    "addEntry": "Añadir Entrada",
+    "reset": "Restablecer",
+    "recentEntries": "Entradas Recientes",
+    "previous": "‹ Anterior",
+    "next": "Siguiente ›",
+    "placeholders": {
+      "trackerActivity": "ej. Escribiendo informe, Reunión de equipo #trabajo",
+      "trackerDescription": "Detalles adicionales sobre esta actividad..."
+    }
+  },
+  "todo": {
+    "newTodo": "Nueva Tarea",
+    "todoLabel": "¿Qué necesita hacer?",
+    "todoPlaceholder": "ej. Llamar cliente sobre proyecto, Revisar presupuesto #trabajo",
+    "descriptionLabel": "Descripción (opcional)",
+    "descriptionPlaceholder": "Detalles adicionales sobre esta tarea",
+    "markTodoTitle": "Marcar como tarea pendiente",
+    "markNoteTitle": "Marcar como nota",
+    "addTodo": "Añadir Tarea",
+    "newTodoNote": "Nueva Nota de Tarea",
+    "todoNoteLabel": "¿Qué necesita anotar y hacer?",
+    "todoNoteDescription": "Detalles de nota y descripción de tarea",
+    "addTodoNote": "Añadir Nota de Tarea",
+    "todoList": "Lista de Tareas",
+    "filter": "Filtro:",
+    "sortBy": "Ordenar por:",
+    "filters": {
+      "allTodos": "Todas las Tareas",
+      "dueToday": "Vencen Hoy",
+      "overdue": "Vencidas",
+      "noDueDate": "Sin Fecha de Vencimiento"
+    },
+    "sorting": {
+      "newestFirst": "Más Reciente Primero",
+      "oldestFirst": "Más Antiguo Primero",
+      "dueDateEarliest": "Fecha de Vencimiento (Más Temprana)",
+      "dueDateLatest": "Fecha de Vencimiento (Más Tardía)",
+      "activityAZ": "Actividad A-Z",
+      "activityZA": "Actividad Z-A"
+    },
+    "todoCount": "{count} tarea{count, plural, one {} other {s}}",
+    "noTodos": "No se encontraron tareas. ¡Añada actividades como tareas para verlas aquí!",
+    "pagination": {
+      "previous": "← Anterior",
+      "next": "Siguiente →",
+      "pageInfo": "Página {current} de {total}"
+    },
+    "markCompleteHelp": "Haz clic en \"Marcar como completado\" para terminar las tareas",
+    "placeholders": {
+      "todoActivity": "ej. Investigar opciones de presupuesto, Revisar agenda de reunión #trabajo",
+      "todoDescription": "Capture sus notas y describa lo que necesita hacerse..."
+    }
+  },
+  "notes": {
+    "newNote": "Nueva Nota",
+    "titleLabel": "Título o tema de la nota",
+    "titlePlaceholder": "ej. Notas de reunión, Ideas para proyecto #lluvia-ideas",
+    "contentLabel": "Contenido de la nota",
+    "contentPlaceholder": "Escriba el contenido de su nota aquí...",
+    "addNote": "Añadir Nota",
+    "notesTitle": "Notas",
+    "filters": {
+      "allNotes": "Todas las Notas",
+      "today": "Hoy",
+      "thisWeek": "Esta Semana",
+      "thisMonth": "Este Mes"
+    },
+    "sort": "Ordenar:",
+    "sorting": {
+      "newestFirst": "Más Reciente Primero",
+      "oldestFirst": "Más Antiguo Primero",
+      "activityName": "Nombre de Actividad"
+    },
+    "searchPlaceholder": "Buscar en notas...",
+    "clear": "Limpiar",
+    "noNotes": "No se encontraron notas.",
+    "placeholders": {
+      "noteActivity": "ej. Notas de reunión, Ideas para proyecto #lluvia-ideas",
+      "noteDescription": "Escriba el contenido de su nota, ideas, observaciones o pensamientos aquí..."
+    }
+  },
+  "reports": {
+    "title": "Informes de Actividad",
+    "dateRange": "Rango de Fechas",
+    "dateRangeDescription": "Seleccione el período de tiempo para su informe",
+    "startDateTitle": "Elegir la fecha de inicio para su informe",
+    "startDateLabel": "Fecha de Inicio",
+    "endDateTitle": "Elegir la fecha de fin para su informe",
+    "endDateLabel": "Fecha de Fin",
+    "generateReportTitle": "Generar informe para el rango de fechas seleccionado",
+    "generateReport": "Generar Informe",
+    "thisWeekTitle": "Establecer rango de fechas a la semana actual",
+    "thisWeek": "Esta Semana",
+    "templateOptions": "Plantilla y Opciones",
+    "templateOptionsDescription": "Elija formato, opciones y descargue su informe",
+    "reportTemplateTitle": "Seleccionar el formato para su informe",
+    "reportTemplateLabel": "Plantilla de Informe",
+    "todoItems": "Elementos de Tareas:",
+    "todoOptions": {
+      "excludeAll": "Excluir todas las tareas",
+      "incompleteOnly": "Incluir solo tareas incompletas",
+      "includeAll": "Incluir todas las tareas"
+    },
+    "notes": "Notas:",
+    "noteOptions": {
+      "exclude": "Excluir notas",
+      "include": "Incluir notas"
+    },
+    "downloadReportTitle": "Descargar el informe generado",
+    "downloadReport": "Descargar Informe",
+    "openNewTabTitle": "Abrir el informe generado en una nueva pestaña",
+    "openNewTab": "Abrir en Nueva Pestaña",
+    "weekNavigation": {
+      "previous": "← Semana Anterior",
+      "next": "Semana Siguiente →",
+      "weekOf": "Semana del {date}"
+    },
+    "reportPreview": "Vista Previa del Informe",
+    "viewFormattedTitle": "Ver la salida formateada del informe",
+    "rendered": "Renderizado",
+    "viewSourceTitle": "Ver el código fuente sin procesar del informe",
+    "source": "Fuente",
+    "copyReportTitle": "Copiar contenido del informe al portapapeles",
+    "copyReport": "Copiar Informe",
+    "selectDateRange": "Seleccione un rango de fechas y genere un informe para ver una vista previa.",
+    "reportTemplates": "Plantillas de Informe",
+    "templatesDescription": "Gestionar plantillas para la generación de informes",
+    "manageTemplatesTitle": "Abrir el editor de plantillas para crear y modificar plantillas de informes",
+    "manageTemplates": "Gestionar Plantillas",
+    "resetDefaultTitle": "Restaurar todas las plantillas a sus versiones predeterminadas originales",
+    "resetDefault": "Restablecer a Predeterminado",
+    "templateGuideTitle": "Ver documentación de ayuda para sintaxis de plantillas y datos disponibles",
+    "templateGuide": "📋 Guía de Plantillas"
+  },
+  "settings": {
+    "title": "Configuración",
+    "enableReminders": "Activar Recordatorios",
+    "generalSettings": "Configuración General",
+    "generalDescription": "Configuración que se aplica a todos los modos de operación",
+    "colourThemeTitle": "Elegir su preferencia de tema de color",
+    "colourTheme": "Tema de Color",
+    "themeOptions": {
+      "system": "Seguir configuración del sistema",
+      "light": "Modo claro",
+      "dark": "Modo oscuro"
+    },
+    "soundSettingsTitle": "Elegir qué sonidos silenciar",
+    "soundSettings": "Configuración de Sonido",
+    "soundOptions": {
+      "allEnabled": "Todos los sonidos activados",
+      "muteAll": "Silenciar todos los sonidos",
+      "mutePomodoroOnly": "Silenciar solo sonidos Pomodoro",
+      "muteNotificationOnly": "Silenciar solo sonidos de notificación"
+    },
+    "itemsPerPageTitle": "Número de elementos a mostrar por página en las listas",
+    "itemsPerPage": "Elementos por página",
+    "itemsPerPageOptions": {
+      "10": "10 elementos",
+      "20": "20 elementos",
+      "30": "30 elementos",
+      "50": "50 elementos",
+      "100": "100 elementos"
+    },
+    "systemNotificationsTitle": "Enviar notificaciones del sistema a su sistema operativo",
+    "systemNotifications": "Notificaciones del Sistema",
+    "dateFormatTitle": "Elija su formato de visualización de fecha preferido",
+    "dateFormat": "Formato de Fecha",
+    "dateFormatOptions": {
+      "default": "Predeterminado (basado en configuración regional)",
+      "iso": "ISO 8601 (AAAA-MM-DD)",
+      "us": "Formato de EE.UU. (MM/DD/AAAA)",
+      "european": "Europeo (DD/MM/AAAA)",
+      "short": "Formato Corto",
+      "long": "Formato Largo"
+    },
+    "yesNo": {
+      "yes": "Sí",
+      "no": "No"
+    },
+    "reminderSettings": "Configuración de Recordatorios",
+    "reminderIntervalTitle": "Con qué frecuencia recibirá notificaciones de recordatorio de actividad",
+    "reminderInterval": "Intervalo de Recordatorio",
+    "intervals": {
+      "1min": "1 minuto",
+      "2min": "2 minutos",
+      "5min": "5 minutos",
+      "15min": "15 minutos",
+      "30min": "30 minutos",
+      "1hour": "1 hora",
+      "1.5hour": "1,5 horas",
+      "2hour": "2 horas",
+      "3hour": "3 horas",
+      "4hour": "4 horas"
+    },
+    "pauseResumeTitle": "Cuánto tiempo permanecen pausadas las alertas antes de reanudarse automáticamente",
+    "pauseResume": "Al pausar, reanudar después de",
+    "never": "Nunca",
+    "autoStartTitle": "Iniciar recordatorios automáticamente cuando se abra la aplicación",
+    "autoStart": "Inicio automático de recordatorios al abrir la aplicación",
+    "reminderSoundTitle": "Elegir el sonido que se reproduce con los recordatorios",
+    "reminderSound": "Sonido de Recordatorio"
+  },
+  "schedule": {
+    "title": "Horario de Actividad",
+    "description": "Establecer sus horas y días de actividad activos para notificaciones",
+    "activityHours": "Horas de Actividad",
+    "complexScheduleTitle": "Activar programación compleja con múltiples rangos de tiempo por día",
+    "complexSchedule": "Horario Complejo",
+    "startTimeTitle": "Cuándo comienza su período de actividad",
+    "startTime": "Hora de Inicio",
+    "endTimeTitle": "Cuándo termina su período de actividad",
+    "endTime": "Hora de Fin",
+    "complexDescription": "Establecer múltiples rangos de tiempo para cada día para acomodar horarios complejos.",
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "addRange": "+ Añadir Rango",
+    "activityDays": "Días de Actividad",
+    "datePreview": {
+      "prefix": "Vista previa: "
+    }
+  },
+  "pomodoro": {
+    "title": "Modo Pomodoro",
+    "description": "Intervalos estructurados de trabajo/descanso con notificaciones automáticas",
+    "enableTitle": "Activar modo de cronometraje Pomodoro con alertas de trabajo y descanso",
+    "enable": "Activar Modo Pomodoro",
+    "workDurationTitle": "Duración de los períodos de trabajo en minutos",
+    "workDuration": "Duración del Trabajo (minutos)",
+    "workDurations": {
+      "15": "15 minutos",
+      "20": "20 minutos",
+      "25": "25 minutos",
+      "30": "30 minutos",
+      "45": "45 minutos",
+      "60": "60 minutos"
+    },
+    "shortBreakTitle": "Duración de los períodos de descanso corto en minutos",
+    "shortBreak": "Duración del Descanso Corto (minutos)",
+    "shortBreakDurations": {
+      "3": "3 minutos",
+      "5": "5 minutos",
+      "10": "10 minutos",
+      "15": "15 minutos"
+    },
+    "longBreakTitle": "Duración de los períodos de descanso largo en minutos",
+    "longBreak": "Duración del Descanso Largo (minutos)",
+    "sessionsBeforeLongTitle": "Número de sesiones de trabajo antes de tomar un descanso largo",
+    "sessionsBeforeLong": "Sesiones antes del descanso largo",
+    "sessionOptions": {
+      "2": "Cada 2 sesiones",
+      "3": "Cada 3 sesiones",
+      "4": "Cada 4 sesiones",
+      "5": "Cada 5 sesiones",
+      "6": "Cada 6 sesiones"
+    },
+    "tickSounds": "Sonidos de Tic",
+    "tickSoundTitle": "Sonido de tic opcional para recordarle que está en una sesión de trabajo",
+    "tickSoundType": "Tipo de Sonido de Tic",
+    "tickOptions": {
+      "none": "Sin tic",
+      "soft": "Tic suave",
+      "classic": "Tic clásico",
+      "digital": "Tic digital"
+    },
+    "tickIntervalTitle": "Con qué frecuencia reproducir el sonido de tic en segundos",
+    "tickInterval": "Intervalo de Tic (segundos)",
+    "tickIntervals": {
+      "off": "Desactivado (sin tic)",
+      "1": "Cada 1 segundo",
+      "2": "Cada 2 segundos",
+      "3": "Cada 3 segundos",
+      "5": "Cada 5 segundos",
+      "10": "Cada 10 segundos",
+      "15": "Cada 15 segundos",
+      "30": "Cada 30 segundos",
+      "60": "Cada 60 segundos"
+    },
+    "announceSounds": "Sonidos de Anuncio",
+    "shortBreakAnnounceTitle": "Sonido a reproducir cuando comienza el descanso corto",
+    "shortBreakAnnounce": "Anuncio Descanso Corto",
+    "longBreakAnnounceTitle": "Sonido a reproducir cuando comienza el descanso largo",
+    "longBreakAnnounce": "Anuncio Descanso Largo",
+    "resumeWorkAnnounceTitle": "Sonido a reproducir al reanudar el trabajo después del descanso",
+    "resumeWorkAnnounce": "Anuncio Reanudar Trabajo",
+    "options": "Opciones",
+    "autoStartTitle": "Iniciar automáticamente la siguiente sesión sin requerir intervención manual",
+    "autoStart": "Iniciar automáticamente la siguiente sesión",
+    "promptDescriptionsTitle": "Solicitar descripción de actividad y crear entradas de registro para sesiones de trabajo",
+    "promptDescriptions": "Solicitar descripciones de sesión de trabajo",
+    "logBreaksTitle": "También registrar sesiones de descanso en el seguimiento de actividades",
+    "logBreaks": "Registrar sesiones de descanso también",
+    "enableLongBreaksTitle": "Activar descansos largos después de completar múltiples sesiones",
+    "enableLongBreaks": "Activar descansos largos",
+    "allowPausingTitle": "Permitir pausar sesiones Pomodoro desde el banner",
+    "allowPausing": "Permitir pausa de sesión",
+    "autoResetDailyTitle": "Restablecer automáticamente el contador de sesiones a 1 cuando cambie el día",
+    "autoResetDaily": "Restablecer sesiones automáticamente a diario",
+    "sessionManagement": "Gestión de Sesiones",
+    "resetCounterTitle": "Restablecer contador de sesiones a 1",
+    "resetCounter": "Restablecer Contador de Sesiones"
+  },
+  "dataManagement": {
+    "backup": "Respaldo de Base de Datos",
+    "backupDescription": "Exportar o importar sus datos de actividad",
+    "exportDatabase": "Exportar Base de Datos",
+    "importDatabase": "Importar Base de Datos",
+    "warningSettings": "Configuración de Advertencias",
+    "warningDescription": "Configurar diálogos de confirmación para acciones destructivas",
+    "warnDeleteTitle": "Mostrar diálogo de confirmación al eliminar actividades",
+    "warnDelete": "Advertir al eliminar actividad",
+    "warnResetTitle": "Mostrar diálogo de confirmación al restablecer el contador de sesiones Pomodoro",
+    "warnReset": "Advertir al restablecer sesión",
+    "forceManualSave": "Forzar Guardado Manual"
+  },
+  "diagnostics": {
+    "title": "🔧 Diagnósticos",
+    "systemTests": "Pruebas del Sistema",
+    "systemTestsDescription": "Probar varios componentes y funcionalidades del sistema",
+    "notifications": "🔔 Notificaciones",
+    "testReminderTitle": "Enviar un recordatorio de prueba",
+    "testReminder": "🧪 Recordatorio de Prueba",
+    "testSoundTitle": "Reproducir un sonido de recordatorio de prueba",
+    "testSound": "🔊 Sonido de Prueba",
+    "refreshStatusTitle": "Actualizar la visualización del estado de permisos de recordatorio",
+    "refreshStatus": "🔄 Actualizar Estado",
+    "forceEnableTitle": "Forzar mostrar diálogo de permisos de notificación",
+    "forceEnable": "⚡ Forzar Activación",
+    "serviceWorker": "⚙️ Service Worker",
+    "runDiagnosticsTitle": "Ejecutar diagnósticos completos del service worker",
+    "runDiagnostics": "🔍 Ejecutar Diagnósticos",
+    "dataManagement": "⚠️ Gestión de Datos",
+    "dataWarning": "Estas acciones no se pueden deshacer",
+    "clearAllData": "🗑️ Borrar Todos los Datos"
+  },
+  "modals": {
+    "edit": {
+      "title": "Editar Entrada",
+      "activity": "Actividad",
+      "description": "Descripción",
+      "time": "Hora",
+      "markTodo": "Marcar como Tarea",
+      "markNote": "Marcar como Nota",
+      "dueDate": "Fecha de Vencimiento (opcional)",
+      "update": "Actualizar Entrada",
+      "cancel": "Cancelar"
+    },
+    "templateManager": {
+      "title": "Gestor de Plantillas",
+      "saveAll": "Guardar Todos los Cambios",
+      "close": "Cerrar",
+      "templates": "Plantillas",
+      "addTemplate": "Añadir Plantilla",
+      "resetAll": "Restablecer Todo",
+      "selectTemplate": "Seleccionar una plantilla para editar",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "duplicate": "Duplicar",
+      "editor": "Editor",
+      "preview": "Vista Previa",
+      "templateName": "Nombre de Plantilla",
+      "templateNamePlaceholder": "ej. Mi Plantilla Personalizada",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Breve descripción de la plantilla",
+      "outputType": "Tipo de Salida",
+      "outputTypes": {
+        "html": "HTML",
+        "markdown": "Markdown",
+        "csv": "CSV",
+        "plainText": "Texto Plano"
+      },
+      "templateContent": "Contenido de Plantilla",
+      "templateContentPlaceholder": "Ingrese el contenido de su plantilla aquí...",
+      "setDefault": "Establecer como plantilla predeterminada",
+      "previewTitle": "Vista Previa",
+      "rendered": "Renderizado",
+      "source": "Fuente",
+      "refresh": "Actualizar",
+      "selectTemplatePreview": "Seleccionar una plantilla para ver la vista previa"
+    },
+    "templateGuide": {
+      "title": "Guía de Plantillas",
+      "activityDescription": "Descripción de la actividad"
+    },
+    "pomodoroActivity": {
+      "title": "Actividad de Sesión de Trabajo",
+      "activityLabel": "¿En qué va a trabajar?",
+      "activityPlaceholder": "ej. Escribir informe, Preparación de reunión",
+      "usePrevious": "Usar Actividad Anterior",
+      "descriptionLabel": "Descripción (opcional)",
+      "descriptionPlaceholder": "Detalles adicionales sobre esta sesión de trabajo",
+      "startSession": "Iniciar Sesión de Trabajo",
+      "cancel": "Cancelar"
+    },
+    "pomodoroAbandon": {
+      "title": "Abandono de Sesión",
+      "workedFor": "Trabajó durante {minutes} minuto{minutes, plural, one {} other {s}}",
+      "saveQuestion": "¿Le gustaría guardar lo que logró durante esta sesión parcial?",
+      "activityLabel": "Actividad lograda",
+      "activityPlaceholder": "¿En qué trabajó durante este tiempo?",
+      "descriptionLabel": "Descripción (opcional)",
+      "descriptionPlaceholder": "Detalles adicionales sobre lo que logró",
+      "saveAbandon": "Guardar Trabajo y Abandonar",
+      "justAbandon": "Solo Abandonar"
+    },
+    "confirmation": {
+      "title": "Confirmar Acción",
+      "defaultMessage": "¿Está seguro de que desea realizar esta acción?",
+      "dontAskAgain": "No preguntar de nuevo para este tipo de acción",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar"
+    },
+    "activityHoursInfo": {
+      "title": "⏰ Información de Horas de Actividad",
+      "alertsOff": "Las alertas de recordatorio están desactivadas fuera de las horas de actividad.",
+      "configure": "⚙️ Configurar Horas de Actividad",
+      "gotIt": "Entendido"
+    },
+    "overdueAlert": {
+      "title": "⚠️ Elementos Vencidos",
+      "message": "Los siguientes elementos han pasado su fecha de vencimiento:",
+      "gotIt": "Entendido"
+    },
+    "hashtagBrowser": {
+      "title": "Explorador de Hashtags",
+      "count": "{count} hashtag{count, plural, one {} other {s}} encontrado{count, plural, one {} other {s}}",
+      "noHashtags": "No se encontraron hashtags. ¡Añada actividades con #hashtags para verlos aquí!"
+    },
+    "userGuide": {
+      "title": "Guía del Usuario",
+      "settingsCustomization": "Configuración y personalización"
+    },
+    "notificationSetup": {
+      "title": "¿Activar Notificaciones del Sistema?",
+      "appName": "Seguimiento de Actividades",
+      "enableOption": "✅ Activar Notificaciones del Sistema",
+      "soundOption": "🔊 Solo Sonido",
+      "enableButton": "Activar Notificaciones del Sistema",
+      "soundButton": "Solo Sonido"
+    },
+    "about": {
+      "title": "Acerca del Seguimiento de Actividades",
+      "appInfo": "Información de la Aplicación",
+      "versionHistory": "Historial de Versiones",
+      "loadingVersion": "Cargando historial de versiones...",
+      "appName": "Seguimiento de Actividades",
+      "copyright": "© 2025 Chris Carline",
+      "githubLink": "⚡ Ver en GitHub"
+    },
+    "workspaceManager": {
+      "title": "🏢 Gestor de Espacios de Trabajo",
+      "currentWorkspace": "Espacio de Trabajo Actual: {name}",
+      "description": "Cada espacio de trabajo mantiene actividades, configuración y estado separados...",
+      "availableWorkspaces": "Espacios de Trabajo Disponibles",
+      "enterName": "Ingrese nombre del espacio de trabajo...",
+      "createWorkspace": "Crear Espacio de Trabajo",
+      "close": "Cerrar"
+    },
+    "languagePicker": {
+      "title": "🌐 Seleccionar idioma"
+    }
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "markComplete": "Marcar como completado",
+    "outsideActivityHours": "Fuera del horario de actividad",
+    "todoTag": "Tarea",
+    "noteTag": "Nota",
+    "yes": "Sí",
+    "no": "No",
+    "ok": "OK",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información",
+    "none": "Ninguno",
+    "all": "Todo",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana",
+    "thisWeek": "Esta Semana",
+    "thisMonth": "Este Mes",
+    "minutes": "minuto{count, plural, one {} other {s}}",
+    "hours": "hora{count, plural, one {} other {s}}",
+    "days": "día{count, plural, one {} other {s}}",
+    "weeks": "semana{count, plural, one {} other {s}}",
+    "months": "mes{count, plural, one {} other {es}}",
+    "daysOfWeek": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    }
+  }
+}
