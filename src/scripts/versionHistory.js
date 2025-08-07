@@ -5,6 +5,11 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "31b0120",
+        date: "2025-08-07",
+        summary: "Fixed todo/notes form submission, enhanced Service Worker notifications with inline reply, improved contextual entry creation across all form types"
+    },
+    {
         commit: "24dacd7",
         date: "2025-08-05",
         summary: "Added complex schedule capabilities and renamed 'working schedule' to 'activity schedule' for generic terminology"
@@ -23,11 +28,6 @@ const VERSION_HISTORY = [
         commit: "eb3cd3b",
         date: "2025-08-05",
         summary: "Enhanced mobile UI with hashtag autocompletion, improved form layouts, and better notification integration"
-    },
-    {
-        commit: "b0709e0",
-        date: "2025-08-04",
-        summary: "Complete due date management system with overdue alerts, rescheduling, and smart prioritization"
     }
 ];
 
