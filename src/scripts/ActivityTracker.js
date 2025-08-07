@@ -1891,11 +1891,41 @@ class ActivityTracker {
 
         // Check if currently within activity hours
         if (this.isWithinWorkingHours(now)) {
-            // Calculate time until next break or end of work
             if (this.notificationTimer) {
-                const nextReminder = new Date(this.state.nextReminderTime || Date.now() + this.settings.notificationInterval * 60000);
-                const minutesUntil = Math.max(0, Math.ceil((nextReminder - now) / 60000));
-                timeRemainingEl.textContent = `Next reminder in ${minutesUntil}m`;
+                // Calculate time until next reminder based on actual last reminder time
+                const lastReminderTime = localStorage.getItem('lastNotificationTime');
+                const intervalMs = this.settings.notificationInterval * 60 * 1000;
+                
+                if (!lastReminderTime || intervalMs <= 0) {
+                    timeRemainingEl.textContent = 'Ready for reminder';
+                    return;
+                }
+
+                const timeSinceLastReminder = now.getTime() - parseInt(lastReminderTime);
+                const timeUntilNextReminder = intervalMs - timeSinceLastReminder;
+
+                if (timeUntilNextReminder <= 0) {
+                    timeRemainingEl.textContent = 'Ready for reminder';
+                    return;
+                }
+
+                // Convert milliseconds to hours, minutes, seconds
+                const totalSeconds = Math.ceil(timeUntilNextReminder / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                // Format time display
+                let timeText;
+                if (hours > 0) {
+                    timeText = `${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    timeText = `${minutes}m ${seconds}s`;
+                } else {
+                    timeText = `${seconds}s`;
+                }
+
+                timeRemainingEl.textContent = timeText;
             } else {
                 timeRemainingEl.textContent = 'Ready to start';
             }
@@ -1920,41 +1950,6 @@ class ActivityTracker {
         } else {
             timeRemainingEl.textContent = 'No activity days scheduled';
         }
-
-        // We're in activity hours - calculate time until next reminder based on actual last reminder time
-        const lastReminderTime = localStorage.getItem('lastNotificationTime');
-        const intervalMs = this.settings.notificationInterval * 60 * 1000;
-        
-        if (!lastReminderTime || intervalMs <= 0) {
-            timeRemainingEl.textContent = 'Ready for reminder';
-            return;
-        }
-
-        const timeSinceLastReminder = now.getTime() - parseInt(lastReminderTime);
-        const timeUntilNextReminder = intervalMs - timeSinceLastReminder;
-
-        if (timeUntilNextReminder <= 0) {
-            timeRemainingEl.textContent = 'Ready for reminder';
-            return;
-        }
-
-        // Convert milliseconds to hours, minutes, seconds
-        const totalSeconds = Math.ceil(timeUntilNextReminder / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        // Format time display
-        let timeText;
-        if (hours > 0) {
-            timeText = `${hours}h ${minutes}m ${seconds}s`;
-        } else if (minutes > 0) {
-            timeText = `${minutes}m ${seconds}s`;
-        } else {
-            timeText = `${seconds}s`;
-        }
-
-        timeRemainingEl.textContent = timeText;
     }
 
     /**
@@ -2177,6 +2172,8 @@ class ActivityTracker {
         this.notificationTimer = setInterval(() => {
             this.checkAndTriggerActivityReminder();
         }, 60000); // Check every minute
+        
+        // Countdown display will calculate from lastNotificationTime directly
         
         // Start countdown display timer (updates every second)
         this.startNotificationCountdown();

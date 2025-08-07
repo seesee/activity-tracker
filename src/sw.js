@@ -149,7 +149,22 @@ self.addEventListener('notificationactionclick', (event) => {
         console.log('User replied:', reply);
         
         if (reply && reply.trim()) {
-            // Send the reply text to populate the activity input field
+            // Create entry directly from notification
+            const now = new Date();
+            const entry = {
+                id: generateId(),
+                activity: reply.trim(),
+                description: 'from notification',
+                timestamp: now.toISOString(),
+                created: now.toISOString(),
+                isTodo: false,
+                isNote: false,
+                tags: extractHashtags(reply.trim()),
+                dueDate: null,
+                startedAt: null
+            };
+            
+            // Send the entry to create it immediately
             event.waitUntil(
                 clients.matchAll({ type: 'window' }).then((clientList) => {
                     let messageSent = false;
@@ -158,8 +173,8 @@ self.addEventListener('notificationactionclick', (event) => {
                     for (const client of clientList) {
                         if (isAppClient(client.url)) {
                             client.postMessage({ 
-                                type: 'populate-activity-input', 
-                                text: reply.trim()
+                                type: 'add-entry', 
+                                entry: entry
                             });
                             messageSent = true;
                         }
@@ -171,8 +186,8 @@ self.addEventListener('notificationactionclick', (event) => {
                             // Wait a bit for the page to load, then send the message
                             setTimeout(() => {
                                 client.postMessage({ 
-                                    type: 'populate-activity-input', 
-                                    text: reply.trim()
+                                    type: 'add-entry', 
+                                    entry: entry
                                 });
                             }, 2000);
                         });
@@ -281,6 +296,40 @@ function broadcastMessage(message) {
             client.postMessage(message);
         });
     });
+}
+
+/**
+ * Generate a unique ID (replicated from utils.js)
+ * @returns {string} Unique identifier
+ */
+function generateId() {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+}
+
+/**
+ * Extract hashtags from text (replicated from ActivityTracker.js)
+ * @param {string} text - Text to extract hashtags from
+ * @returns {string[]} Array of hashtags without the # symbol
+ */
+function extractHashtags(text) {
+    if (!text || typeof text !== 'string') return [];
+    
+    const hashtagRegex = /#([\w][\w-]*)/g;
+    const hashtags = [];
+    const seenTags = new Set(); // For case-insensitive deduplication
+    let match;
+    
+    while ((match = hashtagRegex.exec(text)) !== null) {
+        const originalTag = match[1]; // Preserve original case
+        const lowerTag = originalTag.toLowerCase(); // For comparison
+        
+        if (!seenTags.has(lowerTag)) {
+            seenTags.add(lowerTag);
+            hashtags.push(originalTag); // Store original case
+        }
+    }
+    
+    return hashtags;
 }
 
 /**
