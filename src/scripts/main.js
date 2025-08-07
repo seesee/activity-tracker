@@ -2368,7 +2368,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                     console.log('New Service Worker installed, refresh recommended');
-                                    showNotification('App updated! Refresh for latest version.', 'info', 10000);
+                                    const notificationId = showNotification('App updated! <button onclick="window.location.reload(); event.stopPropagation();" class="refresh-btn">Refresh Now</button>', 'info', 15000);
+                                    
+                                    // Also make the entire notification clickable to refresh
+                                    setTimeout(() => {
+                                        const notificationEl = document.querySelector(`[data-notification-id="${notificationId}"]`);
+                                        if (notificationEl) {
+                                            // Remove default click handler and add refresh handler
+                                            notificationEl.onclick = (e) => {
+                                                // Don't refresh if clicking the button (it has its own handler)
+                                                if (!e.target.classList.contains('refresh-btn')) {
+                                                    window.location.reload();
+                                                }
+                                            };
+                                        }
+                                    }, 100);
                                 }
                             });
                         }

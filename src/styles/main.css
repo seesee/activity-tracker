@@ -4408,9 +4408,11 @@ body.debug-palette-override .entry-item {
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Undo button styling within notifications (both toast and utils notifications) */
+/* Button styling within notifications (undo, refresh, etc.) */
 .notification-toast .undo-btn,
-div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-btn {
+.notification-toast .refresh-btn,
+div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-btn,
+div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh-btn {
     background: rgba(255, 255, 255, 0.2);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -4424,10 +4426,23 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-bt
 }
 
 .notification-toast .undo-btn:hover,
-div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-btn:hover {
+.notification-toast .refresh-btn:hover,
+div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .undo-btn:hover,
+div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh-btn:hover {
     background: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
+}
+
+/* Special styling for refresh button (slightly different color for info notifications) */
+.notification-toast.notification-info .refresh-btn {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.notification-toast.notification-info .refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 @keyframes slideIn {
