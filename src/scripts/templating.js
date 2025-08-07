@@ -28,7 +28,8 @@ class TemplatingEngine {
                     return renderer.renderInlineWithClasses(String(value));
                 }
                 return this.escapeHtml(value);
-            }
+            },
+            cleanHashtags: (value) => this.cleanHashtags(value)
         };
         console.log('Templating Engine Initialized (Tokenizer Version)');
     }
@@ -512,6 +513,13 @@ class TemplatingEngine {
             return `"${str.replace(/"/g, '""')}"`;
         }
         return str;
+    }
+
+    cleanHashtags(text) {
+        if (text === null || text === undefined) return '';
+        return String(text).replace(/#([\w][\w-_]*)/g, (match, hashtag) => {
+            return hashtag.replace(/[-_]/g, ' ');
+        });
     }
 }
 
