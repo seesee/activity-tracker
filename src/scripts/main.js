@@ -1091,7 +1091,7 @@ function getOverdueItems() {
     if (!tracker || !tracker.entries) return [];
     
     const overdueItems = tracker.entries.filter(entry => 
-        entry.dueDate && isOverdue(entry.dueDate)
+        entry.dueDate && entry.isTodo && isOverdue(entry.dueDate)
     );
     
     // Sort by most overdue first (oldest due date first)
@@ -1461,9 +1461,9 @@ function checkDueItemsForNotifications() {
     const now = new Date();
     const oneMinuteAgo = new Date(now.getTime() - 60000);
     
-    // Find items that became due in the last minute
+    // Find items that became due in the last minute (only consider active todos)
     const newlyDueItems = tracker.entries.filter(entry => {
-        if (!entry.dueDate) return false;
+        if (!entry.dueDate || !entry.isTodo) return false;
         
         const dueDate = new Date(entry.dueDate);
         return dueDate <= now && dueDate > oneMinuteAgo;

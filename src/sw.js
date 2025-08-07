@@ -112,22 +112,22 @@ self.addEventListener('notificationclick', (event) => {
     event.notification.close();
     
     // Handle different types of notifications
-    if (event.notification.tag === 'activity-reminder' || event.notification.tag === 'test-notification') {
+    if (event.notification.tag === 'activity-reminder') {
         // Open the app and focus on tracker section
         event.waitUntil(
-            clients.matchAll({ type: 'window' }).then((clientList) => {
+            clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
                 // If app is already open, focus it
                 for (const client of clientList) {
-                    if (client.url.includes('activity-tracker') || 
-                        client.url.includes('index.html') || 
-                        client.url.includes('activity_tracker.html')) {
-                        client.focus();
-                        client.postMessage({ type: 'navigate-to-tracker' });
-                        return;
+                    if (isAppClient(client.url)) {
+                        console.log('Found existing client, focusing:', client.url);
+                        return client.focus().then(() => {
+                            client.postMessage({ type: 'navigate-to-tracker' });
+                        });
                     }
                 }
                 
                 // If app is not open, open it
+                console.log('No existing client found, opening new window');
                 if (clients.openWindow) {
                     return clients.openWindow(getAppUrl() + '#tracker');
                 }
@@ -156,9 +156,7 @@ self.addEventListener('notificationactionclick', (event) => {
                     
                     // Send to existing clients
                     for (const client of clientList) {
-                        if (client.url.includes('activity-tracker') || 
-                            client.url.includes('index.html') || 
-                            client.url.includes('activity_tracker.html')) {
+                        if (isAppClient(client.url)) {
                             client.postMessage({ 
                                 type: 'populate-activity-input', 
                                 text: reply.trim()
@@ -286,16 +284,51 @@ function broadcastMessage(message) {
 }
 
 /**
+ * Utility function to check if a client URL belongs to this app
+ * @param {string} url - The client URL to check
+ * @returns {boolean} True if this is an app client
+ */
+function isAppClient(url) {
+    try {
+        const urlObj = new URL(url);
+        const pathname = urlObj.pathname;
+        const filename = pathname.split('/').pop();
+        
+        // Check for activity-tracker directory in URL (development/subdirectory deployments)
+        if (pathname.includes('/activity-tracker/')) {
+            return true;
+        }
+        
+        // Check for root deployments (just domain or domain with trailing slash)
+        if (pathname === '/' || pathname === '') {
+            return true;
+        }
+        
+        // Check if this is the same origin as the service worker
+        if (urlObj.origin !== self.location.origin) {
+            return false;
+        }
+        
+        // Check for index.html (current) or index.{language}.html (future language-specific versions)
+        // Must start with "index." and end with ".html"
+        if (filename.startsWith('index.') && filename.endsWith('.html')) {
+            return true;
+        }
+        
+        return false;
+    } catch (error) {
+        // If URL parsing fails, assume it's not an app client
+        return false;
+    }
+}
+
+/**
  * Utility function to check if app is already open
  * @returns {Promise<boolean>} True if app is open
  */
 function isAppOpen() {
     return clients.matchAll({ type: 'window' }).then((clientList) => {
-        return clientList.some((client) => 
-            client.url.includes('activity-tracker') || 
-            client.url.includes('index.html') ||
-            client.url.includes('activity_tracker.html')
-        );
+        return clientList.some((client) => isAppClient(client.url));
     });
 }
 
@@ -304,17 +337,9 @@ function isAppOpen() {
  * @returns {string} The appropriate app URL
  */
 function getAppUrl() {
-    // Try to determine the correct filename based on the service worker location
-    const swUrl = self.location.href;
-    const basePath = swUrl.substring(0, swUrl.lastIndexOf('/') + 1);
-    
-    // Check if we're in a subdirectory or root deployment
-    if (swUrl.includes('/activity-tracker/') || swUrl.includes('/dist/')) {
-        return './index.html';
-    } else {
-        // Likely deployed at root level, use activity_tracker.html
-        return './activity_tracker.html';
-    }
+    // Always use index.html as the main entry point
+    // The app will handle language routing if needed
+    return './index.html';
 }
 
 console.log('Service Worker loaded');

@@ -840,8 +840,8 @@ class ActivityTracker {
      */
     getSortedEntriesWithOverduePriority() {
         const now = new Date();
-        const overdueEntries = this.entries.filter(entry => entry.dueDate && new Date(entry.dueDate) < now);
-        const regularEntries = this.entries.filter(entry => !entry.dueDate || new Date(entry.dueDate) >= now);
+        const overdueEntries = this.entries.filter(entry => entry.dueDate && entry.isTodo && new Date(entry.dueDate) < now);
+        const regularEntries = this.entries.filter(entry => !entry.dueDate || !entry.isTodo || new Date(entry.dueDate) >= now);
 
         // Sort overdue entries by how overdue they are (most overdue first)
         const sortedOverdue = overdueEntries.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
@@ -874,17 +874,17 @@ class ActivityTracker {
             itemClass += isOverdue ? ' entry-todo entry-overdue' : ' entry-todo';
         }
         
-        // Generate human-friendly due date display
+        // Generate human-friendly due date display (only show if item is currently a todo)
         let dueDateHtml = '';
-        if (entry.dueDate && typeof formatTimeUntilDue === 'function') {
+        if (entry.dueDate && isTodo && typeof formatTimeUntilDue === 'function') {
             const countdownText = formatTimeUntilDue(entry.dueDate);
             if (countdownText) {
                 const isOverdueItem = typeof isOverdue === 'function' && isOverdue(entry.dueDate);
                 const badgeClass = isOverdueItem ? 'due-badge-overdue' : 'due-badge-normal';
                 dueDateHtml = `<div class="entry-due-date"><span class="due-countdown-badge ${badgeClass}">${countdownText}</span></div>`;
             }
-        } else if (entry.dueDate) {
-            // Fallback to formatted date if countdown functions aren't available
+        } else if (entry.dueDate && isTodo) {
+            // Fallback to formatted date if countdown functions aren't available (only for todos)
             dueDateHtml = `<div class="entry-due-date">Due: ${formatDateTime(entry.dueDate)}</div>`;
         }
 
@@ -1578,16 +1578,17 @@ class ActivityTracker {
         }
 
         try {
+            // Use the same notification as regular activity reminders, just with a different body text
             const options = {
-                body: 'This is a test notification. Try entering an activity in the text field below!',
+                body: 'This is a test notification. What are you working on right now?',
                 icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
-                tag: 'test-notification',
+                tag: 'activity-reminder', // Use the same tag as regular notifications
                 requireInteraction: true,
                 actions: [
-                    { action: 'reply', type: 'text', title: 'Log Activity', placeholder: 'e.g. coding' }
+                    { action: 'reply', type: 'text', title: 'Log Activity', placeholder: 'What are you working on?' }
                 ]
             };
-            this.showNotificationWithServiceWorker('Activity Tracker Test', options);
+            this.showNotificationWithServiceWorker('Activity Tracker Reminder', options);
 
             if (!isAutoTest) {
                 showNotification('Test notification sent successfully!', 'success');
@@ -2271,7 +2272,7 @@ class ActivityTracker {
                 tag: 'activity-reminder',
                 requireInteraction: true,
                 actions: [
-                    { action: 'reply', type: 'text', title: 'Log Activity', placeholder: 'e.g. coding' }
+                    { action: 'reply', type: 'text', title: 'Log Activity', placeholder: 'What are you working on?' }
                 ]
             };
             this.showNotificationWithServiceWorker('Activity Tracker Reminder', options);
