@@ -105,32 +105,56 @@ self.addEventListener('fetch', (event) => {
 
 /**
  * Notification click handler
+ * Follows best practices: close notification, find existing client or open new one,
+ * post message to client for DOM manipulation, wrap in event.waitUntil
  */
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification clicked:', event.notification.tag);
     
+    // Close the notification immediately
     event.notification.close();
     
     // Handle different types of notifications
     if (event.notification.tag === 'activity-reminder') {
-        // Open the app and focus on tracker section
+        // Wrap everything in event.waitUntil to prevent SW termination
         event.waitUntil(
-            clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-                // If app is already open, focus it
+            clients.matchAll({ 
+                type: 'window', 
+                includeUncontrolled: true 
+            }).then((clientList) => {
+                // First, try to find and focus an existing client
                 for (const client of clientList) {
                     if (isAppClient(client.url)) {
                         console.log('Found existing client, focusing:', client.url);
                         return client.focus().then(() => {
-                            client.postMessage({ type: 'navigate-to-tracker' });
+                            // Post message to client for DOM manipulation
+                            client.postMessage({ 
+                                type: 'navigate-to-tracker',
+                                source: 'notification-click'
+                            });
                         });
                     }
                 }
                 
-                // If app is not open, open it
+                // If no existing client, open new window with proper URL
                 console.log('No existing client found, opening new window');
                 if (clients.openWindow) {
-                    return clients.openWindow(getAppUrl() + '#tracker');
+                    const appUrl = getAppUrl();
+                    console.log('Opening URL:', appUrl);
+                    return clients.openWindow(appUrl).then((client) => {
+                        if (client) {
+                            // Wait for client to load, then send navigation message
+                            setTimeout(() => {
+                                client.postMessage({ 
+                                    type: 'navigate-to-tracker',
+                                    source: 'notification-click'
+                                });
+                            }, 1000);
+                        }
+                    });
                 }
+            }).catch(error => {
+                console.error('Error handling notification click:', error);
             })
         );
     }
@@ -186,23 +210,69 @@ self.addEventListener('notificationactionclick', (event) => {
                     
                     // If no existing client, open the app and send both messages
                     if (!messageSent) {
-                        return clients.openWindow(getAppUrl() + '#tracker').then((client) => {
-                            // Wait a bit for the page to load, then send both messages
-                            setTimeout(() => {
-                                client.postMessage({ 
-                                    type: 'add-entry', 
-                                    entry: entry
-                                });
-                                client.postMessage({ 
-                                    type: 'populate-activity-input', 
-                                    text: reply.trim()
-                                });
-                            }, 2000);
+                        const appUrl = getAppUrl();
+                        return clients.openWindow(appUrl).then((client) => {
+                            if (client) {
+                                // Wait for the page to load, then send both messages
+                                setTimeout(() => {
+                                    client.postMessage({ 
+                                        type: 'add-entry', 
+                                        entry: entry
+                                    });
+                                    client.postMessage({ 
+                                        type: 'populate-activity-input', 
+                                        text: reply.trim(),
+                                        source: 'notification-action'
+                                    });
+                                }, 2000);
+                            }
                         });
                     }
                 })
             );
         }
+    } else if (event.action === 'open') {
+        // Handle "Open App" action - same as notification click
+        event.waitUntil(
+            clients.matchAll({ 
+                type: 'window', 
+                includeUncontrolled: true 
+            }).then((clientList) => {
+                // First, try to find and focus an existing client
+                for (const client of clientList) {
+                    if (isAppClient(client.url)) {
+                        console.log('Found existing client, focusing:', client.url);
+                        return client.focus().then(() => {
+                            // Post message to client for DOM manipulation
+                            client.postMessage({ 
+                                type: 'navigate-to-tracker',
+                                source: 'notification-action-open'
+                            });
+                        });
+                    }
+                }
+                
+                // If no existing client, open new window with proper URL
+                console.log('No existing client found, opening new window');
+                if (clients.openWindow) {
+                    const appUrl = getAppUrl();
+                    console.log('Opening URL:', appUrl);
+                    return clients.openWindow(appUrl).then((client) => {
+                        if (client) {
+                            // Wait for client to load, then send navigation message
+                            setTimeout(() => {
+                                client.postMessage({ 
+                                    type: 'navigate-to-tracker',
+                                    source: 'notification-action-open'
+                                });
+                            }, 1000);
+                        }
+                    });
+                }
+            }).catch(error => {
+                console.error('Error handling notification open action:', error);
+            })
+        );
     }
 });
 
@@ -394,9 +464,22 @@ function isAppOpen() {
  * @returns {string} The appropriate app URL
  */
 function getAppUrl() {
-    // Always use index.html as the main entry point
-    // The app will handle language routing if needed
-    return './index.html';
+    // Get the current Service Worker registration scope
+    const scope = self.registration.scope;
+    console.log('Service Worker scope:', scope);
+    
+    // Use the scope to ensure URL is within SW scope
+    // This prevents opening a second tab/window
+    try {
+        const scopeUrl = new URL(scope);
+        // Return just the base URL without explicit filename
+        // This matches the app's start_url and stays within scope
+        return scope;
+    } catch (error) {
+        console.error('Error getting app URL from scope:', error);
+        // Fallback to relative path
+        return './';
+    }
 }
 
 console.log('Service Worker loaded');

@@ -1594,9 +1594,19 @@ class ActivityTracker {
         }
 
         try {
+            // Debug Service Worker state
+            console.log('Service Worker debug info:', {
+                supported: 'serviceWorker' in navigator,
+                controller: navigator.serviceWorker?.controller?.state,
+                controllerUrl: navigator.serviceWorker?.controller?.scriptURL
+            });
+            
             // Try service worker approach first
-            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            if ('serviceWorker' in navigator) {
                 const registration = await navigator.serviceWorker.ready;
+                console.log('Service Worker registration ready:', registration);
+                
+                // Show notification via Service Worker
                 console.log('Showing notification with options:', options);
                 await registration.showNotification(title, options);
                 console.log('Notification shown via Service Worker');
@@ -1661,9 +1671,6 @@ class ActivityTracker {
         console.log('Testing notification, permission:', Notification.permission);
         this.updateDebugInfo();
         
-        // Play sound regardless of notification permission
-        this.playNotificationSound();
-        
         if (Notification.permission !== 'granted') {
             if (!isAutoTest) {
                 showNotification('Please enable notifications first! Current permission: ' + Notification.permission, 'error');
@@ -1672,22 +1679,13 @@ class ActivityTracker {
         }
 
         try {
-            // Use the same notification as regular activity reminders, just with a different body text
-            const options = {
-                body: 'This is a test notification. What are you working on right now?',
-                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
-                tag: 'activity-reminder', // Use the same tag as regular notifications
-                requireInteraction: true,
-                actions: [
-                    { action: 'reply', type: 'text', title: 'Log Activity', placeholder: 'What are you working on?' }
-                ]
-            };
-            this.showNotificationWithServiceWorker('Activity Tracker Reminder', options);
+            // Use the real activity reminder notification method
+            this.showActivityReminderNotification();
 
             if (!isAutoTest) {
                 showNotification('Test notification sent successfully!', 'success');
             }
-            console.log('Test notification created successfully');
+            console.log('Test notification created successfully using real notification method');
         } catch (error) {
             console.error('Error creating test notification:', error);
             showNotification('Error creating test notification: ' + error.message, 'error');
@@ -2363,9 +2361,27 @@ class ActivityTracker {
                 tag: 'activity-reminder',
                 requireInteraction: true,
                 actions: [
-                    { action: 'reply', type: 'text', title: 'Log Activity', placeholder: 'What are you working on?' }
+                    {
+                        action: 'reply',
+                        type: 'text',
+                        title: 'Quick Log',
+                        placeholder: 'What are you working on?'
+                    },
+                    {
+                        action: 'open',
+                        title: 'Open App'
+                    }
                 ]
             };
+            
+            console.log('Creating notification with options:', options);
+            console.log('Browser support check:', {
+                notificationSupported: 'Notification' in window,
+                serviceWorkerSupported: 'serviceWorker' in navigator,
+                notificationPermission: typeof Notification !== 'undefined' ? Notification.permission : 'unknown',
+                maxActions: typeof Notification !== 'undefined' ? Notification.maxActions : 'unknown'
+            });
+            
             this.showNotificationWithServiceWorker('Activity Tracker Reminder', options);
         } catch (error) {
             console.error('Error showing activity reminder notification:', error);

@@ -2406,10 +2406,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (event.data && event.data.type === 'navigate-to-tracker') {
+                console.log('Received navigate-to-tracker message:', event.data);
                 showSection('tracker');
                 
-                // Focus the activity input field and ensure forms are visible
-                setTimeout(() => {
+                // Focus the activity input field with proper visibility checks
+                const focusInput = () => {
+                    // Only focus if page is visible (some platforms block focus until visible)
+                    if (document.hidden) {
+                        console.log('Page hidden, deferring focus until visible');
+                        // Wait for page to become visible before focusing
+                        const visibilityHandler = () => {
+                            if (!document.hidden) {
+                                document.removeEventListener('visibilitychange', visibilityHandler);
+                                setTimeout(focusInput, 100); // Retry focus
+                            }
+                        };
+                        document.addEventListener('visibilitychange', visibilityHandler);
+                        return;
+                    }
+                    
                     const activityInput = document.getElementById('activity');
                     if (activityInput) {
                         // Make sure entry forms are visible if they were hidden
@@ -2419,23 +2434,60 @@ document.addEventListener('DOMContentLoaded', () => {
                                 updateAllEntryForms();
                             }
                         }
-                        activityInput.focus();
+                        
+                        // Focus with additional checks
+                        try {
+                            activityInput.focus();
+                            console.log('Activity input focused successfully');
+                        } catch (error) {
+                            console.warn('Failed to focus activity input:', error);
+                        }
                     }
-                }, 100);
+                };
+                
+                // Small delay to ensure UI is ready, then focus
+                setTimeout(focusInput, event.data.source === 'notification-click' ? 200 : 100);
             }
             
             if (event.data && event.data.type === 'populate-activity-input') {
+                console.log('Received populate-activity-input message:', event.data);
                 // Navigate to tracker section first
                 showSection('tracker');
                 
-                // Populate the activity input field with the notification reply text
-                const activityInput = document.getElementById('activity');
-                if (activityInput && event.data.text) {
-                    activityInput.value = event.data.text;
-                    activityInput.focus();
-                    activityInput.select(); // Select the text so user can easily modify it
-                    showNotification('Activity text populated from notification!', 'success');
-                }
+                // Populate the activity input field with proper visibility handling
+                const populateAndFocus = () => {
+                    // Check if page is visible before focusing
+                    if (document.hidden) {
+                        console.log('Page hidden, waiting for visibility before populating input');
+                        const visibilityHandler = () => {
+                            if (!document.hidden) {
+                                document.removeEventListener('visibilitychange', visibilityHandler);
+                                setTimeout(populateAndFocus, 100);
+                            }
+                        };
+                        document.addEventListener('visibilitychange', visibilityHandler);
+                        return;
+                    }
+                    
+                    const activityInput = document.getElementById('activity');
+                    if (activityInput && event.data.text) {
+                        activityInput.value = event.data.text;
+                        
+                        // Focus and select with error handling
+                        try {
+                            activityInput.focus();
+                            activityInput.select(); // Select the text so user can easily modify it
+                            console.log('Activity input populated and focused successfully');
+                            showNotification('Activity text populated from notification!', 'success');
+                        } catch (error) {
+                            console.warn('Failed to focus/select activity input:', error);
+                            showNotification('Activity text populated from notification!', 'success');
+                        }
+                    }
+                };
+                
+                // Small delay for UI readiness
+                setTimeout(populateAndFocus, event.data.source === 'notification-action' ? 300 : 100);
             }
         });
 
