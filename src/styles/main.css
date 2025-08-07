@@ -1505,6 +1505,10 @@ h3 {
     .entry-actions .btn {
         padding: 6px 10px;
         font-size: 12px;
+        text-align: center;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
     }
 
     .report-navigation {
@@ -1795,6 +1799,10 @@ h3 {
         font-size: 12px;
         margin-right: 4px;
         margin-bottom: 4px;
+        text-align: center;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
     }
     
     .btn-quick-set {
@@ -1919,6 +1927,10 @@ h3 {
         margin: 4px;
         min-height: 36px;
         min-width: 60px;
+        text-align: center;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
     }
     
     /* Modal close button larger for touch */
@@ -5480,6 +5492,7 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
 }
 
