@@ -149,7 +149,7 @@ self.addEventListener('notificationactionclick', (event) => {
         console.log('User replied:', reply);
         
         if (reply && reply.trim()) {
-            // Create entry directly from notification
+            // Create entry directly from notification AND populate the input field
             const now = new Date();
             const entry = {
                 id: generateId(),
@@ -164,7 +164,6 @@ self.addEventListener('notificationactionclick', (event) => {
                 startedAt: null
             };
             
-            // Send the entry to create it immediately
             event.waitUntil(
                 clients.matchAll({ type: 'window' }).then((clientList) => {
                     let messageSent = false;
@@ -172,22 +171,31 @@ self.addEventListener('notificationactionclick', (event) => {
                     // Send to existing clients
                     for (const client of clientList) {
                         if (isAppClient(client.url)) {
+                            // Send both messages: create entry and populate input
                             client.postMessage({ 
                                 type: 'add-entry', 
                                 entry: entry
+                            });
+                            client.postMessage({ 
+                                type: 'populate-activity-input', 
+                                text: reply.trim()
                             });
                             messageSent = true;
                         }
                     }
                     
-                    // If no existing client, open the app and send the message
+                    // If no existing client, open the app and send both messages
                     if (!messageSent) {
                         return clients.openWindow(getAppUrl() + '#tracker').then((client) => {
-                            // Wait a bit for the page to load, then send the message
+                            // Wait a bit for the page to load, then send both messages
                             setTimeout(() => {
                                 client.postMessage({ 
                                     type: 'add-entry', 
                                     entry: entry
+                                });
+                                client.postMessage({ 
+                                    type: 'populate-activity-input', 
+                                    text: reply.trim()
                                 });
                             }, 2000);
                         });

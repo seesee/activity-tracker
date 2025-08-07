@@ -2407,6 +2407,21 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (event.data && event.data.type === 'navigate-to-tracker') {
                 showSection('tracker');
+                
+                // Focus the activity input field and ensure forms are visible
+                setTimeout(() => {
+                    const activityInput = document.getElementById('activity');
+                    if (activityInput) {
+                        // Make sure entry forms are visible if they were hidden
+                        if (typeof entryFormsVisible !== 'undefined' && !entryFormsVisible) {
+                            entryFormsVisible = true;
+                            if (typeof updateAllEntryForms === 'function') {
+                                updateAllEntryForms();
+                            }
+                        }
+                        activityInput.focus();
+                    }
+                }, 100);
             }
             
             if (event.data && event.data.type === 'populate-activity-input') {
@@ -2440,6 +2455,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle hash navigation (if coming from notification)
     if (window.location.hash === '#tracker') {
         showSection('tracker');
+        
+        // Focus the activity input field and ensure forms are visible
+        setTimeout(() => {
+            const activityInput = document.getElementById('activity');
+            if (activityInput) {
+                // Make sure entry forms are visible if they were hidden
+                if (typeof entryFormsVisible !== 'undefined' && !entryFormsVisible) {
+                    entryFormsVisible = true;
+                    if (typeof updateAllEntryForms === 'function') {
+                        updateAllEntryForms();
+                    }
+                }
+                activityInput.focus();
+            }
+        }, 200);
+        
         // Clean up the hash
         history.replaceState(null, document.title, window.location.pathname + window.location.search);
     }

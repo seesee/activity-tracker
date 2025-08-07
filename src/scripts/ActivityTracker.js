@@ -274,10 +274,29 @@ class ActivityTracker {
      * Attach event listeners to forms
      */
     attachEventListeners() {
+        // Main tracker form
         document.getElementById('activityForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            this.addEntry();
+            this.addEntry('tracker');
         });
+
+        // Todo form
+        const todoForm = document.getElementById('todoActivityForm');
+        if (todoForm) {
+            todoForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.addEntry('todo');
+            });
+        }
+
+        // Notes form
+        const notesForm = document.getElementById('notesActivityForm');
+        if (notesForm) {
+            notesForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.addEntry('notes');
+            });
+        }
 
         document.getElementById('editForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -458,15 +477,69 @@ class ActivityTracker {
      * Add a new activity entry
      * @param {Object} entry - Optional pre-formed entry object
      */
-    addEntry(entry) {
-        let newEntry = entry;
+    addEntry(contextOrEntry) {
+        let newEntry, context;
+        
+        // If first parameter is an entry object (from service worker), use it directly
+        if (contextOrEntry && typeof contextOrEntry === 'object' && contextOrEntry.id) {
+            newEntry = contextOrEntry;
+            context = null; // No context needed for pre-built entries
+        } else {
+            // Otherwise, it's a context string ('tracker', 'todo', 'notes')
+            context = contextOrEntry || 'tracker';
+            newEntry = null;
+        }
+        
         if (!newEntry) {
-            const activity = document.getElementById('activity').value;
-            const description = document.getElementById('description').value;
-            const timestamp = document.getElementById('timestamp').value;
-            const isTodo = isTodoModeActive();
-            const isNote = isNoteModeActive();
-            const dueDate = document.getElementById('dueDate')?.value || null;
+            // Determine field IDs based on context
+            let activityId, descriptionId, timestampId, dueDateId;
+            let defaultIsTodo, defaultIsNote;
+            
+            if (context === 'todo') {
+                activityId = 'todoActivity';
+                descriptionId = 'todoDescription';
+                timestampId = 'todoTimestamp';
+                dueDateId = 'todoDueDate';
+                defaultIsTodo = true;
+                defaultIsNote = false;
+            } else if (context === 'notes') {
+                activityId = 'notesActivity';
+                descriptionId = 'notesDescription';
+                timestampId = 'notesTimestamp';
+                dueDateId = 'notesDueDate';
+                defaultIsTodo = false;
+                defaultIsNote = true;
+            } else {
+                // Default to tracker context
+                activityId = 'activity';
+                descriptionId = 'description';
+                timestampId = 'timestamp';
+                dueDateId = 'dueDate';
+                defaultIsTodo = isTodoModeActive();
+                defaultIsNote = isNoteModeActive();
+            }
+            
+            const activity = document.getElementById(activityId).value;
+            const description = document.getElementById(descriptionId).value;
+            const timestamp = document.getElementById(timestampId).value;
+            
+            // For contextual forms, use the context defaults unless overridden by toggle buttons
+            let isTodo, isNote;
+            if (context === 'todo') {
+                // Check if note toggle is active in todo context
+                isNote = document.getElementById('todoNoteToggleBtn')?.classList.contains('active') || false;
+                isTodo = true; // Always true in todo context
+            } else if (context === 'notes') {
+                // Check if todo toggle is active in notes context
+                isTodo = document.getElementById('notesTodToggleBtn')?.classList.contains('active') || false;
+                isNote = true; // Always true in notes context
+            } else {
+                // Use the toggle state functions for tracker context
+                isTodo = defaultIsTodo;
+                isNote = defaultIsNote;
+            }
+            
+            const dueDate = document.getElementById(dueDateId)?.value || null;
 
             // Extract hashtags from text and add pomodoro hashtags if active
             const extractedTags = this.extractHashtags(activity + ' ' + (description || ''));
@@ -485,9 +558,9 @@ class ActivityTracker {
                 dueDate: dueDate ? new Date(dueDate).toISOString() : null,
                 startedAt: isTodo ? new Date(timestamp).toISOString() : null
             };
-        } else if (entry.source === 'pomodoro') {
+        } else if (newEntry.source === 'pomodoro') {
             const pomodoroTags = this.generatePomodoroHashtags();
-            const allTags = [...new Set([...(entry.tags || []), ...pomodoroTags])];
+            const allTags = [...new Set([...(newEntry.tags || []), ...pomodoroTags])];
             newEntry.tags = allTags;
         }
 
@@ -500,8 +573,29 @@ class ActivityTracker {
         this.displayTodos();
         this.displayNotes();
 
-        if (!entry) {
+        // Only reset form if this was a user-entered entry (not from service worker)
+        if (context) {
+            this.resetFormByContext(context);
+        }
+        
+        showNotification('Entry added successfully!', 'success');
+    }
+
+    /**
+     * Reset form based on context after adding an entry
+     * @param {string} context - 'tracker', 'todo', or 'notes'
+     */
+    resetFormByContext(context) {
+        if (context === 'todo') {
+            // Reset todo form using the existing function
+            resetTodoForm();
+        } else if (context === 'notes') {
+            // Reset notes form using the existing function
+            resetNotesForm();
+        } else {
+            // Default tracker form reset
             document.getElementById('activityForm').reset();
+            
             // Reset todo mode button
             const todoBtn = document.getElementById('todoToggleBtn');
             if (todoBtn) {
@@ -515,11 +609,10 @@ class ActivityTracker {
                 noteBtn.classList.remove('active');
                 noteBtn.textContent = 'Mark as Note';
             }
+            
             this.setCurrentTime();
             document.getElementById('activity').focus();
         }
-        
-        showNotification('Entry added successfully!', 'success');
     }
 
     /**
@@ -1504,6 +1597,7 @@ class ActivityTracker {
             // Try service worker approach first
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 const registration = await navigator.serviceWorker.ready;
+                console.log('Showing notification with options:', options);
                 await registration.showNotification(title, options);
                 console.log('Notification shown via Service Worker');
                 return;
