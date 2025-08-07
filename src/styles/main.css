@@ -56,6 +56,38 @@ h3 {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+.header {
+    position: relative;
+}
+
+.header .header-icon-overlay {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 130px;
+    height: 130px;
+    opacity: 0.25;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.header .header-content {
+    position: relative;
+    z-index: 1;
+}
+
+.header .header-text {
+    flex-grow: 1;
+}
+
+.header .header-text h1 {
+    margin: 0 0 4px 0;
+}
+
+.header .header-text p {
+    margin: 0;
+}
+
 .nav {
     display: flex;
     justify-content: space-between;
@@ -1997,6 +2029,10 @@ body.dark-mode {
     background: rgba(45, 55, 72, 0.85);
     backdrop-filter: blur(10px);
     color: #e2e8f0;
+}
+
+.dark-mode .header .header-icon-overlay {
+    opacity: 0.25;
 }
 
 .dark-mode .form-group label {

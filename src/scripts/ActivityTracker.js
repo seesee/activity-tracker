@@ -4508,13 +4508,13 @@ class ActivityTracker {
      * Update header to show workspace name
      */
     updateHeaderWorkspaceName() {
-        const header = document.querySelector('.header h1');
-        if (header) {
+        const headerText = document.querySelector('.header .header-text h1 .header-text');
+        if (headerText) {
             const baseTitle = 'Activity Tracker';
             if (this.currentWorkspace && this.currentWorkspace !== 'Default') {
-                header.textContent = `${baseTitle} - ${this.currentWorkspace}`;
+                headerText.textContent = `${baseTitle} - ${this.currentWorkspace}`;
             } else {
-                header.textContent = baseTitle;
+                headerText.textContent = baseTitle;
             }
         }
     }

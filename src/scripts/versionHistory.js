@@ -5,6 +5,11 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "46ff2e2",
+        date: "2025-08-07", 
+        summary: "Added elegant SVG logo overlay in header background with gradient design, proper positioning, and theme-aware transparency. Fixed todo/notes form submission and enhanced Service Worker notifications"
+    },
+    {
         commit: "31b0120",
         date: "2025-08-07",
         summary: "Fixed todo/notes form submission, enhanced Service Worker notifications with inline reply, improved contextual entry creation across all form types"

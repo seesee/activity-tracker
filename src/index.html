@@ -13,8 +13,27 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Activity Tracker</h1>
-            <p>Task diary, organiser and knowledge base</p>
+            <svg width="130" height="130" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AT icon" class="header-icon-overlay">
+                <defs>
+                    <radialGradient id="headerIconGradient" cx="35%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#b6a9ff"/>
+                        <stop offset="100%" stop-color="#5a4fcf"/>
+                    </radialGradient>
+                </defs>
+                <circle cx="32" cy="32" r="22" fill="url(#headerIconGradient)" stroke="#b5adff" stroke-width="2"/>
+                <rect x="20" y="28" width="24" height="16" rx="3.5" fill="none" stroke="#5949bc" stroke-width="2"/>
+                <path d="M20 36h24M32 28v16" stroke="#5949bc" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <circle cx="32" cy="26.5" r="8.0" fill="none" stroke="#e6e4ff" stroke-width="1.5"/>
+                <path d="M32 26.5 L39.31 24.12" stroke="#e6e4ff" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+                <path d="M32 26.5 L31.45 20.9" stroke="#e6e4ff" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+                <circle cx="32" cy="26.5" r="1.15" fill="#e6e4ff"/>
+            </svg>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1><span class="header-text">Activity Tracker</span></h1>
+                    <p>Task diary, organiser and knowledge base</p>
+                </div>
+            </div>
             
             <!-- Global Search -->
             <div class="global-search">
