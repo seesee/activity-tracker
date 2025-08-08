@@ -624,6 +624,7 @@ function toggleTodoMode() {
     
     const isActive = btn.classList.contains('active');
     const dueDateSection = document.getElementById('dueDateSection');
+    const trackerFormComponent = document.getElementById('trackerEntryComponent');
     
     if (isActive) {
         btn.classList.remove('active');
@@ -632,12 +633,20 @@ function toggleTodoMode() {
         if (dueDateSection) {
             dueDateSection.style.display = 'none';
         }
+        // Reset to normal height
+        if (trackerFormComponent) {
+            trackerFormComponent.style.maxHeight = '500px';
+        }
     } else {
         btn.classList.add('active');
         btn.textContent = '✓ Todo';
         // Show due date section when in todo mode
         if (dueDateSection) {
             dueDateSection.style.display = 'block';
+        }
+        // Expand height for due date section
+        if (trackerFormComponent) {
+            trackerFormComponent.style.maxHeight = '650px';
         }
     }
     
@@ -812,15 +821,24 @@ function toggleTodoModeForNotes() {
     
     const isActive = btn.classList.contains('active');
     const dueDateSection = document.getElementById('notesDueDateSection');
+    const notesFormComponent = document.getElementById('notesEntryComponent');
     
     if (isActive) {
         btn.classList.remove('active');
         btn.textContent = 'Mark as Todo';
         if (dueDateSection) dueDateSection.style.display = 'none';
+        // Reset to normal notes height
+        if (notesFormComponent) {
+            notesFormComponent.style.maxHeight = '550px';
+        }
     } else {
         btn.classList.add('active');
         btn.textContent = '✓ Todo';
         if (dueDateSection) dueDateSection.style.display = 'block';
+        // Expand height for due date section
+        if (notesFormComponent) {
+            notesFormComponent.style.maxHeight = '650px';
+        }
     }
     
     updateFormLabelsAndExamples('notes');
