@@ -513,6 +513,16 @@
                             <option value="100">100 items</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="hashtagCloudLimit" title="Maximum number of hashtags to display in the hashtag cloud browser">Hashtag cloud limit</label>
+                        <select id="hashtagCloudLimit" onchange="saveSettings()">
+                            <option value="25">25 hashtags</option>
+                            <option value="50" selected>50 hashtags</option>
+                            <option value="75">75 hashtags</option>
+                            <option value="100">100 hashtags</option>
+                            <option value="200">200 hashtags</option>
+                        </select>
+                    </div>
                     <div class="form-group" id="systemNotificationsGroup" style="display: none;">
                         <label for="sendSystemNotifications" title="Send system notifications to your operating system">System Notifications</label>
                         <select id="sendSystemNotifications" onchange="saveSettings()">

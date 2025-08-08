@@ -72,6 +72,7 @@ class ActivityTracker {
             notificationSoundType: "classic",
             darkModePreference: 'system', // 'light', 'dark', 'system'
             paginationSize: 20,
+            hashtagCloudLimit: 50,
             warnOnActivityDelete: true,
             warnOnSessionReset: true
         };
@@ -321,6 +322,7 @@ class ActivityTracker {
             'darkModePreference',
             'autoStartAlerts',
             'paginationSize',
+            'hashtagCloudLimit',
             'pomodoroEnabled',
             'pomodoroWorkDuration',
             'pomodoroBreakDuration',
@@ -371,6 +373,7 @@ class ActivityTracker {
         this.settings.darkModePreference = document.getElementById('darkModePreference').value;
         this.settings.autoStartAlerts = document.getElementById('autoStartAlerts')?.value === 'true';
         this.settings.paginationSize = parseInt(document.getElementById('paginationSize').value);
+        this.settings.hashtagCloudLimit = parseInt(document.getElementById('hashtagCloudLimit').value);
         this.settings.pomodoroAutoStart = document.getElementById('pomodoroAutoStart')?.checked || false;
         this.settings.pomodoroAutoLog = document.getElementById('pomodoroAutoLog')?.checked !== false;
         this.settings.pomodoroLogBreaks = document.getElementById('pomodoroLogBreaks')?.checked || false;
@@ -1087,6 +1090,7 @@ class ActivityTracker {
             hasRequestedNotificationPermission: this.settings.hasRequestedNotificationPermission, // Don't override this from form
             sendSystemNotifications: document.getElementById('sendSystemNotifications')?.value === 'true',
             paginationSize: parseInt(document.getElementById('paginationSize').value),
+            hashtagCloudLimit: parseInt(document.getElementById('hashtagCloudLimit').value),
             warnOnActivityDelete: document.getElementById('warnOnActivityDelete')?.value === 'true',
             warnOnSessionReset: document.getElementById('warnOnSessionReset')?.value === 'true',
             workingDays: {
@@ -1420,6 +1424,7 @@ class ActivityTracker {
         document.getElementById('darkModePreference').value = this.settings.darkModePreference;
         document.getElementById('autoStartAlerts').value = this.settings.autoStartAlerts.toString();
         document.getElementById('paginationSize').value = this.settings.paginationSize;
+        document.getElementById('hashtagCloudLimit').value = this.settings.hashtagCloudLimit;
         document.getElementById('sendSystemNotifications').value = this.settings.sendSystemNotifications.toString();
         document.getElementById('warnOnActivityDelete').value = this.settings.warnOnActivityDelete.toString();
         document.getElementById('warnOnSessionReset').value = this.settings.warnOnSessionReset.toString();
@@ -2513,56 +2518,126 @@ class ActivityTracker {
         try {
             const backupData = JSON.parse(fileData);
             
-            // Validate backup data structure
-            if (!backupData.entries || !Array.isArray(backupData.entries)) {
-                throw new Error('Invalid backup file: missing or invalid entries data');
+            // Check if this is a new workspace-based backup or legacy single-workspace backup
+            if (backupData.workspaces && typeof backupData.workspaces === 'object') {
+                // New multi-workspace backup format
+                return this.importAllWorkspaces(backupData);
+            } else if (backupData.entries && Array.isArray(backupData.entries)) {
+                // Legacy single-workspace backup format
+                return this.importLegacyDatabase(backupData);
+            } else {
+                throw new Error('Invalid backup file: missing or invalid backup data structure');
             }
 
-            // Confirm import action
-            const entriesCount = backupData.entries.length;
-            const backupDate = backupData.timestamp ? new Date(backupData.timestamp).toLocaleDateString('en-GB') : 'unknown date';
-            
-            if (!confirm(`Import ${entriesCount} entries from backup created on ${backupDate}? This will replace all current data.`)) {
-                return;
-            }
-
-            // Validate entries format
-            const validEntries = backupData.entries.filter(entry => 
-                entry && typeof entry === 'object' && entry.timestamp
-            );
-
-            if (validEntries.length !== backupData.entries.length) {
-                console.warn(`Filtered out ${backupData.entries.length - validEntries.length} invalid entries`);
-            }
-
-            // Import data
-            this.entries = validEntries;
-            localStorage.setItem('activityEntries', JSON.stringify(this.entries));
-
-            // Import settings if available
-            if (backupData.settings && typeof backupData.settings === 'object') {
-                this.settings = { ...this.settings, ...backupData.settings };
-                localStorage.setItem('activitySettings', JSON.stringify(this.settings));
-                this.loadSettings(); // Reload settings UI
-            }
-
-            // Import state if available
-            if (backupData.state && typeof backupData.state === 'object') {
-                this.state = { ...this.state, ...backupData.state };
-                localStorage.setItem('activityState', JSON.stringify(this.state));
-                console.log('State imported:', this.state);
-            }
-
-            // Update display
-            this.displayEntries();
-            this.currentReportEntries = [];
-            document.getElementById('reportPreview').innerHTML = '';
-
-            showNotification(`Database imported successfully! Restored ${validEntries.length} entries.`, 'success');
         } catch (error) {
             console.error('Error importing database:', error);
             showNotification('Error importing database: ' + error.message, 'error');
         }
+    }
+
+    /**
+     * Import legacy single-workspace database format
+     */
+    importLegacyDatabase(backupData) {
+        // Confirm import action
+        const entriesCount = backupData.entries.length;
+        const backupDate = backupData.timestamp ? new Date(backupData.timestamp).toLocaleDateString('en-GB') : 'unknown date';
+        
+        if (!confirm(`Import ${entriesCount} entries from legacy backup created on ${backupDate}? This will replace current workspace data.`)) {
+            return;
+        }
+
+        // Validate entries format
+        const validEntries = backupData.entries.filter(entry => 
+            entry && typeof entry === 'object' && entry.timestamp
+        );
+
+        if (validEntries.length !== backupData.entries.length) {
+            console.warn(`Filtered out ${backupData.entries.length - validEntries.length} invalid entries`);
+        }
+
+        // Import data
+        this.entries = validEntries;
+        localStorage.setItem('activityEntries', JSON.stringify(this.entries));
+
+        // Import settings if available
+        if (backupData.settings && typeof backupData.settings === 'object') {
+            this.settings = { ...this.settings, ...backupData.settings };
+            localStorage.setItem('activitySettings', JSON.stringify(this.settings));
+            this.loadSettings(); // Reload settings UI
+        }
+
+        // Import state if available
+        if (backupData.state && typeof backupData.state === 'object') {
+            this.state = { ...this.state, ...backupData.state };
+            localStorage.setItem('activityState', JSON.stringify(this.state));
+            console.log('State imported:', this.state);
+        }
+
+        // Update display
+        this.displayEntries();
+        this.currentReportEntries = [];
+        document.getElementById('reportPreview').innerHTML = '';
+
+        showNotification(`Database imported successfully! Restored ${validEntries.length} entries.`, 'success');
+    }
+
+    /**
+     * Import all workspaces from backup file
+     */
+    importAllWorkspaces(backupData) {
+        console.log('Import backup data structure:', backupData);
+        
+        // Count total entries across all workspaces
+        let totalEntries = 0;
+        const workspaceNames = Object.keys(backupData.workspaces || {});
+        
+        console.log('Found workspace names:', workspaceNames);
+        
+        workspaceNames.forEach(workspaceName => {
+            const workspace = backupData.workspaces[workspaceName];
+            console.log(`Workspace "${workspaceName}":`, workspace);
+            
+            if (workspace && workspace.data && workspace.data.activityEntries && Array.isArray(workspace.data.activityEntries)) {
+                const entriesCount = workspace.data.activityEntries.length;
+                console.log(`Workspace "${workspaceName}" has ${entriesCount} entries`);
+                totalEntries += entriesCount;
+            } else {
+                console.warn(`Workspace "${workspaceName}" has invalid structure or no entries`);
+            }
+        });
+        
+        console.log('Total entries found:', totalEntries);
+
+        const backupDate = backupData.exportDate ? 
+            new Date(backupData.exportDate).toLocaleDateString('en-GB') : 
+            'unknown date';
+        
+        if (!confirm(`Import ${totalEntries} entries from ${workspaceNames.length} workspace${workspaceNames.length !== 1 ? 's' : ''} (${workspaceNames.join(', ')}) from backup created on ${backupDate}? This will replace all current data.`)) {
+            return;
+        }
+
+        // Save current workspace before import
+        this.saveCurrentWorkspaceData(this.currentWorkspace);
+
+        // Import all workspace data
+        localStorage.setItem('workspaces', JSON.stringify(backupData.workspaces));
+        
+        // Set the current workspace from backup or keep existing
+        const targetWorkspace = backupData.currentWorkspace || this.currentWorkspace || 'Default';
+        this.currentWorkspace = targetWorkspace;
+        localStorage.setItem('currentWorkspace', targetWorkspace);
+
+        // Load the current workspace data
+        this.loadWorkspaceData(targetWorkspace);
+
+        // Update header and display
+        this.updateHeaderWorkspaceName();
+        this.displayEntries();
+        this.currentReportEntries = [];
+        document.getElementById('reportPreview').innerHTML = '';
+
+        showNotification(`All workspaces imported successfully! Restored ${totalEntries} entries across ${workspaceNames.length} workspace${workspaceNames.length !== 1 ? 's' : ''}.`, 'success');
     }
 
     /**

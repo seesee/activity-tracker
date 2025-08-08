@@ -526,7 +526,12 @@ function showHashtagBrowser() {
     
     // Update count display
     if (countElement) {
-        countElement.textContent = `${hashtagCount} hashtag${hashtagCount !== 1 ? 's' : ''} found`;
+        const displayLimit = Math.min(hashtagCount, tracker.settings.hashtagCloudLimit);
+        if (hashtagCount > tracker.settings.hashtagCloudLimit) {
+            countElement.textContent = `Showing top ${displayLimit} of ${hashtagCount} hashtags (limited by settings)`;
+        } else {
+            countElement.textContent = `${hashtagCount} hashtag${hashtagCount !== 1 ? 's' : ''} found`;
+        }
     }
     
     if (hashtagCount === 0) {
@@ -538,13 +543,20 @@ function showHashtagBrowser() {
         
         const hashtagElements = Object.entries(hashtagFrequency)
             .sort(([,a], [,b]) => b - a) // Sort by frequency desc
+            .slice(0, tracker.settings.hashtagCloudLimit) // Limit based on setting
             .map(([tag, freq]) => {
                 const normalized = (freq - minFreq) / range;
-                const fontSize = 0.8 + (normalized * 1.2); // 0.8em to 2.0em
-                const opacity = 0.6 + (normalized * 0.4); // 0.6 to 1.0
+                // Use subtle size variation (only 0.9em to 1.3em)
+                const fontSize = 0.9 + (normalized * 0.4);
+                
+                // Color-based "hotness" - from cool blue to hot red
+                const hue = 240 - (normalized * 120); // 240 (blue) to 120 (red-orange)
+                const saturation = 70 + (normalized * 30); // 70% to 100%
+                const lightness = 45 + (normalized * 15); // 45% to 60%
+                const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
                 
                 return `<span class="hashtag-cloud-item" 
-                              style="font-size: ${fontSize}em; opacity: ${opacity};"
+                              style="font-size: ${fontSize}em; color: ${color};"
                               onclick="tracker.searchByHashtag('${tag}'); closeModal('hashtagBrowserModal');"
                               title="${freq} occurrence${freq !== 1 ? 's' : ''}">#${tag}</span>`;
             })

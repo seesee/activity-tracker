@@ -22,18 +22,18 @@ After comprehensive research, Jest was selected as the primary testing framework
 The testing strategy follows a two-tier approach:
 
 1. **Jest for Unit & Integration Tests (Primary - 80% of tests)**
-   - Test individual classes (ActivityTracker, PomodoroManager, etc.)
-   - Test localStorage persistence
-   - Test timer functionality with mocked timers
-   - Test form validation and data processing
-   - Test utility functions and business logic
+  - Test individual classes (ActivityTracker, PomodoroManager, etc.)
+  - Test localStorage persistence
+  - Test timer functionality with mocked timers
+  - Test form validation and data processing
+  - Test utility functions and business logic
 
 2. **Playwright for E2E Tests (Future - 20% of tests)**
-   - Test complete user workflows
-   - Test PWA installation and service worker behavior
-   - Test real notification functionality
-   - Test offline capabilities
-   - Test cross-browser compatibility
+  - Test complete user workflows
+  - Test PWA installation and service worker behavior
+  - Test real notification functionality
+  - Test offline capabilities
+  - Test cross-browser compatibility
 
 ## Current Setup
 
