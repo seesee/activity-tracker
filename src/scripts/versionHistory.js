@@ -7,32 +7,32 @@ const VERSION_HISTORY = [
     {
         commit: "46ff2e2",
         date: "2025-08-07", 
-        summary: "Added elegant SVG logo overlay in header background with gradient design, proper positioning, and theme-aware transparency. Fixed todo/notes form submission and enhanced Service Worker notifications"
+        summary: "Added SVG logo overlay to background. Fixed more todo/notes UI bugs. Updated Service Worker notifications"
     },
     {
         commit: "31b0120",
         date: "2025-08-07",
-        summary: "Fixed todo/notes form submission, enhanced Service Worker notifications with inline reply, improved contextual entry creation across all form types"
+        summary: "Fixed todo/notes form submissions, improved contextual entry creation across all form types"
     },
     {
         commit: "24dacd7",
         date: "2025-08-05",
-        summary: "Added complex schedule capabilities and renamed 'working schedule' to 'activity schedule' for generic terminology"
+        summary: "Added complex activity schedule support"
     },
     {
         commit: "5398868",
         date: "2025-08-05",
-        summary: "Added comprehensive workspace system for organizing separate projects with isolated data, settings, and state"
+        summary: "Added workspace system for organising separate projects and schedules"
     },
     {
         commit: "eccb96b",
         date: "2025-08-05",
-        summary: "UI refactor with split Add/Reset buttons, flexible due date controls, system theme default, and reorganized settings"
+        summary: "UI refactor. Added quick due-date controls, various fixes"
     },
     {
         commit: "eb3cd3b",
         date: "2025-08-05",
-        summary: "Enhanced mobile UI with hashtag autocompletion, improved form layouts, and better notification integration"
+        summary: "Added hashtag autocompletion, improved form layouts, better notifications"
     }
 ];
 
