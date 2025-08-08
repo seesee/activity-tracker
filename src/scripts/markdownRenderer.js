@@ -18,16 +18,17 @@ class MarkdownRenderer {
             { pattern: /```([^`]*)```/gims, replacement: '<pre><code>$1</code></pre>' },
             
             // Bold and Italic combinations (must come before individual patterns)
-            { pattern: /\*\*\*(.*?)\*\*\*/gim, replacement: '<strong><em>$1</em></strong>' },
-            { pattern: /___([^_]+?)___/gim, replacement: '<strong><em>$1</em></strong>' },
+            // Use word boundaries and require whitespace/punctuation/start/end around formatting
+            { pattern: /(^|[\s\(\[])(\*\*\*(.*?)\*\*\*)(?=[\s\)\].,!?;:]|$)/gim, replacement: '$1<strong><em>$3</em></strong>' },
+            { pattern: /(^|[\s\(\[])(___(.*?)___)(?=[\s\)\].,!?;:]|$)/gim, replacement: '$1<strong><em>$2</em></strong>' },
             
             // Bold (both ** and __ syntax)
-            { pattern: /\*\*(.*?)\*\*/gim, replacement: '<strong>$1</strong>' },
-            { pattern: /__([^_]+?)__/gim, replacement: '<strong>$1</strong>' },
+            { pattern: /(^|[\s\(\[])(\*\*(.*?)\*\*)(?=[\s\)\].,!?;:]|$)/gim, replacement: '$1<strong>$3</strong>' },
+            { pattern: /(^|[\s\(\[])(__([^_]*?)__)(?=[\s\)\].,!?;:]|$)/gim, replacement: '$1<strong>$2</strong>' },
             
-            // Italic (both * and _ syntax, non-greedy)
-            { pattern: /\*([^*]+?)\*/gim, replacement: '<em>$1</em>' },
-            { pattern: /_([^_]+?)_/gim, replacement: '<em>$1</em>' },
+            // Italic (both * and _ syntax, non-greedy) - respect word boundaries
+            { pattern: /(^|[\s\(\[])(\*([^*]*?)\*)(?=[\s\)\].,!?;:]|$)/gim, replacement: '$1<em>$3</em>' },
+            { pattern: /(^|[\s\(\[])(_([^_]*?)_)(?=[\s\)\].,!?;:]|$)/gim, replacement: '$1<em>$2</em>' },
             
             // Strikethrough
             { pattern: /~~(.*?)~~/gim, replacement: '<del>$1</del>' },

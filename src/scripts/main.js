@@ -36,6 +36,46 @@ function showSection(sectionName, event) {
 
     // Focus on entry input when showing tracker, todo, or notes (if form is visible)
     if (sectionName === 'tracker' || sectionName === 'todo' || sectionName === 'notes') {
+        // Set appropriate default mode for section
+        if (sectionName === 'todo') {
+            // Ensure todo mode is active in todo section
+            const todoBtn = document.getElementById('todoTodoToggleBtn');
+            const noteBtn = document.getElementById('todoNoteToggleBtn');
+            if (todoBtn && !todoBtn.classList.contains('active')) {
+                todoBtn.classList.add('active');
+                todoBtn.textContent = 'Mark as Todo ✓';
+            }
+            if (noteBtn && noteBtn.classList.contains('active')) {
+                noteBtn.classList.remove('active');
+                noteBtn.textContent = 'Mark as Note';
+            }
+            // Show due date section for todos
+            const dueDateSection = document.getElementById('todoDueDateSection');
+            if (dueDateSection) {
+                dueDateSection.style.display = 'block';
+            }
+        } else if (sectionName === 'notes') {
+            // Ensure note mode is active in notes section
+            const todoBtn = document.getElementById('notesTodToggleBtn');
+            const noteBtn = document.getElementById('notesNoteToggleBtn');
+            if (todoBtn && todoBtn.classList.contains('active')) {
+                todoBtn.classList.remove('active');
+                todoBtn.textContent = 'Mark as Todo';
+            }
+            if (noteBtn && !noteBtn.classList.contains('active')) {
+                noteBtn.classList.add('active');
+                noteBtn.textContent = 'Mark as Note ✓';
+            }
+            // Hide due date section for notes by default
+            const dueDateSection = document.getElementById('notesDueDateSection');
+            if (dueDateSection) {
+                dueDateSection.style.display = 'none';
+            }
+        }
+        
+        // Update form labels for the section
+        updateFormLabelsAndExamples(sectionName);
+        
         setTimeout(() => {
             const inputId = sectionName === 'tracker' ? 'activity' : 
                            sectionName === 'todo' ? 'todoActivity' : 'notesActivity';
@@ -2682,6 +2722,34 @@ document.addEventListener('keydown', (e) => {
                 form.dispatchEvent(new Event('submit'));
             }
         }
+        
+        // Todo section form
+        else if (activeElement && (activeElement.id === 'todoActivity' || activeElement.id === 'todoDescription')) {
+            e.preventDefault();
+            const form = document.getElementById('todoActivityForm');
+            if (form) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        }
+        
+        // Notes section form
+        else if (activeElement && (activeElement.id === 'notesActivity' || activeElement.id === 'notesDescription')) {
+            e.preventDefault();
+            const form = document.getElementById('notesActivityForm');
+            if (form) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        }
+        
+        // Edit modal form
+        else if (activeElement && (activeElement.id === 'editActivity' || activeElement.id === 'editDescription' || activeElement.id === 'editTimestamp')) {
+            e.preventDefault();
+            const form = document.getElementById('editForm');
+            if (form) {
+                form.dispatchEvent(new Event('submit'));
+            }
+        }
+        
         return;
     }
     
