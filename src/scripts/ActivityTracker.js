@@ -5473,7 +5473,11 @@ class ActivityTracker {
             // Schedule initial backup sync
             await this.scheduleNextAutomaticBackup();
 
-            showNotification('🚀 Automatic backups enabled! Backups will happen in the background.', 'success', 4000);
+            // Trigger an initial backup to help user enable downloads in browser
+            console.log('Triggering initial backup to help user enable downloads...');
+            this.exportDatabase();
+
+            showNotification('🚀 Automatic backups enabled! Please allow downloads when prompted. Backups will happen in the background.', 'success', 6000);
             return true;
 
         } catch (error) {
@@ -5543,14 +5547,14 @@ class ActivityTracker {
                     break;
             }
 
-            // If next backup time is in the past, trigger immediately
+            // Only register sync if backup is overdue (next backup time is in the past)
             if (nextBackupTime <= now) {
                 await registration.sync.register('automatic-backup');
-                console.log('Automatic backup scheduled immediately');
+                console.log('Automatic backup scheduled immediately (overdue)');
             } else {
-                // Schedule for the calculated time
-                await registration.sync.register('automatic-backup');
+                // Future backup - don't register sync yet, just log when it would be due
                 console.log(`Next automatic backup scheduled for: ${nextBackupTime.toLocaleString()}`);
+                // Note: Background sync will be triggered by the missed backup check during next app load
             }
 
         } catch (error) {

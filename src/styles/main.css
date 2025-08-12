@@ -5727,6 +5727,16 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
     color: #718096;
 }
 
+.diagnostics-note {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background-color: #f7fafc;
+    border-left: 3px solid #4299e1;
+    color: #2d3748;
+}
+
 .diagnostics-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -5781,6 +5791,12 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
 }
 
 .dark-mode .diagnostics-card h4 {
+    color: #e2e8f0;
+}
+
+.dark-mode .diagnostics-note {
+    background-color: #374151;
+    border-left-color: #4299e1;
     color: #e2e8f0;
 }
 

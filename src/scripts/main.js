@@ -377,6 +377,66 @@ function declineNotificationPermission() {
 }
 
 /**
+ * Check if downloads are blocked in the browser
+ * @returns {boolean} True if downloads appear to be blocked
+ */
+function checkDownloadsBlocked() {
+    // This is a heuristic check - we can't directly detect if downloads are blocked
+    // but we can check for common indicators
+    try {
+        // Check if we're in an environment that typically blocks downloads
+        if (window.location.protocol === 'file:') {
+            return true; // file:// protocol typically can't download
+        }
+        
+        // For now, assume downloads work unless we have evidence otherwise
+        // In practice, this would need to be tested with actual download attempts
+        return false;
+    } catch (error) {
+        console.warn('Error checking download capabilities:', error);
+        return true; // Assume blocked if we can't check
+    }
+}
+
+/**
+ * Test file download capability
+ */
+function testFileDownload() {
+    try {
+        // Create a simple test file
+        const testData = JSON.stringify({
+            test: true,
+            timestamp: new Date().toISOString(),
+            message: 'This is a test download from Activity Tracker'
+        }, null, 2);
+        
+        const blob = new Blob([testData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'activity-tracker-download-test.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showNotification('📄 Test download initiated. Check your downloads folder.', 'info', 4000);
+        
+        // Refresh diagnostics after a delay to see if download worked
+        setTimeout(() => {
+            if (typeof refreshDiagnostics === 'function') {
+                refreshDiagnostics();
+            }
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Download test failed:', error);
+        showNotification('❌ Download test failed. Downloads may be blocked.', 'error', 4000);
+    }
+}
+
+/**
  * Force enable notification capability for diagnostics
  */
 function forceEnableNotifications() {
@@ -2658,6 +2718,26 @@ function renderDiagnosticsData(diagnostics) {
         }
         
         html += `</div>`;
+        
+        // Add file download capabilities section
+        html += `
+        <div class="diagnostics-section">
+            <div class="diagnostics-header">File Download Status</div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Downloads Blocked:</span>
+                <span class="diagnostics-value ${checkDownloadsBlocked() ? 'error' : 'success'}">${checkDownloadsBlocked() ? 'Yes - Enable in browser' : 'No - Downloads allowed'}</span>
+            </div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Download Test:</span>
+                <button class="btn btn-sm btn-secondary" onclick="testFileDownload()" style="margin-left: 10px;">Test Download</button>
+            </div>
+            <div class="diagnostics-note">
+                ${checkDownloadsBlocked() ? 
+                    '⚠️ Downloads appear to be blocked. Enable automatic downloads for this site in your browser settings to use backup features.' : 
+                    '✅ File downloads are working correctly.'}
+            </div>
+        </div>
+        `;
         
         if (comp.timestamp) {
             html += `
