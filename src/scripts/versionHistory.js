@@ -5,7 +5,12 @@
 
 const VERSION_HISTORY = [
     {
-        commit: "TBD",
+        commit: "d8ee79d",
+        date: "2025-08-13",
+        summary: "Major backup system improvements: Added 20-second backup throttling, unified backup type dropdown (reminders/automatic/off), fixed version update triggering unnecessary backups, restored file download diagnostics panel with test functionality, and automatic backup permission setup with initial backup trigger"
+    },
+    {
+        commit: "584f3a7",
         date: "2025-08-12",
         summary: "Enhanced service worker diagnostics with comprehensive modal interface, statistics collection, and interactive features"
     },
@@ -23,11 +28,6 @@ const VERSION_HISTORY = [
         commit: "24dacd7",
         date: "2025-08-05",
         summary: "Added complex activity schedule support"
-    },
-    {
-        commit: "5398868",
-        date: "2025-08-05",
-        summary: "Added workspace system for organising separate projects and schedules"
     }
 ];
 
