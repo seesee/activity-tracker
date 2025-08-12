@@ -45,7 +45,7 @@ class ActivityTrackerBuilder {
             let html = htmlTemplate
                 .replace('{{CSS}}', css)
                 .replace('{{JAVASCRIPT}}', js)
-                .replace('{{VERSION}}', version);
+                .replace(/\{\{VERSION\}\}/g, version);
             
             // Minify HTML if requested
             if (this.minify) {
@@ -64,9 +64,9 @@ class ActivityTrackerBuilder {
                 'utf8'
             );
             
-            let processedSW = swContent;
+            let processedSW = swContent.replace(/\{\{VERSION\}\}/g, version);
             if (this.minify) {
-                const result = await minifyJS(swContent, {
+                const result = await minifyJS(processedSW, {
                     compress: {
                         drop_console: false, // Keep console logs in SW for debugging
                         drop_debugger: true,

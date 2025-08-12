@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="app-version" content="{{VERSION}}">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>Activity Tracker</title>
     <style>
@@ -568,6 +572,14 @@
                             <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="reminderTimerReset" title="Choose when the reminder timer should be reset">Reset reminder timer</label>
+                        <select id="reminderTimerReset" onchange="saveSettings()">
+                            <option value="on_add" selected>Reset timer on add entry</option>
+                            <option value="on_add_edit">Reset timer on add/edit entry</option>
+                            <option value="never">Do not reset timer</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="settings-section">
@@ -902,6 +914,15 @@
                             <div class="diagnostic-buttons">
                                 <button class="btn btn-secondary diagnostic-btn" onclick="runServiceWorkerTest()" title="Run comprehensive service worker diagnostics">
                                     <span class="btn-icon">🔍</span>Run Diagnostics
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="diagnostic-card">
+                            <h4>🚀 Version Management</h4>
+                            <div class="diagnostic-buttons">
+                                <button class="btn btn-primary diagnostic-btn" onclick="checkForUpdatesManually()" title="Check for app updates immediately">
+                                    <span class="btn-icon">🔄</span>Check for Updates
                                 </button>
                             </div>
                         </div>
@@ -1601,6 +1622,10 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 <div class="about-section">
                     <h4>Application Info</h4>
                     <div class="debug-info" id="aboutDebugInfo">Loading...</div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="checkForUpdatesManually()" style="margin-right: 8px;">Check for Updates</button>
+                        <small style="color: #666;">Automatic checks run every 12 hours</small>
+                    </div>
                 </div>
                 
                 <div class="about-section">
@@ -1635,6 +1660,32 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Worker Diagnostics Modal -->
+    <div id="swDiagnosticsModal" class="modal">
+        <div class="modal-content diagnostics-modal-content">
+            <div class="modal-header">
+                <h3>🔧 Service Worker Diagnostics</h3>
+                <button class="btn-close" onclick="closeDiagnosticsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="diagnostics-container">
+                    <div class="diagnostics-loading" id="diagnosticsLoading">
+                        <div class="loading-spinner"></div>
+                        <p>Gathering diagnostics data...</p>
+                    </div>
+                    <div class="diagnostics-content" id="diagnosticsContent" style="display: none;">
+                        <!-- Diagnostics data will be populated here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="refreshDiagnostics()">🔄 Refresh</button>
+                <button class="btn btn-secondary" onclick="copyDiagnosticsToClipboard()">📋 Copy to Clipboard</button>
+                <button class="btn btn-secondary" onclick="closeDiagnosticsModal()">Close</button>
             </div>
         </div>
     </div>

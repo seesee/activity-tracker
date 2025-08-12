@@ -70,6 +70,7 @@ class ActivityTracker {
             sendSystemNotifications: true, // Whether to send system notifications (only applies if hasRequestedNotificationPermission is true)
             soundMuteMode: 'none', // 'none', 'all', 'pomodoro', 'notifications'
             notificationSoundType: "classic",
+            reminderTimerReset: 'on_add', // 'on_add', 'on_add_edit', 'never'
             darkModePreference: 'system', // 'light', 'dark', 'system'
             paginationSize: 20,
             hashtagCloudLimit: 50,
@@ -579,6 +580,9 @@ class ActivityTracker {
         // Only reset form if this was a user-entered entry (not from service worker)
         if (context) {
             this.resetFormByContext(context);
+            
+            // Reset reminder timer based on setting
+            this.handleReminderTimerReset('add');
         }
         
         showNotification('Entry added successfully!', 'success');
@@ -659,6 +663,10 @@ class ActivityTracker {
             this.displayTodos();
             this.displayNotes();
             this.closeEditModal();
+            
+            // Reset reminder timer based on setting
+            this.handleReminderTimerReset('edit');
+            
             showNotification('Entry updated successfully!', 'success');
         }
     }
@@ -1085,6 +1093,7 @@ class ActivityTracker {
             pauseDuration: parseInt(document.getElementById('pauseDuration').value),
             soundMuteMode: document.getElementById('soundMuteMode').value,
             notificationSoundType: document.getElementById('notificationSoundType').value,
+            reminderTimerReset: document.getElementById('reminderTimerReset').value,
             darkModePreference: document.getElementById('darkModePreference').value,
             autoStartAlerts: document.getElementById('autoStartAlerts')?.value === 'true',
             hasRequestedNotificationPermission: this.settings.hasRequestedNotificationPermission, // Don't override this from form
@@ -1428,6 +1437,7 @@ class ActivityTracker {
         document.getElementById('sendSystemNotifications').value = this.settings.sendSystemNotifications.toString();
         document.getElementById('warnOnActivityDelete').value = this.settings.warnOnActivityDelete.toString();
         document.getElementById('warnOnSessionReset').value = this.settings.warnOnSessionReset.toString();
+        document.getElementById('reminderTimerReset').value = this.settings.reminderTimerReset;
         
         // Populate sound dropdowns with all available sounds
         this.populateSoundDropdowns();
@@ -2209,7 +2219,8 @@ class ActivityTracker {
             platform: navigator.platform,
             registration: null,
             controller: null,
-            error: null
+            error: null,
+            comprehensive: null
         };
 
         if (!diagnostics.available) {
@@ -2222,9 +2233,10 @@ class ActivityTracker {
             diagnostics.registration = await navigator.serviceWorker.getRegistration();
             diagnostics.controller = navigator.serviceWorker.controller;
 
-            // Test communication if controller exists
+            // Test communication and get comprehensive diagnostics if controller exists
             if (diagnostics.controller) {
                 try {
+                    // Get basic version info first
                     const messageChannel = new MessageChannel();
                     const response = await new Promise((resolve, reject) => {
                         const timeout = setTimeout(() => reject(new Error('SW communication timeout')), 5000);
@@ -2242,6 +2254,25 @@ class ActivityTracker {
                     
                     diagnostics.communication = 'Working';
                     diagnostics.swVersion = response.version;
+                    
+                    // Get comprehensive diagnostics
+                    const diagChannel = new MessageChannel();
+                    const comprehensiveData = await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => reject(new Error('SW diagnostics timeout')), 10000);
+                        
+                        diagChannel.port1.onmessage = (event) => {
+                            clearTimeout(timeout);
+                            resolve(event.data);
+                        };
+                        
+                        diagnostics.controller.postMessage(
+                            { type: 'GET_DIAGNOSTICS' }, 
+                            [diagChannel.port2]
+                        );
+                    });
+                    
+                    diagnostics.comprehensive = comprehensiveData;
+                    
                 } catch (commError) {
                     diagnostics.communication = `Failed: ${commError.message}`;
                 }
@@ -2292,6 +2323,38 @@ class ActivityTracker {
         }
         
         this.hideReminderBanner();
+    }
+
+    /**
+     * Handle reminder timer reset based on user setting
+     * @param {string} action - 'add' or 'edit'
+     */
+    handleReminderTimerReset(action) {
+        const setting = this.settings.reminderTimerReset;
+        
+        if (setting === 'never') {
+            // Don't reset timer
+            return;
+        }
+        
+        if (setting === 'on_add' && action === 'add') {
+            // Reset timer only on add entry
+            this.resetReminderTimer();
+        } else if (setting === 'on_add_edit' && (action === 'add' || action === 'edit')) {
+            // Reset timer on both add and edit entry
+            this.resetReminderTimer();
+        }
+    }
+
+    /**
+     * Reset the reminder timer by updating lastNotificationTime to now
+     */
+    resetReminderTimer() {
+        if (this.notificationTimer) {
+            const now = new Date();
+            localStorage.setItem('lastNotificationTime', now.getTime().toString());
+            console.log('Reminder timer reset due to user activity');
+        }
     }
 
     /**
@@ -4591,6 +4654,201 @@ class ActivityTracker {
             } else {
                 headerText.textContent = baseTitle;
             }
+        }
+    }
+
+    /**
+     * Version checking and update notification system
+     */
+    initializeVersionChecking() {
+        // Check immediately on startup
+        this.checkForUpdates();
+        
+        // Set up periodic checks every 12 hours
+        this.versionCheckInterval = setInterval(() => {
+            this.checkForUpdates();
+        }, 12 * 60 * 60 * 1000); // 12 hours in milliseconds
+        
+        console.log('Version checking initialized - will check every 12 hours');
+    }
+
+    /**
+     * Check for app updates by comparing current version with server version
+     * @param {boolean} isManualCheck - Whether this is a manual check (affects error handling)
+     */
+    async checkForUpdates(isManualCheck = false) {
+        try {
+            const currentVersion = typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'unknown';
+            const lastCheck = localStorage.getItem('lastVersionCheck');
+            const now = Date.now();
+            
+            // Only check if more than 11 hours have passed since last check (unless manual)
+            if (!isManualCheck && lastCheck && (now - parseInt(lastCheck)) < (11 * 60 * 60 * 1000)) {
+                return Promise.resolve();
+            }
+            
+            // Try to fetch the current page to get the latest version
+            const response = await fetch(window.location.href, {
+                method: 'HEAD',
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache'
+                }
+            });
+            
+            if (response.ok) {
+                // Fetch the full HTML to extract version from meta tag
+                const htmlResponse = await fetch(window.location.href, {
+                    cache: 'no-cache',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                
+                if (!htmlResponse.ok) {
+                    throw new Error(`Failed to fetch HTML: ${htmlResponse.status} ${htmlResponse.statusText}`);
+                }
+                
+                const html = await htmlResponse.text();
+                
+                if (!html) {
+                    throw new Error('Empty response received');
+                }
+                
+                const versionMatch = html.match(/<meta name="app-version" content="([^"]+)"/);
+                
+                if (versionMatch) {
+                    const serverVersion = versionMatch[1];
+                    
+                    // Store last check time
+                    localStorage.setItem('lastVersionCheck', now.toString());
+                    
+                    if (this.compareVersions(serverVersion, currentVersion) > 0) {
+                        console.log(`Update available: ${currentVersion} → ${serverVersion}`);
+                        this.showUpdateNotification(serverVersion);
+                    } else {
+                        console.log(`App is up to date: ${currentVersion}`);
+                    }
+                } else {
+                    console.warn('Version meta tag not found in HTML response');
+                    // Still store last check time so we don't spam requests
+                    localStorage.setItem('lastVersionCheck', now.toString());
+                }
+            } else {
+                throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.warn('Version check failed (this is normal if offline):', error.message);
+            // Re-throw error only for manual checks to handle
+            if (isManualCheck) {
+                throw error;
+            }
+        }
+    }
+
+    /**
+     * Compare two version strings (YYYY.MM.DD.NN format)
+     * Returns: 1 if version1 > version2, -1 if version1 < version2, 0 if equal
+     */
+    compareVersions(version1, version2) {
+        if (version1 === version2) return 0;
+        
+        const v1Parts = version1.split('.').map(n => parseInt(n, 10));
+        const v2Parts = version2.split('.').map(n => parseInt(n, 10));
+        
+        for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+            const v1 = v1Parts[i] || 0;
+            const v2 = v2Parts[i] || 0;
+            
+            if (v1 > v2) return 1;
+            if (v1 < v2) return -1;
+        }
+        
+        return 0;
+    }
+
+    /**
+     * Show update notification to user
+     */
+    showUpdateNotification(newVersion) {
+        const currentVersion = typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'unknown';
+        
+        // Create update notification banner
+        const updateBanner = document.createElement('div');
+        updateBanner.id = 'updateBanner';
+        updateBanner.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            z-index: 10001;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 500;
+        `;
+        
+        updateBanner.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <span>🚀 Update available! ${currentVersion} → ${newVersion}</span>
+                <button onclick="window.location.reload()" style="
+                    background: rgba(255,255,255,0.2);
+                    border: 1px solid rgba(255,255,255,0.3);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" 
+                   onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    Update Now
+                </button>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background: transparent;
+                    border: 1px solid rgba(255,255,255,0.3);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='rgba(255,255,255,0.1)'" 
+                   onmouseout="this.style.background='transparent'">
+                    Dismiss
+                </button>
+            </div>
+        `;
+        
+        // Remove any existing update banner
+        const existingBanner = document.getElementById('updateBanner');
+        if (existingBanner) {
+            existingBanner.remove();
+        }
+        
+        // Add banner to page
+        document.body.appendChild(updateBanner);
+        
+        // Also show a toast notification
+        showNotification(
+            `Update available! Current: ${currentVersion}, Available: ${newVersion}`,
+            'info',
+            8000
+        );
+    }
+
+    /**
+     * Cleanup version checking interval
+     */
+    stopVersionChecking() {
+        if (this.versionCheckInterval) {
+            clearInterval(this.versionCheckInterval);
+            this.versionCheckInterval = null;
+            console.log('Version checking stopped');
         }
     }
 }

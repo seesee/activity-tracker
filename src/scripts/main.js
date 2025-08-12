@@ -2300,6 +2300,21 @@ function switchTemplateTab(tabType) {
 }
 
 /**
+ * Format bytes to human readable string
+ */
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 B';
+    
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+/**
  * Run comprehensive service worker diagnostic test
  */
 async function runServiceWorkerTest() {
@@ -2308,56 +2323,473 @@ async function runServiceWorkerTest() {
         return;
     }
     
-    showNotification('Running Service Worker diagnostics...', 'info');
+    // Open the diagnostics modal
+    openDiagnosticsModal();
+}
+
+/**
+ * Open the diagnostics modal and start data collection
+ */
+async function openDiagnosticsModal() {
+    const modal = document.getElementById('swDiagnosticsModal');
+    const loading = document.getElementById('diagnosticsLoading');
+    const content = document.getElementById('diagnosticsContent');
+    
+    // Show modal and loading state
+    modal.style.display = 'block';
+    loading.style.display = 'flex';
+    content.style.display = 'none';
     
     try {
+        // Run diagnostics
         const diagnostics = await tracker.runServiceWorkerDiagnostics();
         
-        let message = 'Service Worker Diagnostics:\n\n';
-        message += `Available: ${diagnostics.available}\n`;
-        message += `Protocol: ${diagnostics.protocol}\n`;
-        message += `Platform: ${diagnostics.platform}\n`;
+        // Populate content
+        renderDiagnosticsData(diagnostics);
         
-        if (diagnostics.registration) {
-            message += `Registration: Active\n`;
-            message += `Scope: ${diagnostics.registration.scope}\n`;
-        } else {
-            message += `Registration: None\n`;
-        }
+        // Show content and hide loading
+        loading.style.display = 'none';
+        content.style.display = 'block';
         
-        if (diagnostics.controller) {
-            message += `Controller: Active (${diagnostics.controller.state})\n`;
-        } else {
-            message += `Controller: None\n`;
-        }
-        
-        if (diagnostics.communication) {
-            message += `Communication: ${diagnostics.communication}\n`;
-        }
-        
-        if (diagnostics.swVersion) {
-            message += `SW Version: ${diagnostics.swVersion}\n`;
-        }
-        
-        if (diagnostics.error) {
-            message += `Error: ${diagnostics.error}\n`;
-        }
-        
-        // Show detailed results in console and user notification
-        console.log('Service Worker Diagnostics:', diagnostics);
-        alert(message);
-        
-        const status = diagnostics.available && diagnostics.registration ? 'success' : 'warning';
-        const summary = diagnostics.available && diagnostics.registration ? 
-            'Service Worker is working correctly' : 
-            'Service Worker issues detected (see console)';
-            
-        showNotification(summary, status);
+        // Store for clipboard copy
+        window.currentDiagnostics = diagnostics;
         
     } catch (error) {
         console.error('Diagnostic test failed:', error);
-        showNotification('Diagnostic test failed: ' + error.message, 'error');
+        content.innerHTML = `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Error</div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Error Message:</span>
+                    <span class="diagnostics-value error">${error.message}</span>
+                </div>
+            </div>
+        `;
+        loading.style.display = 'none';
+        content.style.display = 'block';
     }
+}
+
+/**
+ * Close the diagnostics modal
+ */
+function closeDiagnosticsModal() {
+    const modal = document.getElementById('swDiagnosticsModal');
+    modal.style.display = 'none';
+}
+
+/**
+ * Refresh diagnostics data
+ */
+function refreshDiagnostics() {
+    openDiagnosticsModal();
+}
+
+/**
+ * Copy diagnostics to clipboard
+ */
+function copyDiagnosticsToClipboard() {
+    if (!window.currentDiagnostics) {
+        showNotification('No diagnostics data available', 'error');
+        return;
+    }
+    
+    const text = formatDiagnosticsAsText(window.currentDiagnostics);
+    
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Diagnostics copied to clipboard!', 'success');
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Diagnostics copied to clipboard!', 'success');
+    });
+}
+
+/**
+ * Render diagnostics data into the modal
+ */
+function renderDiagnosticsData(diagnostics) {
+    const content = document.getElementById('diagnosticsContent');
+    let html = '';
+    
+    // Basic Information Section
+    html += `
+        <div class="diagnostics-section">
+            <div class="diagnostics-header">Basic Information</div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Available:</span>
+                <span class="diagnostics-value ${diagnostics.available ? 'success' : 'error'}">${diagnostics.available}</span>
+            </div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Protocol:</span>
+                <span class="diagnostics-value">${diagnostics.protocol}</span>
+            </div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Platform:</span>
+                <span class="diagnostics-value">${diagnostics.platform}</span>
+            </div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">App Version:</span>
+                <span class="diagnostics-value">${typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'unknown'}</span>
+            </div>
+    `;
+    
+    if (diagnostics.registration) {
+        html += `
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Registration:</span>
+                <span class="diagnostics-value success">Active</span>
+            </div>
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Scope:</span>
+                <span class="diagnostics-value">${diagnostics.registration.scope}</span>
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Registration:</span>
+                <span class="diagnostics-value error">None</span>
+            </div>
+        `;
+    }
+    
+    if (diagnostics.controller) {
+        html += `
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Controller:</span>
+                <span class="diagnostics-value success">Active (${diagnostics.controller.state})</span>
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Controller:</span>
+                <span class="diagnostics-value error">None</span>
+            </div>
+        `;
+    }
+    
+    if (diagnostics.communication) {
+        html += `
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">Communication:</span>
+                <span class="diagnostics-value ${diagnostics.communication === 'Working' ? 'success' : 'error'}">${diagnostics.communication}</span>
+            </div>
+        `;
+    }
+    
+    if (diagnostics.swVersion) {
+        html += `
+            <div class="diagnostics-item">
+                <span class="diagnostics-label">SW Version:</span>
+                <span class="diagnostics-value">${diagnostics.swVersion}</span>
+            </div>
+        `;
+    }
+    
+    html += `</div>`;
+    
+    // Comprehensive Statistics
+    if (diagnostics.comprehensive) {
+        const comp = diagnostics.comprehensive;
+        
+        // Performance Section
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Performance</div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">State:</span>
+                    <span class="diagnostics-value">${comp.state}</span>
+                </div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Update Via Cache:</span>
+                    <span class="diagnostics-value">${comp.updateViaCache}</span>
+                </div>
+        `;
+        
+        if (comp.performance) {
+            html += `
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Uptime:</span>
+                    <span class="diagnostics-value">${Math.round(comp.performance.uptime / 1000)}s</span>
+                </div>
+            `;
+        }
+        
+        html += `</div>`;
+        
+        // Cache Statistics Section
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Cache Statistics</div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Cache Count:</span>
+                    <span class="diagnostics-value">${comp.caches?.count || 0}</span>
+                </div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Total Cache Size:</span>
+                    <span class="diagnostics-value">${formatBytes(comp.totalCacheSize || 0)}</span>
+                </div>
+        `;
+        
+        if (comp.cacheStats) {
+            Object.entries(comp.cacheStats).forEach(([name, stats]) => {
+                if (!stats.error) {
+                    html += `
+                        <div class="diagnostics-subitem">
+                            <span class="diagnostics-label">${name}:</span>
+                            <span class="diagnostics-value">${stats.keyCount} items, ${formatBytes(stats.size)}</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        html += `</div>`;
+        
+        // Client Information Section
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Client Information</div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Connected Clients:</span>
+                    <span class="diagnostics-value">${comp.clients?.count || 0}</span>
+                </div>
+        `;
+        
+        if (comp.clients?.types) {
+            Object.entries(comp.clients.types).forEach(([type, count]) => {
+                html += `
+                    <div class="diagnostics-subitem">
+                        <span class="diagnostics-label">${type}:</span>
+                        <span class="diagnostics-value">${count}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        html += `</div>`;
+        
+        // Event Statistics Section
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Event Statistics</div>
+        `;
+        
+        if (comp.events) {
+            html += `
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Fetch Requests:</span>
+                    <span class="diagnostics-value">${comp.events.fetchRequests}</span>
+                </div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Notification Clicks:</span>
+                    <span class="diagnostics-value">${comp.events.notificationClicks}</span>
+                </div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Push Messages:</span>
+                    <span class="diagnostics-value">${comp.events.pushMessages}</span>
+                </div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Messages:</span>
+                    <span class="diagnostics-value">${comp.events.messagesSent}</span>
+                </div>
+            `;
+        }
+        
+        html += `</div>`;
+        
+        // Storage Information Section
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Storage Information</div>
+        `;
+        
+        if (comp.storage && comp.storage.quota) {
+            html += `
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Storage Used:</span>
+                    <span class="diagnostics-value">${formatBytes(comp.storage.usage)} / ${formatBytes(comp.storage.quota)} (${comp.storage.percentUsed}%)</span>
+                </div>
+            `;
+            
+            if (comp.storage.usageDetails) {
+                Object.entries(comp.storage.usageDetails).forEach(([type, usage]) => {
+                    html += `
+                        <div class="diagnostics-subitem">
+                            <span class="diagnostics-label">${type}:</span>
+                            <span class="diagnostics-value">${formatBytes(usage)}</span>
+                        </div>
+                    `;
+                });
+            }
+        } else {
+            html += `
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Storage Info:</span>
+                    <span class="diagnostics-value warning">Not available</span>
+                </div>
+            `;
+        }
+        
+        html += `</div>`;
+        
+        // Capabilities Section
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Browser Capabilities</div>
+        `;
+        
+        if (comp.capabilities) {
+            Object.entries(comp.capabilities).forEach(([feature, supported]) => {
+                html += `
+                    <div class="diagnostics-item">
+                        <span class="diagnostics-label">${feature.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
+                        <span class="diagnostics-value ${supported ? 'success' : 'warning'}">${supported ? '✓' : '✗'}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        html += `</div>`;
+        
+        if (comp.timestamp) {
+            html += `
+                <div class="diagnostics-section">
+                    <div class="diagnostics-header">Timestamp</div>
+                    <div class="diagnostics-item">
+                        <span class="diagnostics-label">Generated:</span>
+                        <span class="diagnostics-value">${new Date(comp.timestamp).toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Error Section
+    if (diagnostics.error) {
+        html += `
+            <div class="diagnostics-section">
+                <div class="diagnostics-header">Errors</div>
+                <div class="diagnostics-item">
+                    <span class="diagnostics-label">Error:</span>
+                    <span class="diagnostics-value error">${diagnostics.error}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    content.innerHTML = html;
+}
+
+/**
+ * Format diagnostics data as plain text for clipboard
+ */
+function formatDiagnosticsAsText(diagnostics) {
+    let text = 'Service Worker Diagnostics\n\n';
+    
+    // Basic Information
+    text += '=== BASIC INFO ===\n';
+    text += `Available: ${diagnostics.available}\n`;
+    text += `Protocol: ${diagnostics.protocol}\n`;
+    text += `Platform: ${diagnostics.platform}\n`;
+    text += `App Version: ${typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'unknown'}\n`;
+    
+    if (diagnostics.registration) {
+        text += `Registration: Active\n`;
+        text += `Scope: ${diagnostics.registration.scope}\n`;
+    } else {
+        text += `Registration: None\n`;
+    }
+    
+    if (diagnostics.controller) {
+        text += `Controller: Active (${diagnostics.controller.state})\n`;
+    } else {
+        text += `Controller: None\n`;
+    }
+    
+    if (diagnostics.communication) {
+        text += `Communication: ${diagnostics.communication}\n`;
+    }
+    
+    if (diagnostics.swVersion) {
+        text += `SW Version: ${diagnostics.swVersion}\n`;
+    }
+    
+    // Comprehensive Statistics
+    if (diagnostics.comprehensive) {
+        const comp = diagnostics.comprehensive;
+        
+        text += '\n=== PERFORMANCE ===\n';
+        text += `State: ${comp.state}\n`;
+        text += `Update Via Cache: ${comp.updateViaCache}\n`;
+        if (comp.performance) {
+            text += `Uptime: ${Math.round(comp.performance.uptime / 1000)}s\n`;
+        }
+        
+        text += '\n=== CACHE STATISTICS ===\n';
+        text += `Cache Count: ${comp.caches?.count || 0}\n`;
+        text += `Total Cache Size: ${formatBytes(comp.totalCacheSize || 0)}\n`;
+        
+        if (comp.cacheStats) {
+            Object.entries(comp.cacheStats).forEach(([name, stats]) => {
+                if (!stats.error) {
+                    text += `  • ${name}: ${stats.keyCount} items, ${formatBytes(stats.size)}\n`;
+                }
+            });
+        }
+        
+        text += '\n=== CLIENT INFO ===\n';
+        text += `Connected Clients: ${comp.clients?.count || 0}\n`;
+        if (comp.clients?.types) {
+            Object.entries(comp.clients.types).forEach(([type, count]) => {
+                text += `  • ${type}: ${count}\n`;
+            });
+        }
+        
+        text += '\n=== EVENT STATISTICS ===\n';
+        if (comp.events) {
+            text += `Fetch Requests: ${comp.events.fetchRequests}\n`;
+            text += `Notification Clicks: ${comp.events.notificationClicks}\n`;
+            text += `Push Messages: ${comp.events.pushMessages}\n`;
+            text += `Messages: ${comp.events.messagesSent}\n`;
+        }
+        
+        text += '\n=== STORAGE INFO ===\n';
+        if (comp.storage && comp.storage.quota) {
+            text += `Storage Used: ${formatBytes(comp.storage.usage)} / ${formatBytes(comp.storage.quota)} (${comp.storage.percentUsed}%)\n`;
+            if (comp.storage.usageDetails) {
+                Object.entries(comp.storage.usageDetails).forEach(([type, usage]) => {
+                    text += `  • ${type}: ${formatBytes(usage)}\n`;
+                });
+            }
+        } else {
+            text += `Storage Info: Not available\n`;
+        }
+        
+        text += '\n=== CAPABILITIES ===\n';
+        if (comp.capabilities) {
+            Object.entries(comp.capabilities).forEach(([feature, supported]) => {
+                text += `${feature}: ${supported ? '✓' : '✗'}\n`;
+            });
+        }
+        
+        if (comp.timestamp) {
+            text += `\nGenerated: ${new Date(comp.timestamp).toLocaleString()}\n`;
+        }
+    }
+    
+    if (diagnostics.error) {
+        text += `\n=== ERRORS ===\n${diagnostics.error}\n`;
+    }
+    
+    return text;
 }
 
 /**
@@ -2414,6 +2846,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create tracker instance
     tracker = new ActivityTracker();
     
+    // Initialize version checking for automatic updates
+    tracker.initializeVersionChecking();
+    
+    // Clean up version checking on page unload
+    window.addEventListener('beforeunload', () => {
+        if (tracker) {
+            tracker.stopVersionChecking();
+        }
+    });
+    
     // Initialize form timestamps to current time
     initializeFormTimestamps();
     
@@ -2426,7 +2868,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.log('Registering Service Worker...');
             
-            navigator.serviceWorker.register('./sw.js')
+            const swVersion = typeof APP_VERSION !== 'undefined' ? APP_VERSION : Date.now();
+            navigator.serviceWorker.register(`./sw.js?v=${swVersion}`)
                 .then(registration => {
                     console.log('Service Worker registered with scope:', registration.scope);
                     
@@ -2945,6 +3388,19 @@ window.addEventListener('error', (e) => {
 
 window.addEventListener('unhandledrejection', (e) => {
     console.error('Unhandled promise rejection:', e.reason);
+    
+    // Don't show generic error for version check failures or other expected errors
+    if (e.reason && (
+        e.reason.message?.includes('version') ||
+        e.reason.message?.includes('fetch') ||
+        e.reason.message?.includes('network') ||
+        e.reason.message?.includes('update')
+    )) {
+        // Prevent the default unhandled rejection behavior but don't show generic error
+        e.preventDefault();
+        return;
+    }
+    
     showNotification('An unexpected error occurred. Please refresh the page.', 'error');
 });
 
@@ -3271,6 +3727,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/**
+ * Manually check for updates (called from About modal)
+ */
+function checkForUpdatesManually() {
+    if (tracker) {
+        try {
+            // Force check by clearing last check time temporarily
+            const lastCheck = localStorage.getItem('lastVersionCheck');
+            localStorage.removeItem('lastVersionCheck');
+            
+            // Show a loading message
+            showNotification('Checking for updates...', 'info', 2000);
+            
+            tracker.checkForUpdates(true)
+                .then(() => {
+                    // If no update was found, show a message
+                    setTimeout(() => {
+                        if (!document.getElementById('updateBanner')) {
+                            showNotification('You\'re running the latest version!', 'success', 3000);
+                        }
+                    }, 500);
+                    
+                    // Restore last check time if no update was found
+                    if (lastCheck && !document.getElementById('updateBanner')) {
+                        localStorage.setItem('lastVersionCheck', lastCheck);
+                    }
+                })
+                .catch((error) => {
+                    console.warn('Manual version check failed:', error);
+                    
+                    // Restore last check time on error
+                    if (lastCheck) {
+                        localStorage.setItem('lastVersionCheck', lastCheck);
+                    }
+                    
+                    // Show user-friendly error message
+                    showNotification('Unable to check for updates. Please try again later.', 'error', 4000);
+                });
+        } catch (error) {
+            console.error('Error in checkForUpdatesManually:', error);
+            showNotification('Error checking for updates. Please try again.', 'error', 3000);
+        }
+    } else {
+        showNotification('App not ready. Please try again in a moment.', 'error', 3000);
+    }
+}
+
 // Export for testing purposes
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -3320,8 +3823,10 @@ if (typeof module !== 'undefined' && module.exports) {
         toggleScheduleMode,
         addTimeRange,
         updateTimeRange,
-        removeTimeRange
+        removeTimeRange,
+        checkForUpdatesManually
     };
+
 }
 
 // Ensure critical functions are available globally for onclick handlers
@@ -3341,4 +3846,9 @@ if (typeof window !== 'undefined') {
     window.addTimeRange = addTimeRange;
     window.updateTimeRange = updateTimeRange;
     window.removeTimeRange = removeTimeRange;
+    window.checkForUpdatesManually = checkForUpdatesManually;
+    window.openDiagnosticsModal = openDiagnosticsModal;
+    window.closeDiagnosticsModal = closeDiagnosticsModal;
+    window.refreshDiagnostics = refreshDiagnostics;
+    window.copyDiagnosticsToClipboard = copyDiagnosticsToClipboard;
 }

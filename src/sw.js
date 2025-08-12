@@ -3,7 +3,7 @@
  * Handles notifications, notification actions, and offline functionality
  */
 
-const CACHE_NAME = 'activity-tracker-v1';
+const CACHE_NAME = 'activity-tracker-{{VERSION}}';
 const urlsToCache = [
     './',
     './index.html',
@@ -74,32 +74,58 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     // Only handle http/https requests, skip file:// protocol
     if (event.request.url.startsWith('http')) {
-        event.respondWith(
-            caches.match(event.request)
-                .then((response) => {
-                    // Return cached version or fetch from network
-                    if (response) {
+        const isAppResource = event.request.url.includes('index.html') || 
+                              event.request.url.endsWith('/') || 
+                              event.request.url.includes('sw.js');
+        
+        if (isAppResource) {
+            // Use network-first strategy for app resources to ensure updates
+            event.respondWith(
+                fetch(event.request)
+                    .then((response) => {
+                        // Clone response before caching
+                        const responseClone = response.clone();
+                        
+                        // Cache the new version
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, responseClone);
+                        });
+                        
                         return response;
-                    }
-                    
-                    return fetch(event.request).catch(error => {
+                    })
+                    .catch(() => {
+                        // Fallback to cache if network fails
+                        return caches.match(event.request).then((response) => {
+                            if (response) {
+                                return response;
+                            }
+                            
+                            // Return basic offline response for navigation requests
+                            if (event.request.mode === 'navigate') {
+                                return new Response('App offline', { 
+                                    status: 200, 
+                                    statusText: 'OK',
+                                    headers: { 'Content-Type': 'text/html' }
+                                });
+                            }
+                            
+                            throw new Error('No cached response available');
+                        });
+                    })
+            );
+        } else {
+            // Use cache-first for other resources (like external resources)
+            event.respondWith(
+                caches.match(event.request)
+                    .then((response) => {
+                        return response || fetch(event.request);
+                    })
+                    .catch(error => {
                         console.warn('Fetch failed for:', event.request.url, error.message);
-                        // Return a basic offline response for navigation requests
-                        if (event.request.mode === 'navigate') {
-                            return new Response('App offline', { 
-                                status: 200, 
-                                statusText: 'OK',
-                                headers: { 'Content-Type': 'text/html' }
-                            });
-                        }
                         throw error;
-                    });
-                })
-                .catch(error => {
-                    console.warn('Cache match failed for:', event.request.url, error.message);
-                    return fetch(event.request);
-                })
-        );
+                    })
+            );
+        }
     }
 });
 
@@ -348,6 +374,14 @@ self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'GET_VERSION') {
         event.ports[0].postMessage({ version: CACHE_NAME });
     }
+    
+    if (event.data && event.data.type === 'GET_DIAGNOSTICS') {
+        getDiagnostics().then(diagnostics => {
+            event.ports[0].postMessage(diagnostics);
+        }).catch(error => {
+            event.ports[0].postMessage({ error: error.message });
+        });
+    }
 });
 
 /**
@@ -481,5 +515,168 @@ function getAppUrl() {
         return './';
     }
 }
+
+/**
+ * Get comprehensive service worker diagnostics
+ * @returns {Promise<Object>} Detailed diagnostics object
+ */
+async function getDiagnostics() {
+    const diagnostics = {
+        // Basic information
+        version: CACHE_NAME,
+        state: self.registration ? self.registration.active?.state : 'unknown',
+        scope: self.registration?.scope || 'unknown',
+        updateViaCache: self.registration?.updateViaCache || 'unknown',
+        
+        // Cache information
+        caches: {},
+        totalCacheSize: 0,
+        cacheStats: {},
+        
+        // Performance statistics  
+        performance: {
+            installTime: null,
+            activateTime: null,
+            uptime: Date.now() - (self.performance?.timeOrigin || Date.now())
+        },
+        
+        // Client information
+        clients: {
+            count: 0,
+            types: {},
+            urls: []
+        },
+        
+        // Event statistics
+        events: {
+            fetchRequests: self.fetchCounter || 0,
+            notificationClicks: self.notificationCounter || 0,
+            pushMessages: self.pushCounter || 0,
+            messagesSent: self.messageCounter || 0
+        },
+        
+        // Memory and storage info
+        storage: {},
+        
+        // Browser capabilities
+        capabilities: {
+            backgroundSync: 'sync' in self.registration,
+            pushMessaging: 'pushManager' in self.registration,
+            periodicBackgroundSync: 'periodicSync' in self.registration,
+            paymentHandler: 'paymentManager' in self.registration,
+            notifications: 'showNotification' in self.registration
+        },
+        
+        timestamp: new Date().toISOString()
+    };
+    
+    try {
+        // Get cache information
+        const cacheNames = await caches.keys();
+        diagnostics.caches.names = cacheNames;
+        diagnostics.caches.count = cacheNames.length;
+        
+        let totalSize = 0;
+        for (const cacheName of cacheNames) {
+            try {
+                const cache = await caches.open(cacheName);
+                const keys = await cache.keys();
+                const cacheInfo = {
+                    keyCount: keys.length,
+                    keys: keys.map(req => req.url),
+                    size: 0
+                };
+                
+                // Estimate cache size by checking response sizes
+                for (const request of keys) {
+                    try {
+                        const response = await cache.match(request);
+                        if (response) {
+                            const blob = await response.blob();
+                            cacheInfo.size += blob.size;
+                        }
+                    } catch (e) {
+                        // Skip individual response errors
+                    }
+                }
+                
+                diagnostics.cacheStats[cacheName] = cacheInfo;
+                totalSize += cacheInfo.size;
+            } catch (e) {
+                diagnostics.cacheStats[cacheName] = { error: e.message };
+            }
+        }
+        diagnostics.totalCacheSize = totalSize;
+        
+        // Get client information
+        const allClients = await clients.matchAll({ includeUncontrolled: true });
+        diagnostics.clients.count = allClients.length;
+        
+        allClients.forEach(client => {
+            const type = client.type || 'unknown';
+            diagnostics.clients.types[type] = (diagnostics.clients.types[type] || 0) + 1;
+            diagnostics.clients.urls.push({
+                url: client.url,
+                type: client.type,
+                id: client.id,
+                focused: client.focused || false
+            });
+        });
+        
+        // Get storage estimate if available
+        if ('storage' in navigator && 'estimate' in navigator.storage) {
+            const estimate = await navigator.storage.estimate();
+            diagnostics.storage = {
+                quota: estimate.quota,
+                usage: estimate.usage,
+                usageDetails: estimate.usageDetails || {},
+                percentUsed: estimate.quota ? Math.round((estimate.usage / estimate.quota) * 100) : 0
+            };
+        }
+        
+        // Add registration details
+        if (self.registration) {
+            diagnostics.registration = {
+                scope: self.registration.scope,
+                updateViaCache: self.registration.updateViaCache,
+                installing: self.registration.installing?.state || null,
+                waiting: self.registration.waiting?.state || null,
+                active: self.registration.active?.state || null
+            };
+        }
+        
+    } catch (error) {
+        diagnostics.error = error.message;
+        diagnostics.errorStack = error.stack;
+    }
+    
+    return diagnostics;
+}
+
+// Initialize event counters
+self.fetchCounter = 0;
+self.notificationCounter = 0;
+self.pushCounter = 0;
+self.messageCounter = 0;
+
+// Track fetch events
+self.addEventListener('fetch', () => {
+    self.fetchCounter = (self.fetchCounter || 0) + 1;
+});
+
+// Track notification clicks
+self.addEventListener('notificationclick', () => {
+    self.notificationCounter = (self.notificationCounter || 0) + 1;
+});
+
+// Track push messages
+self.addEventListener('push', () => {
+    self.pushCounter = (self.pushCounter || 0) + 1;
+});
+
+// Track messages
+self.addEventListener('message', () => {
+    self.messageCounter = (self.messageCounter || 0) + 1;
+});
 
 console.log('Service Worker loaded');
