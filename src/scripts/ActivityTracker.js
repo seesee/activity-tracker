@@ -75,7 +75,18 @@ class ActivityTracker {
             paginationSize: 20,
             hashtagCloudLimit: 50,
             warnOnActivityDelete: true,
-            warnOnSessionReset: true
+            warnOnSessionReset: true,
+            
+            // Backup settings
+            backupType: 'reminders', // 'reminders', 'automatic', 'off'
+            backupReminders: 'enabled', // 'enabled', 'disabled', 'never'
+            backupSchedule: 'end_of_day', // 'end_of_day', 'daily_5pm', 'weekly_friday', 'weekly_end', 'manual_only'
+            backupFilenamePattern: 'timestamp', // 'timestamp', 'date_only', 'simple', 'workspace'
+            
+            // Automatic backup settings
+            automaticBackups: false, // Enable/disable automatic background backups
+            backgroundBackupFrequency: 'daily', // 'daily', 'weekly', 'bi_weekly', 'monthly'
+            backgroundBackupPermission: 'not_requested' // 'not_requested', 'granted', 'denied'
         };
 
         // Initialize settings with defaults
@@ -1119,7 +1130,14 @@ class ActivityTracker {
             pomodoroAutoLog: document.getElementById('pomodoroAutoLog')?.checked !== false,
             pomodoroLogBreaks: document.getElementById('pomodoroLogBreaks')?.checked || false,
             pomodoroLongBreak: document.getElementById('pomodoroLongBreak')?.checked || false,
-            pomodoroPauseAllowed: document.getElementById('pomodoroPauseAllowed')?.checked !== false
+            pomodoroPauseAllowed: document.getElementById('pomodoroPauseAllowed')?.checked !== false,
+            
+            // Backup settings
+            backupType: document.getElementById('backupType')?.value || 'reminders',
+            backupReminders: this.settings.backupReminders, // Managed by backupType logic
+            automaticBackups: this.settings.automaticBackups, // Managed by backupType logic
+            backgroundBackupFrequency: document.getElementById('backgroundBackupFrequency')?.value || 'daily',
+            backgroundBackupPermission: this.settings.backgroundBackupPermission // Don't override this from form
         };
 
             localStorage.setItem('activitySettings', JSON.stringify(this.settings));
@@ -1466,6 +1484,36 @@ class ActivityTracker {
                     if (complexSchedule) complexSchedule.style.display = 'none';
                 }
             }
+        }
+        
+        // Load backup settings
+        const backupTypeEl = document.getElementById('backupType');
+        const backupRemindersEl = document.getElementById('backupReminders');
+        const backupScheduleEl = document.getElementById('backupSchedule');
+        const backupFilenamePatternEl = document.getElementById('backupFilenamePattern');
+        const automaticBackupsEl = document.getElementById('automaticBackups');
+        const backgroundBackupFrequencyEl = document.getElementById('backgroundBackupFrequency');
+        
+        if (backupTypeEl) {
+            // Determine backup type from current settings
+            if (this.settings.automaticBackups) {
+                backupTypeEl.value = 'automatic';
+            } else if (this.settings.backupReminders === 'never') {
+                backupTypeEl.value = 'off';
+            } else {
+                backupTypeEl.value = 'reminders';
+            }
+        }
+        
+        if (backupRemindersEl) backupRemindersEl.value = this.settings.backupReminders;
+        if (backupScheduleEl) backupScheduleEl.value = this.settings.backupSchedule;
+        if (backupFilenamePatternEl) backupFilenamePatternEl.value = this.settings.backupFilenamePattern;
+        if (automaticBackupsEl) automaticBackupsEl.checked = this.settings.automaticBackups;
+        if (backgroundBackupFrequencyEl) backgroundBackupFrequencyEl.value = this.settings.backgroundBackupFrequency;
+        
+        // Update backup type UI after loading settings
+        if (typeof updateBackupTypeSettings === 'function') {
+            updateBackupTypeSettings();
         }
         
         // Update system notifications visibility
@@ -2565,9 +2613,12 @@ class ActivityTracker {
      */
     exportDatabase() {
         try {
+            // Record backup time (manual backups always allowed)
+            localStorage.setItem('lastBackupTime', new Date().toISOString());
+            
             // Export all workspaces instead of just current data
             this.exportAllWorkspaces();
-            showNotification('All workspaces exported successfully!', 'success');
+            showNotification('💾 Backup created successfully!', 'success');
         } catch (error) {
             console.error('Error exporting database:', error);
             showNotification('Error exporting database: ' + error.message, 'error');
@@ -4614,18 +4665,26 @@ class ActivityTracker {
     }
 
     /**
-     * Export all workspaces data
+     * Get all workspaces data for backup (without triggering download)
+     * @returns {Object} Backup data
      */
-    exportAllWorkspaces() {
+    getAllWorkspacesData() {
         // Save current workspace before export
         this.saveCurrentWorkspaceData(this.currentWorkspace);
         
-        const allData = {
+        return {
             workspaces: JSON.parse(localStorage.getItem('workspaces') || '{}'),
             currentWorkspace: this.currentWorkspace,
             exportDate: new Date().toISOString(),
             version: typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'Development'
         };
+    }
+
+    /**
+     * Export all workspaces data
+     */
+    exportAllWorkspaces() {
+        const allData = this.getAllWorkspacesData();
         
         const dataStr = JSON.stringify(allData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -4849,6 +4908,889 @@ class ActivityTracker {
             clearInterval(this.versionCheckInterval);
             this.versionCheckInterval = null;
             console.log('Version checking stopped');
+        }
+    }
+
+    /**
+     * Initialize automated backup prompt system
+     */
+    initializeBackupPrompt() {
+        // Only initialize if backups are enabled
+        if (this.settings.backupReminders === 'enabled') {
+            this.scheduleBackupPrompt();
+            console.log('Backup prompt system initialized');
+        } else {
+            console.log('Backup prompts disabled in settings');
+        }
+        
+        // Initialize automatic backups if enabled
+        if (this.settings.automaticBackups) {
+            this.initializeAutomaticBackups();
+        }
+    }
+
+    /**
+     * Initialize automatic backup system
+     */
+    async initializeAutomaticBackups() {
+        try {
+            if (this.settings.backgroundBackupPermission === 'granted') {
+                // Check for missed backups and perform one if needed
+                await this.checkAndHandleMissedBackups();
+                
+                await this.scheduleNextAutomaticBackup();
+                console.log('Automatic backup system initialized');
+            } else {
+                console.log('Automatic backups enabled but permission not granted');
+            }
+        } catch (error) {
+            console.error('Failed to initialize automatic backups:', error);
+        }
+    }
+
+    /**
+     * Check for missed backups and perform one if needed
+     */
+    async checkAndHandleMissedBackups() {
+        const lastAutomaticBackup = localStorage.getItem('lastAutomaticBackupTime');
+        const lastGeneralBackup = localStorage.getItem('lastBackupTime');
+        
+        // If no backup history at all, skip missed backup check
+        if (!lastAutomaticBackup && !lastGeneralBackup) {
+            return;
+        }
+        
+        // Use the most recent backup time (automatic or manual)
+        let lastBackupTime = null;
+        if (lastAutomaticBackup && lastGeneralBackup) {
+            const autoTime = new Date(lastAutomaticBackup);
+            const generalTime = new Date(lastGeneralBackup);
+            lastBackupTime = autoTime > generalTime ? lastAutomaticBackup : lastGeneralBackup;
+        } else {
+            lastBackupTime = lastAutomaticBackup || lastGeneralBackup;
+        }
+
+        const now = new Date();
+        const lastBackupDate = new Date(lastBackupTime);
+        let nextBackupDate = new Date(lastBackupDate);
+
+        // Calculate when the next backup should have been
+        switch (this.settings.backgroundBackupFrequency) {
+            case 'daily':
+                nextBackupDate.setDate(nextBackupDate.getDate() + 1);
+                break;
+            case 'weekly':
+                nextBackupDate.setDate(nextBackupDate.getDate() + 7);
+                break;
+            case 'bi_weekly':
+                nextBackupDate.setDate(nextBackupDate.getDate() + 14);
+                break;
+            case 'monthly':
+                nextBackupDate.setMonth(nextBackupDate.getMonth() + 1);
+                break;
+        }
+
+        // If we're past the next backup date, perform a missed backup
+        if (now >= nextBackupDate) {
+            console.log('Detected missed automatic backup, performing now...');
+            
+            try {
+                const backupData = this.getAllWorkspacesData();
+                const filename = this.generateBackupFilename();
+                
+                // Create and download the missed backup
+                const blob = new Blob([JSON.stringify(backupData, null, 2)], { 
+                    type: 'application/json' 
+                });
+                
+                // Record the backup (both automatic and general backup time)
+                localStorage.setItem('lastAutomaticBackupTime', now.toISOString());
+                localStorage.setItem('lastBackupTime', now.toISOString());
+                
+                // Show user-friendly notification
+                showNotification('📦 Missed backup completed automatically', 'success', 4000);
+                
+                console.log('Missed automatic backup completed:', filename);
+                
+            } catch (error) {
+                console.error('Failed to perform missed backup:', error);
+                showNotification('❌ Failed to perform missed backup', 'error', 4000);
+            }
+        }
+    }
+
+    /**
+     * Schedule the backup prompt for 15 minutes before end of working day
+     */
+    scheduleBackupPrompt() {
+        // Clear any existing timer
+        if (this.backupPromptTimer) {
+            clearTimeout(this.backupPromptTimer);
+            this.backupPromptTimer = null;
+        }
+
+        // Check backup schedule setting
+        const schedule = this.settings.backupSchedule;
+        if (schedule === 'manual_only') {
+            console.log('Backup schedule set to manual only, skipping automatic scheduling');
+            return;
+        }
+
+        // Check if we should show the backup prompt
+        const now = new Date();
+        const shouldShowPrompt = this.shouldShowBackupPrompt(schedule, now);
+        
+        if (!shouldShowPrompt.show) {
+            console.log(`Backup prompt not needed: ${shouldShowPrompt.reason}`);
+            return;
+        }
+
+        // Calculate when to show the prompt based on schedule
+        const promptTime = this.calculateBackupPromptTime(schedule);
+        if (!promptTime) {
+            console.log('Could not calculate backup prompt time');
+            return;
+        }
+
+        const msUntilPrompt = promptTime.getTime() - now.getTime();
+        
+        if (msUntilPrompt > 0) {
+            console.log(`Backup prompt scheduled for: ${promptTime.toLocaleTimeString()} (${schedule})`);
+            this.backupPromptTimer = setTimeout(() => {
+                this.showBackupPrompt();
+            }, msUntilPrompt);
+        } else {
+            console.log('Backup prompt time has passed');
+        }
+    }
+
+    /**
+     * Check if backup prompt should be shown based on schedule
+     */
+    shouldShowBackupPrompt(schedule, now) {
+        const today = now.toDateString();
+        const lastPromptDate = localStorage.getItem('lastBackupPromptDate');
+        const promptDismissed = localStorage.getItem('backupPromptDismissed') === today;
+        
+        // Don't show if dismissed today
+        if (promptDismissed) {
+            return { show: false, reason: 'dismissed today' };
+        }
+
+        switch (schedule) {
+            case 'end_of_day':
+                return { 
+                    show: lastPromptDate !== today, 
+                    reason: lastPromptDate === today ? 'already shown today' : 'ready to show'
+                };
+                
+            case 'daily_5pm':
+                return { 
+                    show: lastPromptDate !== today, 
+                    reason: lastPromptDate === today ? 'already shown today' : 'ready to show'
+                };
+                
+            case 'weekly_friday':
+                const isFriday = now.getDay() === 5; // 5 = Friday
+                const thisWeek = this.getWeekStart(now).toDateString();
+                const lastWeek = localStorage.getItem('lastBackupPromptWeek');
+                return { 
+                    show: isFriday && lastWeek !== thisWeek, 
+                    reason: !isFriday ? 'not Friday' : lastWeek === thisWeek ? 'already shown this week' : 'ready to show'
+                };
+                
+            case 'weekly_end':
+                const isWeekend = now.getDay() === 0 || now.getDay() === 6; // Sunday or Saturday
+                const weekStart = this.getWeekStart(now).toDateString();
+                const lastWeekPrompt = localStorage.getItem('lastBackupPromptWeek');
+                return { 
+                    show: isWeekend && lastWeekPrompt !== weekStart, 
+                    reason: !isWeekend ? 'not weekend' : lastWeekPrompt === weekStart ? 'already shown this week' : 'ready to show'
+                };
+                
+            default:
+                return { show: false, reason: 'unknown schedule' };
+        }
+    }
+
+    /**
+     * Get the start of the week (Monday) for a given date
+     */
+    getWeekStart(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        return new Date(d.setDate(diff));
+    }
+
+    /**
+     * Calculate when to show the backup prompt based on schedule type
+     */
+    calculateBackupPromptTime(schedule) {
+        const now = new Date();
+        
+        switch (schedule) {
+            case 'end_of_day':
+                return this.calculateEndOfDayPromptTime(now);
+                
+            case 'daily_5pm':
+                const fivePm = new Date(now);
+                fivePm.setHours(17, 0, 0, 0); // 5:00 PM
+                
+                if (fivePm > now) {
+                    return fivePm;
+                } else {
+                    // If it's past 5 PM, schedule for tomorrow
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    tomorrow.setHours(17, 0, 0, 0);
+                    return tomorrow;
+                }
+                
+            case 'weekly_friday':
+                return this.calculateFridayPromptTime(now);
+                
+            case 'weekly_end':
+                return this.calculateWeekendPromptTime(now);
+                
+            default:
+                return this.calculateEndOfDayPromptTime(now);
+        }
+    }
+
+    /**
+     * Calculate prompt time for end of working day (15 minutes before end)
+     */
+    calculateEndOfDayPromptTime(now) {
+        const dayName = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getDay()];
+        let endTime = null;
+
+        if (this.settings.useComplexSchedule && this.settings.complexSchedule) {
+            const daySchedule = this.settings.complexSchedule[dayName];
+            if (daySchedule && daySchedule.length > 0) {
+                // Find the latest end time for today
+                let latestEnd = null;
+                daySchedule.forEach(range => {
+                    if (range.end) {
+                        const [hours, minutes] = range.end.split(':').map(Number);
+                        const endDateTime = new Date(now);
+                        endDateTime.setHours(hours, minutes, 0, 0);
+                        
+                        if (!latestEnd || endDateTime > latestEnd) {
+                            latestEnd = endDateTime;
+                        }
+                    }
+                });
+                endTime = latestEnd;
+            }
+        } else if (this.settings.endTime) {
+            // Simple schedule mode
+            const dayCheckboxes = document.querySelectorAll('input[name="activityDays"]:checked');
+            const activeDays = Array.from(dayCheckboxes).map(cb => cb.value);
+            
+            if (activeDays.includes(dayName)) {
+                const [hours, minutes] = this.settings.endTime.split(':').map(Number);
+                endTime = new Date(now);
+                endTime.setHours(hours, minutes, 0, 0);
+            }
+        }
+
+        if (endTime && endTime > now) {
+            // Calculate 15 minutes before end time
+            const promptTime = new Date(endTime.getTime() - (15 * 60 * 1000));
+            
+            // Only show if prompt time is in the future
+            if (promptTime > now) {
+                return promptTime;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculate prompt time for Friday at 4:45 PM
+     */
+    calculateFridayPromptTime(now) {
+        const today = now.getDay();
+        const daysUntilFriday = (5 - today + 7) % 7;
+        
+        const fridayDate = new Date(now);
+        if (daysUntilFriday === 0) {
+            // It's Friday today
+            fridayDate.setHours(16, 45, 0, 0); // 4:45 PM
+            if (fridayDate > now) {
+                return fridayDate;
+            } else {
+                // Past 4:45 PM on Friday, wait for next Friday
+                fridayDate.setDate(fridayDate.getDate() + 7);
+                fridayDate.setHours(16, 45, 0, 0);
+                return fridayDate;
+            }
+        } else {
+            // Schedule for next Friday
+            fridayDate.setDate(fridayDate.getDate() + daysUntilFriday);
+            fridayDate.setHours(16, 45, 0, 0);
+            return fridayDate;
+        }
+    }
+
+    /**
+     * Calculate prompt time for weekend (Saturday at 10 AM)
+     */
+    calculateWeekendPromptTime(now) {
+        const today = now.getDay();
+        const daysUntilSaturday = (6 - today + 7) % 7;
+        
+        const saturdayDate = new Date(now);
+        if (daysUntilSaturday === 0) {
+            // It's Saturday today
+            saturdayDate.setHours(10, 0, 0, 0); // 10:00 AM
+            if (saturdayDate > now) {
+                return saturdayDate;
+            } else {
+                // Past 10 AM on Saturday, try Sunday
+                const sundayDate = new Date(now);
+                sundayDate.setDate(sundayDate.getDate() + 1);
+                sundayDate.setHours(10, 0, 0, 0);
+                if (sundayDate > now && today === 6) { // Only if it's Saturday
+                    return sundayDate;
+                } else {
+                    // Wait for next Saturday
+                    saturdayDate.setDate(saturdayDate.getDate() + 7);
+                    saturdayDate.setHours(10, 0, 0, 0);
+                    return saturdayDate;
+                }
+            }
+        } else if (daysUntilSaturday === 1 && today === 0) {
+            // It's Sunday, check if we should show today
+            const sundayTime = new Date(now);
+            sundayTime.setHours(10, 0, 0, 0);
+            if (sundayTime > now) {
+                return sundayTime;
+            } else {
+                // Past time on Sunday, wait for next Saturday
+                saturdayDate.setDate(saturdayDate.getDate() + 6);
+                saturdayDate.setHours(10, 0, 0, 0);
+                return saturdayDate;
+            }
+        } else {
+            // Schedule for next Saturday
+            saturdayDate.setDate(saturdayDate.getDate() + daysUntilSaturday);
+            saturdayDate.setHours(10, 0, 0, 0);
+            return saturdayDate;
+        }
+    }
+
+    /**
+     * Show the backup prompt banner
+     */
+    showBackupPrompt() {
+        const banner = document.getElementById('backupBanner');
+        if (banner) {
+            banner.classList.add('show');
+            
+            const schedule = this.settings.backupSchedule;
+            const now = new Date();
+            
+            // Store tracking information based on schedule type
+            if (schedule === 'weekly_friday' || schedule === 'weekly_end') {
+                // For weekly schedules, track by week
+                const weekStart = this.getWeekStart(now).toDateString();
+                localStorage.setItem('lastBackupPromptWeek', weekStart);
+            } else {
+                // For daily schedules, track by day
+                localStorage.setItem('lastBackupPromptDate', now.toDateString());
+            }
+            
+            console.log(`Backup prompt banner shown (${schedule})`);
+        }
+    }
+
+    /**
+     * Manually show the backup prompt (for testing/diagnostics)
+     */
+    showBackupPromptManually() {
+        const banner = document.getElementById('backupBanner');
+        if (banner) {
+            banner.classList.add('show');
+            console.log('Backup prompt manually triggered from diagnostics');
+            showNotification('💾 Backup prompt displayed for testing', 'info', 2000);
+        }
+    }
+
+    /**
+     * Hide the backup prompt banner
+     */
+    hideBackupPrompt() {
+        const banner = document.getElementById('backupBanner');
+        if (banner) {
+            banner.classList.remove('show');
+        }
+    }
+
+    /**
+     * Create a quick backup and hide the prompt
+     */
+    createQuickBackup() {
+        try {
+            // Use the existing export functionality
+            const data = this.exportDatabase();
+            
+            // Create filename with current date and time
+            const now = new Date();
+            const timestamp = now.toLocaleDateString('en-CA') + '_' + 
+                            now.toLocaleTimeString('en-GB', { hour12: false }).replace(/:/g, '-');
+            const filename = `activity-backup-${timestamp}.json`;
+            
+            // Create and trigger download
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Hide the banner and show success message
+            this.hideBackupPrompt();
+            showNotification(`✅ Backup created: ${filename}`, 'success', 4000);
+            
+            // Mark as completed for today
+            localStorage.setItem('backupPromptDismissed', new Date().toDateString());
+            
+        } catch (error) {
+            console.error('Failed to create backup:', error);
+            showNotification('❌ Failed to create backup. Please try the Settings menu.', 'error', 4000);
+        }
+    }
+
+    /**
+     * Snooze the backup prompt for a specified duration
+     * @param {number} minutes - Minutes to snooze (60=1hr, 180=3hr, 1440=1day, 10080=1week)
+     */
+    snoozeBackupPrompt(minutes = 30) {
+        this.hideBackupPrompt();
+        
+        // Schedule to show again after specified minutes
+        this.backupPromptTimer = setTimeout(() => {
+            this.showBackupPrompt();
+        }, minutes * 60 * 1000);
+        
+        // Friendly duration messages
+        let durationText;
+        if (minutes === 60) durationText = '1 hour';
+        else if (minutes === 180) durationText = '3 hours';
+        else if (minutes === 1440) durationText = 'tomorrow';
+        else if (minutes === 10080) durationText = 'next week';
+        else durationText = `${minutes} minutes`;
+        
+        showNotification(`⏰ Backup reminder snoozed for ${durationText}`, 'info', 3000);
+    }
+
+    /**
+     * Dismiss the backup prompt for today
+     */
+    dismissBackupPrompt() {
+        this.hideBackupPrompt();
+        
+        // Mark as dismissed for today
+        localStorage.setItem('backupPromptDismissed', new Date().toDateString());
+        
+        showNotification('📝 Backup reminder dismissed for today', 'info', 2000);
+    }
+
+    /**
+     * Permanently disable backup reminders
+     */
+    neverRemindBackup() {
+        this.hideBackupPrompt();
+        
+        // Update settings to never remind again
+        this.settings.backupReminders = 'never';
+        this.saveSettings();
+        
+        // Clear any existing timers
+        if (this.backupPromptTimer) {
+            clearTimeout(this.backupPromptTimer);
+            this.backupPromptTimer = null;
+        }
+        
+        showNotification('🚫 Backup reminders disabled permanently (can be re-enabled in Settings)', 'warning', 5000);
+    }
+
+    /**
+     * Request permission for background sync and automatic backups
+     */
+    async requestBackgroundBackupPermission() {
+        try {
+            // Check if Background Sync is supported
+            if (!('serviceWorker' in navigator) || !('sync' in window.ServiceWorkerRegistration.prototype)) {
+                throw new Error('Background Sync is not supported in this browser');
+            }
+
+            // Request persistent notification permission (needed for background operations)
+            const notificationPermission = await Notification.requestPermission();
+            if (notificationPermission !== 'granted') {
+                throw new Error('Notification permission is required for background backups');
+            }
+
+            // Register background sync for automatic backups
+            const registration = await navigator.serviceWorker.ready;
+            await registration.sync.register('automatic-backup');
+
+            // Update permission status
+            this.settings.backgroundBackupPermission = 'granted';
+            this.saveSettings();
+
+            console.log('Background backup permission granted');
+            return true;
+
+        } catch (error) {
+            console.error('Failed to request background backup permission:', error);
+            this.settings.backgroundBackupPermission = 'denied';
+            this.saveSettings();
+            throw error;
+        }
+    }
+
+    /**
+     * Enable automatic backups
+     */
+    async enableAutomaticBackups() {
+        try {
+            // Request permission first if not already granted
+            if (this.settings.backgroundBackupPermission !== 'granted') {
+                await this.requestBackgroundBackupPermission();
+            }
+
+            // Enable automatic backups
+            this.settings.automaticBackups = true;
+            this.saveSettings();
+
+            // Schedule initial backup sync
+            await this.scheduleNextAutomaticBackup();
+
+            showNotification('🚀 Automatic backups enabled! Backups will happen in the background.', 'success', 4000);
+            return true;
+
+        } catch (error) {
+            console.error('Failed to enable automatic backups:', error);
+            showNotification(`❌ Could not enable automatic backups: ${error.message}`, 'error', 6000);
+            return false;
+        }
+    }
+
+    /**
+     * Disable automatic backups
+     */
+    async disableAutomaticBackups() {
+        try {
+            this.settings.automaticBackups = false;
+            this.saveSettings();
+
+            // Clear any pending background sync registrations
+            if ('serviceWorker' in navigator) {
+                const registration = await navigator.serviceWorker.ready;
+                if (registration.sync) {
+                    // Note: There's no unregister method, but we'll handle this in the SW
+                    console.log('Automatic backups disabled');
+                }
+            }
+
+            showNotification('⏸️ Automatic backups disabled', 'info', 3000);
+            return true;
+
+        } catch (error) {
+            console.error('Failed to disable automatic backups:', error);
+            showNotification(`❌ Error disabling automatic backups: ${error.message}`, 'error', 4000);
+            return false;
+        }
+    }
+
+    /**
+     * Schedule the next automatic backup based on frequency setting
+     */
+    async scheduleNextAutomaticBackup() {
+        if (!this.settings.automaticBackups || this.settings.backgroundBackupPermission !== 'granted') {
+            return;
+        }
+
+        try {
+            const registration = await navigator.serviceWorker.ready;
+            
+            // Calculate next backup time based on frequency
+            const now = new Date();
+            const lastBackup = localStorage.getItem('lastAutomaticBackupTime');
+            const lastBackupTime = lastBackup ? new Date(lastBackup) : new Date(0);
+            
+            let nextBackupTime = new Date(now);
+            
+            switch (this.settings.backgroundBackupFrequency) {
+                case 'daily':
+                    nextBackupTime.setDate(lastBackupTime.getDate() + 1);
+                    break;
+                case 'weekly':
+                    nextBackupTime.setDate(lastBackupTime.getDate() + 7);
+                    break;
+                case 'bi_weekly':
+                    nextBackupTime.setDate(lastBackupTime.getDate() + 14);
+                    break;
+                case 'monthly':
+                    nextBackupTime.setMonth(lastBackupTime.getMonth() + 1);
+                    break;
+            }
+
+            // If next backup time is in the past, trigger immediately
+            if (nextBackupTime <= now) {
+                await registration.sync.register('automatic-backup');
+                console.log('Automatic backup scheduled immediately');
+            } else {
+                // Schedule for the calculated time
+                await registration.sync.register('automatic-backup');
+                console.log(`Next automatic backup scheduled for: ${nextBackupTime.toLocaleString()}`);
+            }
+
+        } catch (error) {
+            console.error('Failed to schedule automatic backup:', error);
+        }
+    }
+
+    /**
+     * Perform automatic backup (called by service worker)
+     */
+    performAutomaticBackup() {
+        try {
+            // Check backup throttling for automatic backups
+            if (!this.canPerformAutomaticBackup()) {
+                console.log('⏸️ Automatic backup throttled - too soon since last backup');
+                return false;
+            }
+            
+            // Generate backup data
+            const backupData = this.getAllWorkspacesData();
+            
+            // Generate filename based on pattern
+            const filename = this.generateBackupFilename();
+            
+            // Store backup data temporarily for service worker to access
+            localStorage.setItem('pendingAutomaticBackup', JSON.stringify({
+                data: backupData,
+                filename: filename,
+                timestamp: new Date().toISOString()
+            }));
+
+            // Record that we performed a backup (both automatic and general backup time)
+            localStorage.setItem('lastAutomaticBackupTime', new Date().toISOString());
+            localStorage.setItem('lastBackupTime', new Date().toISOString());
+
+            console.log('Automatic backup prepared:', filename);
+            
+            // Trigger download via service worker message
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'DOWNLOAD_AUTOMATIC_BACKUP',
+                    filename: filename
+                });
+            }
+
+            return true;
+
+        } catch (error) {
+            console.error('Failed to perform automatic backup:', error);
+            return false;
+        }
+    }
+
+    /**
+     * Check if automatic backup can be performed (throttling check)
+     * @returns {boolean} True if backup can be performed
+     */
+    canPerformAutomaticBackup() {
+        const lastBackupTime = localStorage.getItem('lastBackupTime');
+        
+        if (!lastBackupTime) {
+            // No previous backup, allow backup
+            return true;
+        }
+        
+        const now = Date.now();
+        const lastBackup = new Date(lastBackupTime).getTime();
+        const timeSinceLastBackup = now - lastBackup;
+        
+        // Throttle automatic backups to 20 seconds (20000 milliseconds)
+        const THROTTLE_DURATION = 20000;
+        
+        if (timeSinceLastBackup < THROTTLE_DURATION) {
+            const remainingTime = Math.ceil((THROTTLE_DURATION - timeSinceLastBackup) / 1000);
+            console.log(`⏱️ Backup throttled: ${remainingTime} seconds remaining`);
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Get automatic backup status for UI display
+     */
+    getAutomaticBackupStatus() {
+        // Check if we're running from file:// protocol
+        if (window.location.protocol === 'file:') {
+            return {
+                supported: false,
+                enabled: false,
+                status: 'Automatic backups are not available when running from file:// protocol. Use a web server.',
+                statusClass: 'status-disabled'
+            };
+        }
+
+        // Check for Service Worker and Background Sync support
+        if (!('serviceWorker' in navigator) || !('sync' in window.ServiceWorkerRegistration.prototype)) {
+            return {
+                supported: false,
+                enabled: false,
+                status: 'Background Sync is not supported in this browser. Automatic backups unavailable.',
+                statusClass: 'status-disabled'
+            };
+        }
+
+        if (this.settings.backgroundBackupPermission === 'denied') {
+            return {
+                supported: true,
+                enabled: false,
+                status: 'Permission denied. Click to retry permission request.',
+                statusClass: 'status-disabled'
+            };
+        }
+
+        if (this.settings.backgroundBackupPermission === 'not_requested') {
+            return {
+                supported: true,
+                enabled: false,
+                status: 'Permission required for background operations. Will request when enabled.',
+                statusClass: 'status-permission-needed'
+            };
+        }
+
+        if (this.settings.automaticBackups) {
+            const frequency = this.getFrequencyDisplayName(this.settings.backgroundBackupFrequency);
+            const lastBackup = localStorage.getItem('lastAutomaticBackupTime');
+            const nextBackupText = this.getNextBackupText();
+            
+            let statusText = `✅ Automatic backups enabled (${frequency}).`;
+            
+            if (lastBackup) {
+                const lastBackupDate = new Date(lastBackup);
+                const timeSinceLastBackup = this.getTimeSince(lastBackupDate);
+                statusText += ` Last backup: ${timeSinceLastBackup}.`;
+            } else {
+                statusText += ' No backups yet.';
+            }
+            
+            if (nextBackupText) {
+                statusText += ` ${nextBackupText}`;
+            }
+                
+            return {
+                supported: true,
+                enabled: true,
+                status: statusText,
+                statusClass: 'status-enabled'
+            };
+        }
+
+        return {
+            supported: true,
+            enabled: false,
+            status: 'Automatic backups are available. Enable to create backups in the background.',
+            statusClass: ''
+        };
+    }
+
+    /**
+     * Get user-friendly frequency display name
+     */
+    getFrequencyDisplayName(frequency) {
+        const frequencyMap = {
+            'daily': 'Daily',
+            'weekly': 'Weekly', 
+            'bi_weekly': 'Bi-weekly',
+            'monthly': 'Monthly'
+        };
+        return frequencyMap[frequency] || 'Daily';
+    }
+
+    /**
+     * Get time since a date in user-friendly format
+     */
+    getTimeSince(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffMinutes < 1) {
+            return 'just now';
+        } else if (diffMinutes < 60) {
+            return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+        } else if (diffHours < 24) {
+            return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+        } else if (diffDays < 7) {
+            return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+        } else {
+            return date.toLocaleDateString();
+        }
+    }
+
+    /**
+     * Get next backup time text
+     */
+    getNextBackupText() {
+        const lastBackup = localStorage.getItem('lastAutomaticBackupTime');
+        const now = new Date();
+        
+        if (!lastBackup) {
+            return 'Next backup: When app is next closed and reopened';
+        }
+
+        const lastBackupDate = new Date(lastBackup);
+        let nextBackupDate = new Date(lastBackupDate);
+
+        // Calculate next backup time based on frequency
+        switch (this.settings.backgroundBackupFrequency) {
+            case 'daily':
+                nextBackupDate.setDate(nextBackupDate.getDate() + 1);
+                break;
+            case 'weekly':
+                nextBackupDate.setDate(nextBackupDate.getDate() + 7);
+                break;
+            case 'bi_weekly':
+                nextBackupDate.setDate(nextBackupDate.getDate() + 14);
+                break;
+            case 'monthly':
+                nextBackupDate.setMonth(nextBackupDate.getMonth() + 1);
+                break;
+        }
+
+        // If next backup time has passed, it's overdue
+        if (nextBackupDate <= now) {
+            return 'Next backup: Overdue (will backup when app reopens)';
+        }
+
+        // Calculate time until next backup
+        const timeDiff = nextBackupDate - now;
+        const hoursUntil = Math.floor(timeDiff / (1000 * 60 * 60));
+        const daysUntil = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+        if (daysUntil > 0) {
+            return `Next backup: in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}`;
+        } else if (hoursUntil > 0) {
+            return `Next backup: in ${hoursUntil} hour${hoursUntil !== 1 ? 's' : ''}`;
+        } else {
+            return 'Next backup: soon';
         }
     }
 }

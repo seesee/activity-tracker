@@ -583,6 +583,57 @@
                 </div>
 
                 <div class="settings-section">
+                    <h3>Backup Settings</h3>
+                    <p class="settings-description">Configure automated backup reminders and schedules</p>
+                    
+                    <div class="form-group">
+                        <label for="backupType" title="Choose how you want to handle backups">Backup Type</label>
+                        <select id="backupType" onchange="updateBackupTypeSettings()">
+                            <option value="reminders" selected>Send backup reminders</option>
+                            <option value="automatic">Automatic background backups</option>
+                            <option value="off">Turned off</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="backupScheduleGroup" style="display: block;">
+                        <label for="backupSchedule" title="When to show backup reminders">Backup Schedule</label>
+                        <select id="backupSchedule" onchange="saveSettings()">
+                            <option value="end_of_day" selected>15 minutes before end of working day</option>
+                            <option value="daily_5pm">Daily at 5:00 PM</option>
+                            <option value="weekly_friday">Weekly on Friday at 4:30 PM</option>
+                            <option value="weekly_end">Weekly on last working day</option>
+                            <option value="manual_only">Manual only (no automatic prompts)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="backupFilenamePattern" title="How to name backup files automatically">Backup Filename Pattern</label>
+                        <select id="backupFilenamePattern" onchange="saveSettings()">
+                            <option value="timestamp" selected>activity-backup-YYYY-MM-DD_HH-MM-SS.json</option>
+                            <option value="date_only">activity-backup-YYYY-MM-DD.json</option>
+                            <option value="simple">activity-backup.json</option>
+                            <option value="workspace">activity-backup-[workspace]-YYYY-MM-DD.json</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="automaticBackupsGroup" style="display: none;">
+                        <div class="settings-note" id="automaticBackupsStatus">
+                            Automatically create backups in the background based on your schedule, even when the app isn't open.
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="backgroundBackupInterval" style="display: none;">
+                        <label for="backgroundBackupFrequency" title="How often to create automatic backups">Automatic Backup Frequency</label>
+                        <select id="backgroundBackupFrequency" onchange="saveSettings(); updateAutomaticBackupStatus();">
+                            <option value="daily" selected>Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="bi_weekly">Bi-weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
                     <h3>Activity Schedule</h3>
                     <p class="settings-description">Set your active activity hours and days for notifications</p>
                     
@@ -923,6 +974,15 @@
                             <div class="diagnostic-buttons">
                                 <button class="btn btn-primary diagnostic-btn" onclick="checkForUpdatesManually()" title="Check for app updates immediately">
                                     <span class="btn-icon">🔄</span>Check for Updates
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="diagnostic-card">
+                            <h4>💾 Backup Testing</h4>
+                            <div class="diagnostic-buttons">
+                                <button class="btn btn-primary diagnostic-btn" onclick="showBackupPromptManually()" title="Show the automated backup prompt banner for testing">
+                                    <span class="btn-icon">📁</span>Test Backup Prompt
                                 </button>
                             </div>
                         </div>
@@ -1687,6 +1747,34 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 <button class="btn btn-secondary" onclick="copyDiagnosticsToClipboard()">📋 Copy to Clipboard</button>
                 <button class="btn btn-secondary" onclick="closeDiagnosticsModal()">Close</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Automated Backup Prompt Banner -->
+    <div id="backupBanner" class="backup-banner">
+        <div class="backup-banner-header">
+            <h4 class="backup-banner-title">💾 End of Day Backup</h4>
+            <button class="backup-banner-close" onclick="hideBackupBanner()">&times;</button>
+        </div>
+        <div class="backup-banner-message">
+            Your working day ends soon. Would you like to create a backup of your activities?
+        </div>
+        <div class="backup-banner-actions">
+            <button class="backup-banner-btn primary" onclick="createQuickBackup()">📁 Backup Now</button>
+            <div class="backup-banner-dropdown">
+                <button class="backup-banner-btn secondary dropdown-trigger" onclick="toggleBackupReminderDropdown()">
+                    ⏰ Remind Me <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="backup-reminder-dropdown" id="backupReminderDropdown">
+                    <button class="backup-reminder-option" onclick="snoozeBackupBanner(60)">In 1 hour</button>
+                    <button class="backup-reminder-option" onclick="snoozeBackupBanner(180)">In 3 hours</button>
+                    <button class="backup-reminder-option" onclick="snoozeBackupBanner(1440)">Tomorrow</button>
+                    <button class="backup-reminder-option" onclick="snoozeBackupBanner(10080)">Next week</button>
+                    <button class="backup-reminder-option" onclick="dismissBackupBanner()">Not today</button>
+                    <button class="backup-reminder-option never" onclick="neverRemindBackup()">Never remind me again</button>
+                </div>
+            </div>
+            <button class="backup-banner-btn secondary" onclick="dismissBackupBanner()">✕ Dismiss</button>
         </div>
     </div>
 

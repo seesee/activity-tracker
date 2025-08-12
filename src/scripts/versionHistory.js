@@ -5,6 +5,11 @@
 
 const VERSION_HISTORY = [
     {
+        commit: "TBD",
+        date: "2025-08-12",
+        summary: "Enhanced service worker diagnostics with comprehensive modal interface, statistics collection, and interactive features"
+    },
+    {
         commit: "46ff2e2",
         date: "2025-08-07", 
         summary: "Added SVG logo overlay to background. Fixed more todo/notes UI bugs. Updated Service Worker notifications"
@@ -23,16 +28,6 @@ const VERSION_HISTORY = [
         commit: "5398868",
         date: "2025-08-05",
         summary: "Added workspace system for organising separate projects and schedules"
-    },
-    {
-        commit: "eccb96b",
-        date: "2025-08-05",
-        summary: "UI refactor. Added quick due-date controls, various fixes"
-    },
-    {
-        commit: "eb3cd3b",
-        date: "2025-08-05",
-        summary: "Added hashtag autocompletion, improved form layouts, better notifications"
     }
 ];
 

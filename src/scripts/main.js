@@ -2793,6 +2793,251 @@ function formatDiagnosticsAsText(diagnostics) {
 }
 
 /**
+ * Hide backup banner (wrapper function)
+ */
+function hideBackupBanner() {
+    if (tracker) {
+        tracker.hideBackupPrompt();
+    }
+}
+
+/**
+ * Create quick backup (wrapper function)
+ */
+function createQuickBackup() {
+    if (tracker) {
+        tracker.createQuickBackup();
+    }
+}
+
+/**
+ * Snooze backup banner (wrapper function)
+ */
+function snoozeBackupBanner(minutes) {
+    if (tracker) {
+        tracker.snoozeBackupPrompt(minutes);
+    }
+    // Hide dropdown after selection
+    hideBackupReminderDropdown();
+}
+
+/**
+ * Dismiss backup banner (wrapper function)
+ */
+function dismissBackupBanner() {
+    if (tracker) {
+        tracker.dismissBackupPrompt();
+    }
+}
+
+/**
+ * Show backup prompt manually (wrapper function for diagnostics)
+ */
+function showBackupPromptManually() {
+    if (tracker) {
+        tracker.showBackupPromptManually();
+    }
+}
+
+/**
+ * Toggle backup reminder dropdown visibility
+ */
+function toggleBackupReminderDropdown() {
+    const dropdown = document.getElementById('backupReminderDropdown');
+    if (dropdown) {
+        const isVisible = dropdown.style.opacity === '1';
+        if (isVisible) {
+            hideBackupReminderDropdown();
+        } else {
+            showBackupReminderDropdown();
+        }
+    }
+}
+
+/**
+ * Show backup reminder dropdown
+ */
+function showBackupReminderDropdown() {
+    const dropdown = document.getElementById('backupReminderDropdown');
+    if (dropdown) {
+        dropdown.style.opacity = '1';
+        dropdown.style.visibility = 'visible';
+        dropdown.style.transform = 'translateY(0)';
+        
+        // Add click outside listener
+        setTimeout(() => {
+            document.addEventListener('click', handleBackupDropdownClickOutside);
+        }, 10);
+    }
+}
+
+/**
+ * Hide backup reminder dropdown
+ */
+function hideBackupReminderDropdown() {
+    const dropdown = document.getElementById('backupReminderDropdown');
+    if (dropdown) {
+        dropdown.style.opacity = '0';
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.transform = 'translateY(10px)';
+        
+        // Remove click outside listener
+        document.removeEventListener('click', handleBackupDropdownClickOutside);
+    }
+}
+
+/**
+ * Handle clicks outside backup dropdown to close it
+ */
+function handleBackupDropdownClickOutside(event) {
+    const dropdown = document.getElementById('backupReminderDropdown');
+    const trigger = event.target.closest('.dropdown-trigger');
+    
+    if (dropdown && !dropdown.contains(event.target) && !trigger) {
+        hideBackupReminderDropdown();
+    }
+}
+
+/**
+ * Never remind for backup (wrapper function)
+ */
+function neverRemindBackup() {
+    if (tracker) {
+        tracker.neverRemindBackup();
+    }
+    hideBackupReminderDropdown();
+}
+
+/**
+ * Toggle automatic backups (wrapper function)
+ */
+async function toggleAutomaticBackups() {
+    if (!tracker) return;
+
+    const checkbox = document.getElementById('automaticBackups');
+    if (!checkbox) return;
+
+    if (checkbox.checked) {
+        // Enable automatic backups
+        const success = await tracker.enableAutomaticBackups();
+        if (!success) {
+            // Revert checkbox if enabling failed
+            checkbox.checked = false;
+        } else {
+            // Show frequency selector
+            const intervalSection = document.getElementById('backgroundBackupInterval');
+            if (intervalSection) {
+                intervalSection.style.display = 'block';
+                intervalSection.classList.add('show');
+            }
+        }
+    } else {
+        // Disable automatic backups
+        await tracker.disableAutomaticBackups();
+        
+        // Hide frequency selector
+        const intervalSection = document.getElementById('backgroundBackupInterval');
+        if (intervalSection) {
+            intervalSection.style.display = 'none';
+            intervalSection.classList.remove('show');
+        }
+    }
+
+    // Update status display
+    updateAutomaticBackupStatus();
+}
+
+/**
+ * Update automatic backup status display
+ */
+function updateAutomaticBackupStatus() {
+    if (!tracker) return;
+
+    const statusElement = document.getElementById('automaticBackupsStatus');
+    if (!statusElement) return;
+
+    const status = tracker.getAutomaticBackupStatus();
+    
+    // Update status text
+    statusElement.textContent = status.status;
+    
+    // Update status styling
+    statusElement.className = `settings-note ${status.statusClass}`;
+    
+    // Update checkbox state
+    const checkbox = document.getElementById('automaticBackups');
+    if (checkbox) {
+        checkbox.checked = status.enabled;
+    }
+    
+    // Show/hide frequency selector based on status
+    const intervalSection = document.getElementById('backgroundBackupInterval');
+    if (intervalSection) {
+        if (status.enabled) {
+            intervalSection.style.display = 'block';
+            intervalSection.classList.add('show');
+        } else {
+            intervalSection.style.display = 'none';
+            intervalSection.classList.remove('show');
+        }
+    }
+}
+
+/**
+ * Update backup type settings UI based on selected backup type
+ */
+function updateBackupTypeSettings() {
+    if (!tracker) return;
+    
+    const backupType = document.getElementById('backupType').value;
+    const scheduleGroup = document.getElementById('backupScheduleGroup');
+    const automaticGroup = document.getElementById('automaticBackupsGroup');
+    const frequencyGroup = document.getElementById('backgroundBackupInterval');
+    
+    // Hide all conditional sections first
+    if (scheduleGroup) scheduleGroup.style.display = 'none';
+    if (automaticGroup) automaticGroup.style.display = 'none';
+    if (frequencyGroup) frequencyGroup.style.display = 'none';
+    
+    // Show relevant sections based on backup type
+    switch (backupType) {
+        case 'reminders':
+            if (scheduleGroup) scheduleGroup.style.display = 'block';
+            // Update underlying settings
+            tracker.settings.backupReminders = 'enabled';
+            tracker.settings.automaticBackups = false;
+            break;
+            
+        case 'automatic':
+            if (automaticGroup) automaticGroup.style.display = 'block';
+            if (frequencyGroup) frequencyGroup.style.display = 'block';
+            // Update underlying settings
+            tracker.settings.backupReminders = 'disabled';
+            tracker.settings.automaticBackups = true;
+            // Try to enable automatic backups
+            tracker.enableAutomaticBackups();
+            break;
+            
+        case 'off':
+            // Update underlying settings
+            tracker.settings.backupReminders = 'never';
+            tracker.settings.automaticBackups = false;
+            // Disable automatic backups if enabled
+            if (tracker.settings.backgroundBackupPermission === 'granted') {
+                tracker.disableAutomaticBackups();
+            }
+            break;
+    }
+    
+    // Save settings and update displays
+    tracker.saveSettings();
+    updateAutomaticBackupStatus();
+    
+    // Update backup prompt scheduling
+    tracker.scheduleBackupPrompt();
+}
+
+/**
  * Initialize UI state on page load
  */
 function initializeUIState() {
@@ -2849,10 +3094,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize version checking for automatic updates
     tracker.initializeVersionChecking();
     
-    // Clean up version checking on page unload
+    // Initialize backup prompt system
+    tracker.initializeBackupPrompt();
+    
+    // Clean up intervals on page unload
     window.addEventListener('beforeunload', () => {
         if (tracker) {
             tracker.stopVersionChecking();
+            if (tracker.backupPromptTimer) {
+                clearTimeout(tracker.backupPromptTimer);
+            }
         }
     });
     
@@ -3015,6 +3266,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Small delay for UI readiness
                 setTimeout(populateAndFocus, event.data.source === 'notification-action' ? 300 : 100);
+            }
+            
+            // Handle automatic backup data requests from service worker
+            if (event.data && event.data.type === 'REQUEST_BACKUP_DATA') {
+                console.log('Service worker requested backup data');
+                if (tracker && event.ports && event.ports[0]) {
+                    const backupData = tracker.getAllWorkspacesData();
+                    event.ports[0].postMessage({ backupData: backupData });
+                }
+            }
+            
+            // Handle backup throttling checks from service worker
+            if (event.data && event.data.type === 'CHECK_BACKUP_THROTTLING') {
+                console.log('Service worker requested backup throttling check');
+                if (tracker && event.ports && event.ports[0]) {
+                    const canBackup = tracker.canPerformAutomaticBackup();
+                    event.ports[0].postMessage({ canBackup: canBackup });
+                }
+            }
+            
+            // Handle automatic backup completion notification
+            if (event.data && event.data.type === 'AUTOMATIC_BACKUP_COMPLETED') {
+                console.log('Automatic backup completed:', event.data.backupInfo);
+                // Update status display (both automatic and general backup time)
+                localStorage.setItem('lastAutomaticBackupTime', event.data.backupInfo.timestamp);
+                localStorage.setItem('lastBackupTime', event.data.backupInfo.timestamp);
+                updateAutomaticBackupStatus();
+                showNotification('💾 Auto backup completed successfully', 'success', 4000);
             }
         });
 
@@ -3414,6 +3693,11 @@ window.addEventListener('load', () => {
         const loadTime = timing.loadEventEnd - timing.navigationStart;
         console.log(`Page loaded in ${loadTime}ms`);
     }
+    
+    // Update automatic backup status after page load
+    setTimeout(() => {
+        updateAutomaticBackupStatus();
+    }, 100);
 });
 
 /**
@@ -3851,4 +4135,9 @@ if (typeof window !== 'undefined') {
     window.closeDiagnosticsModal = closeDiagnosticsModal;
     window.refreshDiagnostics = refreshDiagnostics;
     window.copyDiagnosticsToClipboard = copyDiagnosticsToClipboard;
+    window.hideBackupBanner = hideBackupBanner;
+    window.createQuickBackup = createQuickBackup;
+    window.snoozeBackupBanner = snoozeBackupBanner;
+    window.dismissBackupBanner = dismissBackupBanner;
+    window.showBackupPromptManually = showBackupPromptManually;
 }

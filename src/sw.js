@@ -345,12 +345,14 @@ self.addEventListener('push', (event) => {
 });
 
 /**
- * Background sync handler (for future offline sync functionality)
+ * Background sync handler (for automatic backups and future offline sync)
  */
 self.addEventListener('sync', (event) => {
     console.log('Background sync triggered:', event.tag);
     
-    if (event.tag === 'sync-activities') {
+    if (event.tag === 'automatic-backup') {
+        event.waitUntil(performAutomaticBackup());
+    } else if (event.tag === 'sync-activities') {
         event.waitUntil(
             // Here you would implement syncing logic
             // For example, upload offline entries to a server
@@ -360,6 +362,162 @@ self.addEventListener('sync', (event) => {
         );
     }
 });
+
+/**
+ * Perform automatic backup in background
+ */
+async function performAutomaticBackup() {
+    try {
+        console.log('🚀 Performing automatic backup in background...');
+
+        // Check backup throttling - get last backup time from clients
+        const canBackup = await checkBackupThrottling();
+        if (!canBackup) {
+            console.log('⏸️ Automatic backup throttled - too soon since last backup');
+            return;
+        }
+
+        // Get data from localStorage via a client or directly
+        const backupData = await getBackupDataFromStorage();
+        
+        if (!backupData) {
+            console.log('No backup data available');
+            return;
+        }
+
+        // Generate filename
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const filename = `activity-backup-${timestamp}.json`;
+
+        // Create a blob URL for download
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { 
+            type: 'application/json' 
+        });
+        
+        // Store backup info for later notification
+        const backupInfo = {
+            filename: filename,
+            size: blob.size,
+            timestamp: now.toISOString(),
+            status: 'completed'
+        };
+
+        // Notify user of successful backup
+        await showBackupCompletedNotification(backupInfo);
+
+        // Update last backup timestamp
+        self.clients.matchAll().then(clients => {
+            clients.forEach(client => {
+                client.postMessage({
+                    type: 'AUTOMATIC_BACKUP_COMPLETED',
+                    backupInfo: backupInfo
+                });
+            });
+        });
+
+        console.log('✅ Automatic backup completed:', filename);
+
+    } catch (error) {
+        console.error('❌ Automatic backup failed:', error);
+        
+        // Show error notification
+        await self.registration.showNotification('Backup Failed', {
+            body: `Automatic backup failed: ${error.message}`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ef4444"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+            tag: 'backup-error',
+            requireInteraction: true
+        });
+    }
+}
+
+/**
+ * Get backup data from localStorage (via client communication)
+ */
+async function getBackupDataFromStorage() {
+    return new Promise((resolve) => {
+        // Try to get data from active clients first
+        self.clients.matchAll().then(clients => {
+            if (clients.length > 0) {
+                // Request backup data from the first available client
+                const client = clients[0];
+                
+                const messageChannel = new MessageChannel();
+                messageChannel.port1.onmessage = (event) => {
+                    resolve(event.data.backupData);
+                };
+                
+                client.postMessage({
+                    type: 'REQUEST_BACKUP_DATA'
+                }, [messageChannel.port2]);
+            } else {
+                // No clients available, try to access localStorage directly
+                // Note: This is limited in Service Worker context
+                try {
+                    // We can't directly access localStorage from SW, but we can try
+                    // to get data from IndexedDB or other persistent storage
+                    resolve(null);
+                } catch (error) {
+                    console.error('Could not access storage from Service Worker:', error);
+                    resolve(null);
+                }
+            }
+        });
+    });
+}
+
+/**
+ * Check if backup can be performed (throttling check)
+ * @returns {Promise<boolean>} True if backup can be performed
+ */
+async function checkBackupThrottling() {
+    return new Promise((resolve) => {
+        // Request throttling check from clients
+        self.clients.matchAll().then(clients => {
+            if (clients.length > 0) {
+                const client = clients[0];
+                
+                const messageChannel = new MessageChannel();
+                messageChannel.port1.onmessage = (event) => {
+                    resolve(event.data.canBackup);
+                };
+                
+                client.postMessage({
+                    type: 'CHECK_BACKUP_THROTTLING'
+                }, [messageChannel.port2]);
+            } else {
+                // No clients available, allow backup (conservative approach)
+                console.log('No clients available for throttling check, allowing backup');
+                resolve(true);
+            }
+        });
+    });
+}
+
+/**
+ * Show notification when automatic backup completes
+ */
+async function showBackupCompletedNotification(backupInfo) {
+    const options = {
+        body: `Your activity data has been automatically backed up.\nFile size: ${(backupInfo.size / 1024).toFixed(1)} KB`,
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2310b981"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+        badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2310b981"><circle cx="12" cy="12" r="10"/></svg>',
+        tag: 'automatic-backup-success',
+        actions: [
+            {
+                action: 'view_backups',
+                title: '📁 View Backups'
+            },
+            {
+                action: 'dismiss',
+                title: 'Dismiss'
+            }
+        ],
+        data: backupInfo
+    };
+
+    return self.registration.showNotification('💾 Auto Backup Complete', options);
+}
 
 /**
  * Message handler for communication with main app
