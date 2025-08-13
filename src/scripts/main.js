@@ -3231,7 +3231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     if (timeSinceRefresh < 10000) {
                                         // Recently refreshed, just show success message
                                         console.log('Recent refresh detected, showing refreshed message instead of button');
-                                        showNotification('🔄 App refreshed', 'success', 2000);
+                                        tracker.showAppRefreshedMessage();
                                         localStorage.removeItem('updateRefreshTriggered');
                                         return;
                                     }

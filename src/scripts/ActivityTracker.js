@@ -5009,7 +5009,8 @@ class ActivityTracker {
      * Show a brief "App refreshed" message that auto-disappears
      */
     showAppRefreshedMessage() {
-        showNotification('🔄 App refreshed', 'success', 2000);
+        const currentVersion = typeof APP_VERSION !== 'undefined' ? APP_VERSION : 'unknown';
+        showNotification(`🔄 App refreshed to ${currentVersion}`, 'success', 3000);
     }
 
     /**
