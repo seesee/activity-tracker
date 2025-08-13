@@ -69,24 +69,41 @@ class MarkdownRenderer {
         // Handle lists FIRST, before other processing
         html = this.renderLists(html);
 
-        // Apply markdown rules (excluding list processing)
+        // Protect checkbox HTML from ALL further processing (rules, line breaks, etc.)
+        const protectedSections = [];
+        // More specific pattern that captures the entire checkbox li element
+        const protectionPattern = /<li class="todo-item[^>]*>.*?<\/li>/gs;
+        
+        // Replace checkbox HTML with placeholders
+        html = html.replace(protectionPattern, (match) => {
+            const placeholder = `__PROTECTED_CHECKBOX_${protectedSections.length}__`;
+            protectedSections.push(match);
+            return placeholder;
+        });
+        
+        // Apply markdown rules to the protected HTML
         this.rules.forEach(rule => {
             html = html.replace(rule.pattern, rule.replacement);
         });
 
-        // Handle line breaks and paragraphs (but not inside lists)
+        // Handle line breaks and paragraphs (but not inside lists and not on protected content)
         if (inline) {
             // For inline content (descriptions), be more conservative
             // Double newlines become paragraph breaks
             html = html.replace(/\n\s*\n/gim, '</p><p>');
-            // Single newlines become line breaks only if not in lists
-            html = html.replace(/\n(?![<\/]|<ul>|<ol>|<li>)/gim, '<br>');
+            // Single newlines become line breaks only if not in lists or protected sections
+            html = html.replace(/\n(?![<\/]|<ul>|<ol>|<li>|__PROTECTED_)/gim, '<br>');
         } else {
             // For full content, handle paragraphs more aggressively
             html = html.replace(/\n\s*\n/gim, '</p><p>');
-            // Don't add line breaks inside list structures
-            html = html.replace(/\n(?![<\/]|<ul>|<ol>|<li>)/gim, '<br>');
+            // Don't add line breaks inside list structures or protected sections
+            html = html.replace(/\n(?![<\/]|<ul>|<ol>|<li>|__PROTECTED_)/gim, '<br>');
         }
+        
+        // Restore protected checkbox HTML AFTER all processing
+        protectedSections.forEach((originalHtml, index) => {
+            html = html.replace(`__PROTECTED_CHECKBOX_${index}__`, originalHtml);
+        });
 
         // Wrap in paragraphs if not inline or if it doesn't start with a block element
         if (!inline || !html.match(/^<(h[1-6]|ul|ol|blockquote|hr)/)) {
@@ -134,15 +151,34 @@ class MarkdownRenderer {
             
             if (unorderedMatch) {
                 const indentation = unorderedMatch[1].length;
-                const content = unorderedMatch[2];
+                let content = unorderedMatch[2];
                 const level = Math.floor(indentation / 2); // Every 2 spaces = 1 level
+                
+                // Check for checkbox patterns
+                let isCheckbox = false;
+                let isChecked = false;
+                
+                const uncheckedMatch = content.match(/^\[( )\] (.*)$/);
+                const checkedMatch = content.match(/^\[([x])\] (.*)$/i);
+                
+                if (uncheckedMatch) {
+                    isCheckbox = true;
+                    isChecked = false;
+                    content = uncheckedMatch[2];
+                } else if (checkedMatch) {
+                    isCheckbox = true;
+                    isChecked = true;
+                    content = checkedMatch[2];
+                }
                 
                 processedLines.push({
                     type: 'list-item',
                     listType: 'ul',
                     level: level,
                     content: content,
-                    original: line
+                    original: line,
+                    isCheckbox: isCheckbox,
+                    isChecked: isChecked
                 });
             } else if (orderedMatch) {
                 const indentation = orderedMatch[1].length;
@@ -197,7 +233,21 @@ class MarkdownRenderer {
                 }
                 
                 // Add the list item
-                result.push(`<li>${item.content}</li>`);
+                if (item.isCheckbox) {
+                    const checkboxId = `checkbox-${Math.random().toString(36).substr(2, 9)}`;
+                    const checkedAttr = item.isChecked ? 'checked' : '';
+                    const checkedClass = item.isChecked ? 'todo-checked' : 'todo-unchecked';
+                    // Use data attribute to store the original line - much safer than inline JS
+                    const escapedOriginal = item.original
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;');
+                    
+                    result.push(`<li class="todo-item ${checkedClass}"><input type="checkbox" id="${checkboxId}" ${checkedAttr} class="todo-checkbox" data-original-line="${escapedOriginal}"><label for="${checkboxId}">${item.content}</label></li>`);
+                } else {
+                    result.push(`<li>${item.content}</li>`);
+                }
                 
             } else {
                 // Close all open lists when we hit non-list content

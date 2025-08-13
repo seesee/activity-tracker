@@ -29,7 +29,8 @@ class TemplatingEngine {
                 }
                 return this.escapeHtml(value);
             },
-            cleanHashtags: (value) => this.cleanHashtags(value)
+            cleanHashtags: (value) => this.cleanHashtags(value),
+            removeCheckboxes: (value) => this.removeCheckboxes(value)
         };
         console.log('Templating Engine Initialized (Tokenizer Version)');
     }
@@ -520,6 +521,15 @@ class TemplatingEngine {
         return String(text).replace(/#([\w][\w-_]*)/g, (match, hashtag) => {
             return hashtag.replace(/[-_]/g, ' ');
         });
+    }
+
+    /**
+     * Remove checkbox syntax from text for clean reports
+     * Converts "- [ ] Task" and "- [x] Task" to "- Task"
+     */
+    removeCheckboxes(text) {
+        if (text === null || text === undefined) return '';
+        return String(text).replace(/^(\s*)-\s*\[[ x]\]\s*/gm, '$1- ');
     }
 }
 

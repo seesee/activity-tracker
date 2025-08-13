@@ -1389,6 +1389,50 @@ h3 {
     margin: 3px 0;
 }
 
+/* Todo checkbox styles in descriptions */
+.md-list li.todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 6px 0;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+}
+
+.md-list li.todo-item input[type="checkbox"] {
+    margin: 0;
+    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    accent-color: #667eea;
+    flex-shrink: 0;
+}
+
+.md-list li.todo-item label {
+    margin: 0;
+    cursor: pointer;
+    flex: 1;
+    line-height: 1.4;
+}
+
+.md-list li.todo-item.todo-checked label {
+    text-decoration: line-through;
+    opacity: 0.7;
+    color: #6b7280;
+}
+
+.md-list li.todo-item:hover {
+    box-shadow: none;
+    background: none;
+}
+
+/* Dark mode styles for todo checkboxes */
+.dark-mode .md-list li.todo-item.todo-checked label {
+    color: #9ca3af;
+}
+
 .md-blockquote {
     margin: 8px 0;
 }

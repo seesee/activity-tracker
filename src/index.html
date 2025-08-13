@@ -512,6 +512,13 @@
                             <option value="200">200 hashtags</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="autoBulletDescriptions" title="Automatically add bullets to description lines, checkboxes for todos">Auto bullet descriptions</label>
+                        <select id="autoBulletDescriptions" onchange="saveSettings()">
+                            <option value="false" selected>Disabled</option>
+                            <option value="true">Enabled</option>
+                        </select>
+                    </div>
                     <div class="form-group" id="systemNotificationsGroup" style="display: none;">
                         <label for="sendSystemNotifications" title="Send system notifications to your operating system">System Notifications</label>
                         <select id="sendSystemNotifications" onchange="saveSettings()">
@@ -1250,6 +1257,25 @@
                                     <li><code>{{ timestamp | time }}</code> → "14:30:25"</li>
                                 </ul>
                             </li>
+                            <li><code>removeCheckboxes</code> - Clean checkbox syntax from text
+                                <ul>
+                                    <li>Converts checkbox syntax to clean bullets for reports</li>
+                                    <li><code>{{ "- [ ] Task" | removeCheckboxes }}</code> → "- Task"</li>
+                                    <li><code>{{ "- [x] Done" | removeCheckboxes }}</code> → "- Done"</li>
+                                </ul>
+                            </li>
+                            <li><code>cleanHashtags</code> - Convert hashtags to readable text
+                                <ul>
+                                    <li>Removes # symbol and converts underscores/dashes to spaces</li>
+                                    <li><code>{{ "#project-work" | cleanHashtags }}</code> → "project work"</li>
+                                </ul>
+                            </li>
+                            <li><code>markdown</code> - Render markdown formatting
+                                <ul>
+                                    <li>Converts markdown syntax to HTML (for HTML templates)</li>
+                                    <li><code>{{ "**bold** text" | markdown }}</code> → "&lt;strong&gt;bold&lt;/strong&gt; text"</li>
+                                </ul>
+                            </li>
                             <li><code>escapeCsv</code> - Escape CSV special characters
                                 <ul>
                                     <li>Wraps text in quotes if it contains commas, quotes, or newlines</li>
@@ -1265,22 +1291,24 @@
 
                         <h5>CSV Template Example with Chaining</h5>
                         <p>Here's how the CSV template uses chaining to create clean, properly escaped output:</p>
-                        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | escapeCsv | stripLinebreaks }},{{ entry.description | escapeCsv | stripLinebreaks }}
+                        <pre><code>{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | cleanHashtags | escapeCsv | stripLinebreaks }},{{ entry.description | removeCheckboxes | cleanHashtags | escapeCsv | stripLinebreaks }}
 {{/each}}</code></pre>
                         
                         <p><strong>How this works:</strong></p>
                         <ul>
                             <li><code>entry.timestamp | date('yyyy-mm-dd')</code> - Converts timestamp to YYYY-MM-DD format</li>
                             <li><code>entry.timestamp | time</code> - Extracts time portion</li>
-                            <li><code>entry.activity | escapeCsv | stripLinebreaks</code> - First removes line breaks, then escapes for CSV</li>
-                            <li><code>entry.description | escapeCsv | stripLinebreaks</code> - Same process for descriptions</li>
+                            <li><code>entry.activity | cleanHashtags | escapeCsv | stripLinebreaks</code> - Cleans hashtags, then escapes for CSV, then removes line breaks</li>
+                            <li><code>entry.description | removeCheckboxes | cleanHashtags | escapeCsv | stripLinebreaks</code> - Removes checkboxes first, then cleans hashtags, then escapes and strips breaks</li>
                         </ul>
 
                         <h5>Order Matters in Chaining!</h5>
                         <p>Functions are applied left to right, so order is important:</p>
                         <ul>
+                            <li>✅ <code>{{ description | removeCheckboxes | cleanHashtags | markdown }}</code> - Clean checkboxes first, then hashtags, then render markdown</li>
                             <li>✅ <code>{{ text | stripLinebreaks | escapeCsv }}</code> - Remove breaks first, then escape</li>
                             <li>❌ <code>{{ text | escapeCsv | stripLinebreaks }}</code> - Escaping first may interfere with break removal</li>
+                            <li>❌ <code>{{ description | cleanHashtags | removeCheckboxes }}</code> - May miss hashtags inside checkbox syntax</li>
                         </ul>
                     </div>
 
@@ -1357,6 +1385,25 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
 
                     <div class="guide-section">
+                        <h4>Clean Report Generation</h4>
+                        <p>For professional reports, use these filter chains to clean up content:</p>
+                        <ul>
+                            <li><strong>HTML Reports with Descriptions:</strong>
+                                <br><code>{{ entry.description | removeCheckboxes | cleanHashtags | markdown }}</code>
+                                <br>Removes checkboxes, cleans hashtags, then renders as HTML
+                            </li>
+                            <li><strong>CSV Reports:</strong>
+                                <br><code>{{ entry.description | removeCheckboxes | cleanHashtags | escapeCsv | stripLinebreaks }}</code>
+                                <br>Full cleaning chain for spreadsheet compatibility
+                            </li>
+                            <li><strong>Markdown Reports:</strong>
+                                <br><code>{{ entry.description | removeCheckboxes | cleanHashtags }}</code>
+                                <br>Clean text suitable for markdown documents
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-section">
                         <h4>Pro Tips</h4>
                         <ul>
                             <li><strong>HTML templates</strong>: Use for rich formatting with CSS styles and complex layouts</li>
@@ -1364,6 +1411,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                             <li><strong>CSV templates</strong>: Ideal for data analysis in spreadsheets</li>
                             <li><strong>Preview feature</strong>: Always test your templates before saving</li>
                             <li><strong>Custom formats</strong>: Combine multiple variables for unique layouts</li>
+                            <li><strong>Filter chaining</strong>: Always start with content cleaning filters (removeCheckboxes, cleanHashtags) before formatting filters</li>
                         </ul>
                     </div>
                 </div>
@@ -1467,7 +1515,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
             <div class="modal-body">
                 <div class="activity-hours-info">
                     <p><strong>Reminder alerts are switched off outside of activity hours.</strong></p>
-                    <p>To receive activity reminders, please update your activity schedule in the settings section. You can customize:</p>
+                    <p>To receive activity reminders, please update your activity schedule in the settings section. You can customise:</p>
                     <ul>
                         <li>Activity days (Monday through Sunday)</li>
                         <li>Start and end times for each day</li>
@@ -1542,9 +1590,13 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                         
                         <p><strong>Key Features:</strong></p>
                         <ul>
+                            <li>Auto Bullet Descriptions with interactive todo checkboxes</li>
+                            <li>Automatic background data backups</li>
                             <li>Pomodoro Timer with configurable work/break cycles</li>
                             <li>Smart notification system with customizable sounds</li>
                             <li>Comprehensive activity reporting with custom templates</li>
+                            <li>Notes management system (excluded from reports)</li>
+                            <li>Workspace organisation for multiple projects</li>
                             <li>Dark mode support</li>
                             <li>Offline functionality with service worker</li>
                             <li>Progressive Web App (PWA) support</li>
@@ -1566,10 +1618,11 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                         <h4>Adding Activities</h4>
                         <ul>
                             <li>Enter what you're doing in the activity field</li>
-                            <li>Add #hashtags for easy categorization</li>
+                            <li>Add #hashtags for easy categorisation</li>
                             <li>Use the "Mark as Todo" button for tasks that need completion</li>
                             <li>Use the "Mark as Note" button for reference items (excluded from reports)</li>
-                            <li>Set due dates for todos using quick-set buttons</li>
+                            <li>Set due dates for todos using quick-set buttons or @YYYY-MM-DD format</li>
+                            <li><strong>Auto Bullet Descriptions:</strong> Enable in Settings to automatically format description lines with bullets (activities) or checkboxes (todos)</li>
                         </ul>
                     </div>
                     
@@ -1589,7 +1642,9 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                             <li>View all todos in the dedicated "To Do" section</li>
                             <li>Filter by status, due date, or category</li>
                             <li>Click "Mark Complete" to finish todos</li>
+                            <li><strong>Interactive Checkboxes:</strong> When Auto Bullet Descriptions is enabled, click checkboxes directly in descriptions to mark items complete</li>
                             <li>Overdue items are highlighted in red</li>
+                            <li>Completed checkbox items show strikethrough styling</li>
                         </ul>
                     </div>
                     
@@ -1614,11 +1669,25 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     </div>
                     
                     <div class="guide-section">
+                        <h4>Notes & Workspace Management</h4>
+                        <ul>
+                            <li><strong>Notes System:</strong> Use <kbd>Ctrl</kbd> + <kbd>N</kbd> to toggle note status</li>
+                            <li>Notes are excluded from reports and have their own dedicated section</li>
+                            <li>Full search and filtering capabilities for notes</li>
+                            <li><strong>Workspaces:</strong> Access via burger menu → Workspaces</li>
+                            <li>Create separate workspaces for different projects</li>
+                            <li>Each workspace has isolated data, settings, and state</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
                         <h4>Settings & Customization</h4>
                         <ul>
                             <li>Customize notification intervals and activity hours</li>
-                            <li>Choose from multiple notification sounds</li>
+                            <li>Choose from multiple notification sounds (notification, chime, bell)</li>
                             <li>Switch between light/dark themes</li>
+                            <li>Enable Auto Bullet Descriptions for automatic formatting</li>
+                            <li>Set up Complex Schedule for different hours per day</li>
                             <li>Set pagination size for better navigation</li>
                             <li>All settings auto-save as you change them</li>
                         </ul>
@@ -1627,7 +1696,10 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                     <div class="guide-section">
                         <h4>Data Management</h4>
                         <ul>
-                            <li>Export your data as JSON backup</li>
+                            <li><strong>Automatic Backups:</strong> Set up background data backups in Settings → Data Management</li>
+                            <li>Choose backup frequency: Daily, Weekly, Bi-weekly, or Monthly</li>
+                            <li>Backups run automatically using Background Sync API</li>
+                            <li>Manual backup always available with "Export Database" button</li>
                             <li>Import previously exported data</li>
                             <li>Data is stored locally in your browser</li>
                             <li>Works offline after initial load</li>
@@ -1789,7 +1861,7 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                 <div class="workspace-info">
                     <div class="current-workspace">
                         <h4>Current Workspace: <span id="currentWorkspaceName">Default</span></h4>
-                        <p class="workspace-description">Each workspace maintains separate activities, settings, and state. Switch between workspaces to organize different projects or contexts.</p>
+                        <p class="workspace-description">Each workspace maintains separate activities, settings, and state. Switch between workspaces to organise different projects or contexts.</p>
                     </div>
                 </div>
                 

@@ -45,7 +45,7 @@ window.ReportTemplates = {
             <div class="entry">
                 <p><span class="entry-time">{{ entry.timestamp | time }}</span>: <span class="entry-activity">{{ entry.activity | cleanHashtags | escapeHtml }}</span></p>
                 {{#if entry.description}}
-                <div class="entry-description">{{ entry.description | cleanHashtags | markdown }}</div>
+                <div class="entry-description">{{ entry.description | removeCheckboxes | cleanHashtags | markdown }}</div>
                 {{/if}}
                 <p class="duration">Duration: {{ entry.duration | duration }}</p>
             </div>
@@ -83,7 +83,7 @@ window.ReportTemplates = {
         description: 'A simple CSV file with core activity data.',
         type: 'csv',
         template: `Date,Time,Activity,Description
-{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | cleanHashtags | escapeCsv | stripLinebreaks }},{{ entry.description | cleanHashtags | escapeCsv | stripLinebreaks }}
+{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.activity | cleanHashtags | escapeCsv | stripLinebreaks }},{{ entry.description | removeCheckboxes | cleanHashtags | escapeCsv | stripLinebreaks }}
 {{/each}}`
     },
     'timed-csv': {
@@ -91,7 +91,7 @@ window.ReportTemplates = {
         description: 'A detailed CSV file including calculated durations.',
         type: 'csv',
         template: `Date,StartTime,EndTime,DurationMinutes,Activity,Description
-{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.endTime | time }},{{ entry.duration }},"{{ entry.activity | cleanHashtags | escapeCsv | stripLinebreaks }}","{{ entry.description | cleanHashtags | escapeCsv | stripLinebreaks }}"
+{{#each entry = entries}}{{ entry.timestamp | date('yyyy-mm-dd') }},{{ entry.timestamp | time }},{{ entry.endTime | time }},{{ entry.duration }},"{{ entry.activity | cleanHashtags | escapeCsv | stripLinebreaks }}","{{ entry.description | removeCheckboxes | cleanHashtags | escapeCsv | stripLinebreaks }}"
 {{/each}}`
     }
 };

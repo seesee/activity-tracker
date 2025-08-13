@@ -1372,7 +1372,7 @@ function navigateToItemInSection(section, itemId) {
         
         if (!targetElement) {
             // Item not visible on current page, it might be on another page
-            // Since overdue items are now prioritized and shown first, 
+            // Since overdue items are now prioritised and shown first, 
             // this shouldn't happen for overdue items, but let's handle it anyway
             
             // Go to first page to look for overdue items
@@ -3065,8 +3065,9 @@ function updateAutomaticBackupStatus() {
 
 /**
  * Update backup type settings UI based on selected backup type
+ * @param {boolean} isInitialization - Whether this is called during app initialization
  */
-function updateBackupTypeSettings() {
+function updateBackupTypeSettings(isInitialization = false) {
     if (!tracker) return;
     
     const backupType = document.getElementById('backupType').value;
@@ -3083,38 +3084,48 @@ function updateBackupTypeSettings() {
     switch (backupType) {
         case 'reminders':
             if (scheduleGroup) scheduleGroup.style.display = 'block';
-            // Update underlying settings
-            tracker.settings.backupReminders = 'enabled';
-            tracker.settings.automaticBackups = false;
+            // Only update underlying settings if this is user interaction (not initialization)
+            if (!isInitialization) {
+                tracker.settings.backupReminders = 'enabled';
+                tracker.settings.automaticBackups = false;
+            }
             break;
             
         case 'automatic':
             if (automaticGroup) automaticGroup.style.display = 'block';
             if (frequencyGroup) frequencyGroup.style.display = 'block';
-            // Update underlying settings
-            tracker.settings.backupReminders = 'disabled';
-            tracker.settings.automaticBackups = true;
-            // Try to enable automatic backups
-            tracker.enableAutomaticBackups();
+            // Only update underlying settings if this is user interaction (not initialization)
+            if (!isInitialization) {
+                tracker.settings.backupReminders = 'disabled';
+                tracker.settings.automaticBackups = true;
+                // Try to enable automatic backups
+                tracker.enableAutomaticBackups();
+            }
             break;
             
         case 'off':
-            // Update underlying settings
-            tracker.settings.backupReminders = 'never';
-            tracker.settings.automaticBackups = false;
-            // Disable automatic backups if enabled
-            if (tracker.settings.backgroundBackupPermission === 'granted') {
-                tracker.disableAutomaticBackups();
+            // Only update underlying settings if this is user interaction (not initialization)
+            if (!isInitialization) {
+                tracker.settings.backupReminders = 'never';
+                tracker.settings.automaticBackups = false;
+                // Disable automatic backups if enabled
+                if (tracker.settings.backgroundBackupPermission === 'granted') {
+                    tracker.disableAutomaticBackups();
+                }
             }
             break;
     }
     
-    // Save settings and update displays
-    tracker.saveSettings();
+    // Save settings and update displays (only if not initialization)
+    if (!isInitialization) {
+        tracker.saveSettings();
+    }
     updateAutomaticBackupStatus();
     
-    // Update backup prompt scheduling
-    tracker.scheduleBackupPrompt();
+    // Update backup prompt scheduling (only if not initialization)
+    if (!isInitialization) {
+        tracker.scheduleBackupPrompt();
+    }
 }
 
 /**
@@ -3777,6 +3788,10 @@ window.addEventListener('load', () => {
     // Update automatic backup status after page load
     setTimeout(() => {
         updateAutomaticBackupStatus();
+        // Also refresh backup type settings UI to ensure correct sections are visible
+        if (typeof updateBackupTypeSettings === 'function') {
+            updateBackupTypeSettings(true);
+        }
     }, 100);
 });
 
@@ -3807,6 +3822,123 @@ document.addEventListener('click', (e) => {
     
     if (burgerMenu && dropdown && !burgerMenu.contains(e.target)) {
         dropdown.style.display = 'none';
+    }
+});
+
+// ==================== TODO CHECKBOX HANDLING ====================
+
+/**
+ * Handle checkbox changes in todo descriptions
+ * @param {HTMLInputElement} checkbox - The checkbox element that was clicked
+ * @param {string} originalLine - The original line from the description
+ */
+function handleTodoCheckboxChange(checkbox, originalLine) {
+    if (!tracker || !tracker.settings.autoBulletDescriptions) {
+        return;
+    }
+
+    const isChecked = checkbox.checked;
+    
+    // Extract the content from the original line (remove checkbox syntax)
+    const contentMatch = originalLine.match(/^\s*- \[[ x]\] (.+)$/);
+    const lineContent = contentMatch ? contentMatch[1] : originalLine.replace(/^\s*- /, '');
+    
+    console.log('Looking for line content:', lineContent);
+    console.log('Original line:', originalLine);
+    
+    // Find entries that could contain this content
+    // We need to look for either the original line format or just the content
+    const entries = tracker.entries.filter(entry => {
+        if (!entry.description) return false;
+        
+        // Check if the description contains the original line as-is
+        if (entry.description.includes(originalLine)) {
+            return true;
+        }
+        
+        // Check if the description contains just the content (which would get auto-bulleted)
+        // Look for the content as a separate line
+        const lines = entry.description.split('\n');
+        return lines.some(line => {
+            const trimmedLine = line.trim();
+            // Check for exact match, or match without bullet, or with different checkbox state
+            return trimmedLine === lineContent || 
+                   trimmedLine === `- ${lineContent}` ||
+                   trimmedLine === `- [ ] ${lineContent}` ||
+                   trimmedLine === `- [x] ${lineContent}`;
+        });
+    });
+
+    if (entries.length === 0) {
+        console.warn('No entry found containing the todo line or content:', originalLine, lineContent);
+        return;
+    }
+
+    // Update each matching entry
+    entries.forEach(entry => {
+        if (!entry.description) return;
+
+        let updatedDescription = entry.description;
+        
+        // Create the new line with updated checkbox state
+        const newCheckboxState = isChecked ? '[x]' : '[ ]';
+        const newLine = `- ${newCheckboxState} ${lineContent}`;
+
+        // Try to replace the original line first
+        if (updatedDescription.includes(originalLine)) {
+            updatedDescription = updatedDescription.replace(originalLine, newLine);
+        } else {
+            // Look for the content in various formats and replace it
+            const lines = updatedDescription.split('\n');
+            const updatedLines = lines.map(line => {
+                const trimmedLine = line.trim();
+                if (trimmedLine === lineContent || 
+                    trimmedLine === `- ${lineContent}` ||
+                    trimmedLine === `- [ ] ${lineContent}` ||
+                    trimmedLine === `- [x] ${lineContent}`) {
+                    // Preserve the original line's indentation
+                    const leadingWhitespace = line.match(/^\s*/)[0];
+                    return leadingWhitespace + newLine;
+                }
+                return line;
+            });
+            updatedDescription = updatedLines.join('\n');
+        }
+        
+        if (updatedDescription !== entry.description) {
+            entry.description = updatedDescription;
+            
+            // Update the entry's modified timestamp
+            entry.modified = new Date().toISOString();
+            
+            // Save to localStorage
+            tracker.saveEntries();
+            
+            console.log('Updated todo checkbox in entry:', entry.id);
+        }
+    });
+
+    // Refresh the current display to show updated checkboxes
+    if (tracker.displayActivities) {
+        tracker.displayActivities();
+    }
+    if (tracker.displayTodos) {
+        tracker.displayTodos();
+    }
+    if (tracker.displayNotes) {
+        tracker.displayNotes();
+    }
+}
+
+// Event delegation for todo checkboxes
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('todo-checkbox')) {
+        const originalLine = e.target.getAttribute('data-original-line')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"');
+        handleTodoCheckboxChange(e.target, originalLine);
     }
 });
 

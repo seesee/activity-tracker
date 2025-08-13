@@ -86,7 +86,10 @@ class ActivityTracker {
             // Automatic backup settings
             automaticBackups: false, // Enable/disable automatic background backups
             backgroundBackupFrequency: 'daily', // 'daily', 'weekly', 'bi_weekly', 'monthly'
-            backgroundBackupPermission: 'not_requested' // 'not_requested', 'granted', 'denied'
+            backgroundBackupPermission: 'not_requested', // 'not_requested', 'granted', 'denied'
+            
+            // Description formatting
+            autoBulletDescriptions: false // Auto-add bullets to description lines, checkboxes for todos
         };
 
         // Initialize settings with defaults
@@ -386,6 +389,7 @@ class ActivityTracker {
         this.settings.autoStartAlerts = document.getElementById('autoStartAlerts')?.value === 'true';
         this.settings.paginationSize = parseInt(document.getElementById('paginationSize').value);
         this.settings.hashtagCloudLimit = parseInt(document.getElementById('hashtagCloudLimit').value);
+        this.settings.autoBulletDescriptions = document.getElementById('autoBulletDescriptions')?.value === 'true';
         this.settings.pomodoroAutoStart = document.getElementById('pomodoroAutoStart')?.checked || false;
         this.settings.pomodoroAutoLog = document.getElementById('pomodoroAutoLog')?.checked !== false;
         this.settings.pomodoroLogBreaks = document.getElementById('pomodoroLogBreaks')?.checked || false;
@@ -951,7 +955,7 @@ class ActivityTracker {
     }
 
     /**
-     * Get entries sorted with overdue items prioritized first
+     * Get entries sorted with overdue items prioritised first
      */
     getSortedEntriesWithOverduePriority() {
         const now = new Date();
@@ -1009,7 +1013,7 @@ class ActivityTracker {
         const noteIndicator = (showNoteIndicator && entry.isNote) ? '<span class="entry-note-indicator">📝 Note</span>' : '';
 
         // Process description with inline hashtags
-        const processedDescription = entry.description ? this.renderDescriptionWithInlineHashtags(entry.description, entry.tags) : '';
+        const processedDescription = entry.description ? this.renderDescriptionWithInlineHashtags(entry.description, entry.tags, entry.isTodo) : '';
 
         return `
             <div class="${itemClass}">
@@ -1029,18 +1033,61 @@ class ActivityTracker {
     }
 
     /**
+     * Process description to add auto bullets/checkboxes if enabled
+     * @param {string} description - Original description text
+     * @param {boolean} isTodo - Whether this entry is a todo
+     * @returns {string} Processed description with auto bullets/checkboxes
+     */
+    processAutoBulletDescription(description, isTodo = false) {
+        if (!this.settings.autoBulletDescriptions || !description) {
+            return description;
+        }
+
+        const lines = description.split('\n');
+        const processedLines = lines.map(line => {
+            // Skip empty lines
+            if (!line.trim()) {
+                return line;
+            }
+
+            // Check if line already has a bullet pattern (optional whitespace followed by "- ")
+            const bulletPattern = /^\s*- /;
+            const checkboxPattern = /^\s*- \[[ x]\] /;
+            
+            // If line already has bullets or checkboxes, leave as is
+            if (bulletPattern.test(line)) {
+                return line;
+            }
+
+            // For todos, add checkbox syntax; for regular entries, add bullet
+            const prefix = isTodo ? '- [ ] ' : '- ';
+            
+            // Preserve leading whitespace for nested items
+            const leadingWhitespace = line.match(/^\s*/)[0];
+            const trimmedLine = line.trim();
+            
+            return leadingWhitespace + prefix + trimmedLine;
+        });
+
+        return processedLines.join('\n');
+    }
+
+    /**
      * Render description text as markdown
      * @param {string} description - Description text
+     * @param {boolean} isTodo - Whether this entry is a todo (for checkbox rendering)
      * @returns {string} HTML string
      */
-    renderDescriptionMarkdown(description) {
+    renderDescriptionMarkdown(description, isTodo = false) {
         // Initialize markdown renderer if not already done
         if (!this.markdownRenderer && typeof MarkdownRenderer !== 'undefined') {
             this.initMarkdownRenderer();
         }
 
         if (this.markdownRenderer && description) {
-            return this.markdownRenderer.renderInlineWithClasses(description);
+            // Process description with auto bullets/checkboxes if enabled
+            const processedDescription = this.processAutoBulletDescription(description, isTodo);
+            return this.markdownRenderer.renderInlineWithClasses(processedDescription);
         }
         return escapeHtml(description);
     }
@@ -1049,9 +1096,10 @@ class ActivityTracker {
      * Render description with inline hashtag links and add missing tags
      * @param {string} description - The entry description
      * @param {Array} entryTags - The tags associated with this entry
+     * @param {boolean} isTodo - Whether this entry is a todo
      * @returns {string} Processed description with clickable hashtags
      */
-    renderDescriptionWithInlineHashtags(description, entryTags = []) {
+    renderDescriptionWithInlineHashtags(description, entryTags = [], isTodo = false) {
         // Start with the description, adding missing tags if needed
         let fullText = description;
         
@@ -1068,17 +1116,32 @@ class ActivityTracker {
         }
         
         // First apply markdown rendering
-        let processedText = this.renderDescriptionMarkdown(fullText);
+        let processedText = this.renderDescriptionMarkdown(fullText, isTodo);
         
         // Convert URLs to clickable links first (before hashtags to avoid conflicts)
         processedText = processedText.replace(/(https?:\/\/[^\s<>"\[\]]+)/gi, (match, url) => {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="external-link">${url}</a>`;
         });
         
-        // Then replace hashtags with clickable links (but not inside HTML tags)
-        // Use negative lookbehind to avoid matching hashtags inside href attributes
+        // Protect checkbox labels from hashtag processing
+        const protectedCheckboxes = [];
+        const checkboxProtectionPattern = /<li class="todo-item[^>]*>.*?<\/li>/gs;
+        
+        // Replace checkbox HTML with placeholders
+        processedText = processedText.replace(checkboxProtectionPattern, (match) => {
+            const placeholder = `__PROTECTED_TODO_${protectedCheckboxes.length}__`;
+            protectedCheckboxes.push(match);
+            return placeholder;
+        });
+        
+        // Then replace hashtags with clickable links (now safe from checkbox interference)
         processedText = processedText.replace(/(?<!href="[^"]*|href='[^']*)#([\w][\w-]*)/g, (match, tag) => {
             return `<a href="#" class="hashtag-link" onclick="tracker.searchByHashtag('${tag}'); return false;">#${tag}</a>`;
+        });
+        
+        // Restore protected checkbox HTML
+        protectedCheckboxes.forEach((originalHtml, index) => {
+            processedText = processedText.replace(`__PROTECTED_TODO_${index}__`, originalHtml);
         });
         
         return processedText;
@@ -1111,6 +1174,7 @@ class ActivityTracker {
             sendSystemNotifications: document.getElementById('sendSystemNotifications')?.value === 'true',
             paginationSize: parseInt(document.getElementById('paginationSize').value),
             hashtagCloudLimit: parseInt(document.getElementById('hashtagCloudLimit').value),
+            autoBulletDescriptions: document.getElementById('autoBulletDescriptions')?.value === 'true',
             warnOnActivityDelete: document.getElementById('warnOnActivityDelete')?.value === 'true',
             warnOnSessionReset: document.getElementById('warnOnSessionReset')?.value === 'true',
             workingDays: {
@@ -1452,6 +1516,7 @@ class ActivityTracker {
         document.getElementById('autoStartAlerts').value = this.settings.autoStartAlerts.toString();
         document.getElementById('paginationSize').value = this.settings.paginationSize;
         document.getElementById('hashtagCloudLimit').value = this.settings.hashtagCloudLimit;
+        document.getElementById('autoBulletDescriptions').value = this.settings.autoBulletDescriptions.toString();
         document.getElementById('sendSystemNotifications').value = this.settings.sendSystemNotifications.toString();
         document.getElementById('warnOnActivityDelete').value = this.settings.warnOnActivityDelete.toString();
         document.getElementById('warnOnSessionReset').value = this.settings.warnOnSessionReset.toString();
@@ -1513,7 +1578,7 @@ class ActivityTracker {
         
         // Update backup type UI after loading settings
         if (typeof updateBackupTypeSettings === 'function') {
-            updateBackupTypeSettings();
+            updateBackupTypeSettings(true); // Pass true to indicate this is initialization
         }
         
         // Update system notifications visibility
