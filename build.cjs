@@ -228,7 +228,7 @@ class ActivityTrackerBuilder {
                         'adjustDueDate', 'resetActivityForm', 'resetTodoForm', 'resetNotesForm', 'updateDueDateSectionVisibility',
                         'openWorkspaceManager', 'closeWorkspaceManager', 'createNewWorkspace', 'switchToWorkspace', 'renameWorkspacePrompt', 'deleteWorkspacePrompt',
                         'toggleScheduleMode', 'addTimeRange', 'updateTimeRange', 'removeTimeRange',
-                        'handleTodoCheckboxChange',
+                        'handleTodoCheckboxChange', 'handleUpdateRefresh',
                         'createQuickBackup', 'snoozeBackupBanner', 'dismissBackupBanner', 'showBackupPromptManually', 'toggleBackupReminderDropdown', 'neverRemindBackup', 'toggleAutomaticBackups', 'updateBackupTypeSettings', 'testFileDownload'
                     ]
                 },

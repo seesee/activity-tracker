@@ -3223,7 +3223,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                     console.log('New Service Worker installed, refresh recommended');
-                                    const notificationId = showNotification('App updated! <button onclick="window.location.reload(); event.stopPropagation();" class="refresh-btn">Refresh Now</button>', 'info', 15000);
+                                    
+                                    // Check if user recently triggered a refresh to avoid showing button again
+                                    const updateRefreshTime = localStorage.getItem('updateRefreshTriggered');
+                                    const timeSinceRefresh = updateRefreshTime ? Date.now() - parseInt(updateRefreshTime) : Infinity;
+                                    
+                                    if (timeSinceRefresh < 10000) {
+                                        // Recently refreshed, just show success message
+                                        console.log('Recent refresh detected, showing refreshed message instead of button');
+                                        showNotification('🔄 App refreshed', 'success', 2000);
+                                        localStorage.removeItem('updateRefreshTriggered');
+                                        return;
+                                    }
+                                    
+                                    const notificationId = showNotification('App updated! <button onclick="tracker.handleUpdateRefresh(); event.stopPropagation();" class="refresh-btn">Refresh Now</button>', 'info', 15000);
                                     
                                     // Also make the entire notification clickable to refresh
                                     setTimeout(() => {
@@ -3233,7 +3246,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             notificationEl.onclick = (e) => {
                                                 // Don't refresh if clicking the button (it has its own handler)
                                                 if (!e.target.classList.contains('refresh-btn')) {
-                                                    window.location.reload();
+                                                    tracker.handleUpdateRefresh();
                                                 }
                                             };
                                         }

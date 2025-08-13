@@ -4851,9 +4851,32 @@ class ActivityTracker {
                     
                     if (this.compareVersions(serverVersion, currentVersion) > 0) {
                         console.log(`Update available: ${currentVersion} → ${serverVersion}`);
-                        this.showUpdateNotification(serverVersion);
+                        
+                        // Check if user recently triggered a refresh
+                        const updateRefreshTime = localStorage.getItem('updateRefreshTriggered');
+                        const timeSinceRefresh = updateRefreshTime ? now - parseInt(updateRefreshTime) : Infinity;
+                        
+                        // If they just refreshed (within 10 seconds), show refreshed message instead of banner
+                        if (timeSinceRefresh < 10000) {
+                            console.log('Recent refresh detected, showing refreshed message instead of update banner');
+                            this.showAppRefreshedMessage();
+                            // Clear the refresh trigger so subsequent checks work normally
+                            localStorage.removeItem('updateRefreshTriggered');
+                        } else {
+                            this.showUpdateNotification(serverVersion);
+                        }
                     } else {
                         console.log(`App is up to date: ${currentVersion}`);
+                        
+                        // Still check for recent refresh to show refreshed message
+                        const updateRefreshTime = localStorage.getItem('updateRefreshTriggered');
+                        const timeSinceRefresh = updateRefreshTime ? now - parseInt(updateRefreshTime) : Infinity;
+                        
+                        if (timeSinceRefresh < 10000) {
+                            console.log('App refreshed and is up to date');
+                            this.showAppRefreshedMessage();
+                            localStorage.removeItem('updateRefreshTriggered');
+                        }
                     }
                 } else {
                     console.warn('Version meta tag not found in HTML response');
@@ -4919,7 +4942,7 @@ class ActivityTracker {
         updateBanner.innerHTML = `
             <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
                 <span>🚀 Update available! ${currentVersion} → ${newVersion}</span>
-                <button onclick="window.location.reload()" style="
+                <button onclick="tracker.handleUpdateRefresh()" style="
                     background: rgba(255,255,255,0.2);
                     border: 1px solid rgba(255,255,255,0.3);
                     color: white;
@@ -4963,6 +4986,30 @@ class ActivityTracker {
             'info',
             8000
         );
+    }
+
+    /**
+     * Handle the update refresh action
+     */
+    handleUpdateRefresh() {
+        // Mark that the user has acted on an update
+        localStorage.setItem('updateRefreshTriggered', Date.now().toString());
+        
+        // Remove the banner
+        const banner = document.getElementById('updateBanner');
+        if (banner) {
+            banner.remove();
+        }
+        
+        // Reload the page
+        window.location.reload();
+    }
+
+    /**
+     * Show a brief "App refreshed" message that auto-disappears
+     */
+    showAppRefreshedMessage() {
+        showNotification('🔄 App refreshed', 'success', 2000);
     }
 
     /**

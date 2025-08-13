@@ -171,7 +171,7 @@ Object.assign(ActivityTracker.prototype, {
         const copyBtn = document.getElementById('copyReportBtn');
         
         if (!this.currentReportData || this.currentReportEntries.length === 0) {
-            previewEl.innerHTML = 'No data for the selected period. Generate a report first.';
+            previewEl.innerHTML = 'No data for the selected period.';
             if (copyBtn) copyBtn.style.display = 'none';
             return;
         }
