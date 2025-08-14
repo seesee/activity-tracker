@@ -513,7 +513,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="autoBulletDescriptions" title="Automatically add bullets to description lines, checkboxes for todos">Auto bullet descriptions</label>
+                        <label for="autoBulletDescriptions" title="Automatically add bullets to description lines, checkboxes for todos">Auto-bullet descriptions and todos</label>
                         <select id="autoBulletDescriptions" onchange="saveSettings()">
                             <option value="false" selected>Disabled</option>
                             <option value="true">Enabled</option>
@@ -1287,6 +1287,13 @@
                                     <li><code>{{ "Line 1\nLine 2" | stripLinebreaks }}</code> → "Line 1 Line 2"</li>
                                 </ul>
                             </li>
+                            <li><code>autoBullet</code> - Automatically add bullets to each line of text
+                                <ul>
+                                    <li>Adds "- " prefix to lines that don't already have bullets</li>
+                                    <li><code>{{ "Task 1\nTask 2" | autoBullet }}</code> → "- Task 1\n- Task 2"</li>
+                                    <li>Preserves existing bullets and empty lines</li>
+                                </ul>
+                            </li>
                         </ul>
 
                         <h5>CSV Template Example with Chaining</h5>
@@ -1399,6 +1406,10 @@ Tags: {{#each tags}}#{{this}} {{/each}}
                             <li><strong>Markdown Reports:</strong>
                                 <br><code>{{ entry.description | removeCheckboxes | cleanHashtags }}</code>
                                 <br>Clean text suitable for markdown documents
+                            </li>
+                            <li><strong>Auto-bulleted Descriptions:</strong>
+                                <br><code>{{ entry.description | removeCheckboxes | cleanHashtags | autoBullet }}</code>
+                                <br>Automatically adds bullets to each line, great for readable lists
                             </li>
                         </ul>
                     </div>

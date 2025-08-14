@@ -30,7 +30,8 @@ class TemplatingEngine {
                 return this.escapeHtml(value);
             },
             cleanHashtags: (value) => this.cleanHashtags(value),
-            removeCheckboxes: (value) => this.removeCheckboxes(value)
+            removeCheckboxes: (value) => this.removeCheckboxes(value),
+            autoBullet: (value) => this.autoBulletText(value)
         };
         console.log('Templating Engine Initialized (Tokenizer Version)');
     }
@@ -530,6 +531,22 @@ class TemplatingEngine {
     removeCheckboxes(text) {
         if (text === null || text === undefined) return '';
         return String(text).replace(/^(\s*)-\s*\[[ x]\]\s*/gm, '$1- ');
+    }
+
+    /**
+     * Add bullets to each new line in text for report formatting
+     * Similar to the auto-bullet functionality in the main app
+     */
+    autoBulletText(text) {
+        if (text === null || text === undefined) return '';
+        const lines = String(text).split('\n');
+        return lines.map(line => {
+            const trimmed = line.trim();
+            if (trimmed && !trimmed.startsWith('-') && !trimmed.startsWith('*') && !trimmed.startsWith('•')) {
+                return '- ' + line;
+            }
+            return line;
+        }).join('\n');
     }
 }
 
