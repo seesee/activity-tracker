@@ -15,6 +15,29 @@
     </style>
 </head>
 <body>
+    <!-- Burger Menu positioned as direct child of body for proper fixed positioning -->
+    <div class="burger-menu">
+        <button class="burger-btn" onclick="toggleBurgerMenu()" title="Settings menu">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
+        <div class="burger-dropdown" id="burgerDropdown" style="display: none;">
+            <button class="burger-item" onclick="showSection('tracker', event); closeBurgerMenu()"><span class="burger-emoji">📝</span><span class="burger-text">Tracker</span></button>
+            <button class="burger-item" onclick="showSection('notes', event); closeBurgerMenu()"><span class="burger-emoji">📔</span><span class="burger-text">Notes</span></button>
+            <button class="burger-item" onclick="showSection('todo', event); closeBurgerMenu()"><span class="burger-emoji">✅</span><span class="burger-text">To Do</span></button>
+            <div class="burger-separator"></div>
+            <button class="burger-item" onclick="showSection('reports', event); closeBurgerMenu()"><span class="burger-emoji">📊</span><span class="burger-text">Reports</span></button>
+            <div class="burger-separator"></div>  
+            <button class="burger-item" onclick="openWorkspaceManager(); closeBurgerMenu()"><span class="burger-emoji">🏢</span><span class="burger-text">Workspaces</span></button>
+            <div class="burger-separator"></div>
+            <button class="burger-item" onclick="showSection('settings', event); closeBurgerMenu()"><span class="burger-emoji">⚙️</span><span class="burger-text">Settings...</span></button>
+            <button class="burger-item" onclick="showSection('diagnostics', event); closeBurgerMenu()"><span class="burger-emoji">🔧</span><span class="burger-text">Diagnostics</span></button>
+            <button class="burger-item" onclick="showUserGuide(); closeBurgerMenu()"><span class="burger-emoji">📖</span><span class="burger-text">User Guide</span></button>
+            <button class="burger-item" onclick="showAbout(); closeBurgerMenu()"><span class="burger-emoji">ℹ️</span><span class="burger-text">About</span></button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="header-content">
@@ -45,29 +68,6 @@
                     <button id="pomodoroButton" class="nav-btn pomodoro-btn" onclick="togglePomodoro()" style="display: none;">🍅 Start Pomodoro</button>
                     <div id="burgerAnchor" class="burger-anchor"></div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Burger Menu positioned outside header to avoid clipping -->
-        <div class="burger-menu">
-            <button class="burger-btn" onclick="toggleBurgerMenu()" title="Settings menu">
-                <span class="burger-line"></span>
-                <span class="burger-line"></span>
-                <span class="burger-line"></span>
-            </button>
-            <div class="burger-dropdown" id="burgerDropdown" style="display: none;">
-                <button class="burger-item" onclick="showSection('tracker', event); closeBurgerMenu()"><span class="burger-emoji">📝</span><span class="burger-text">Tracker</span></button>
-                <button class="burger-item" onclick="showSection('notes', event); closeBurgerMenu()"><span class="burger-emoji">📔</span><span class="burger-text">Notes</span></button>
-                <button class="burger-item" onclick="showSection('todo', event); closeBurgerMenu()"><span class="burger-emoji">✅</span><span class="burger-text">To Do</span></button>
-                <div class="burger-separator"></div>
-                <button class="burger-item" onclick="showSection('reports', event); closeBurgerMenu()"><span class="burger-emoji">📊</span><span class="burger-text">Reports</span></button>
-                <div class="burger-separator"></div>  
-                <button class="burger-item" onclick="openWorkspaceManager(); closeBurgerMenu()"><span class="burger-emoji">🏢</span><span class="burger-text">Workspaces</span></button>
-                <div class="burger-separator"></div>
-                <button class="burger-item" onclick="showSection('settings', event); closeBurgerMenu()"><span class="burger-emoji">⚙️</span><span class="burger-text">Settings...</span></button>
-                <button class="burger-item" onclick="showSection('diagnostics', event); closeBurgerMenu()"><span class="burger-emoji">🔧</span><span class="burger-text">Diagnostics</span></button>
-                <button class="burger-item" onclick="showUserGuide(); closeBurgerMenu()"><span class="burger-emoji">📖</span><span class="burger-text">User Guide</span></button>
-                <button class="burger-item" onclick="showAbout(); closeBurgerMenu()"><span class="burger-emoji">ℹ️</span><span class="burger-text">About</span></button>
             </div>
         </div>
 
@@ -1073,7 +1073,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editDescription">Description</label>
-                        <textarea id="editDescription" rows="3"></textarea>
+                        <textarea id="editDescription" rows="8"></textarea>
                     </div>
                     <div class="form-group form-group-row">
                         <div class="form-group">

@@ -861,7 +861,72 @@ class ActivityTracker {
                 entry.dueDate ? new Date(entry.dueDate).toISOString().slice(0, 16) : '';
             
             document.getElementById('editModal').style.display = 'block';
+            
+            // Adjust textarea height based on available modal space
+            this.adjustEditTextareaHeight();
         }
+    }
+    
+    /**
+     * Dynamically adjust edit modal textarea height based on available space
+     */
+    adjustEditTextareaHeight() {
+        const modal = document.getElementById('editModal');
+        const modalContent = modal.querySelector('.modal-content');
+        const textarea = document.getElementById('editDescription');
+        
+        if (!modal || !modalContent || !textarea) return;
+        
+        // Wait for modal to be fully rendered
+        setTimeout(() => {
+            const viewportHeight = window.innerHeight;
+            const modalRect = modalContent.getBoundingClientRect();
+            const modalBodyHeight = modal.querySelector('.modal-body').offsetHeight;
+            
+            // Calculate how much vertical space is available in the modal
+            const modalTopPadding = 40; // Typical modal top margin
+            const modalBottomPadding = 40; // Space below modal
+            const availableModalHeight = viewportHeight - modalTopPadding - modalBottomPadding;
+            
+            // Calculate space used by other elements in modal
+            const modalHeader = modal.querySelector('.modal-header');
+            const modalActions = modal.querySelector('.modal-actions');
+            const otherFields = modal.querySelectorAll('.form-group:not(:has(#editDescription))');
+            
+            let usedHeight = 0;
+            if (modalHeader) usedHeight += modalHeader.offsetHeight;
+            if (modalActions) usedHeight += modalActions.offsetHeight;
+            otherFields.forEach(field => usedHeight += field.offsetHeight);
+            
+            // Add padding and margins
+            usedHeight += 120; // Buffer for padding, margins, and spacing
+            
+            // Calculate available height for textarea
+            const availableHeight = availableModalHeight - usedHeight;
+            
+            console.log('Textarea sizing:', {
+                viewportHeight,
+                availableModalHeight,
+                usedHeight,
+                availableHeight,
+                modalRect: modalRect.height
+            });
+            
+            // Set appropriate rows based on available space
+            if (availableHeight > 350) {
+                textarea.rows = 15; // Plenty of space
+            } else if (availableHeight > 250) {
+                textarea.rows = 10; // Good space
+            } else if (availableHeight > 150) {
+                textarea.rows = 6; // Medium space
+            } else if (availableHeight > 100) {
+                textarea.rows = 4; // Limited space
+            } else {
+                textarea.rows = 3; // Very limited space
+            }
+            
+            console.log(`Set textarea to ${textarea.rows} rows based on ${availableHeight}px available height`);
+        }, 100);
     }
     
     /**

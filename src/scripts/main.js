@@ -316,36 +316,41 @@ function updateCopyrightYear() {
 }
 
 /**
- * Position burger menu relative to anchor element
+ * Initialize burger menu visibility (positioning now handled entirely by CSS)
  */
 function positionBurgerMenu() {
     const burgerMenu = document.querySelector('.burger-menu');
-    const burgerAnchor = document.getElementById('burgerAnchor');
+    if (!burgerMenu) return;
     
-    if (!burgerMenu || !burgerAnchor) return;
+    // Force remove any inline position styles that might override CSS
+    burgerMenu.style.removeProperty('position');
+    burgerMenu.style.removeProperty('top');
+    burgerMenu.style.removeProperty('right');
+    burgerMenu.style.removeProperty('left');
+    burgerMenu.style.removeProperty('bottom');
     
-    // Ensure the anchor is visible and has layout
-    if (!burgerAnchor.offsetParent && burgerAnchor.style.display !== 'block') {
-        return;
+    // Set up a MutationObserver to prevent any future inline style interference
+    if (!burgerMenu._styleObserver) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const target = mutation.target;
+                    if (target.style.position && target.style.position !== 'fixed') {
+                        target.style.removeProperty('position');
+                    }
+                    if (target.style.top && target.style.top !== '30px') {
+                        target.style.removeProperty('top');
+                    }
+                    if (target.style.right && target.style.right !== '30px') {
+                        target.style.removeProperty('right');
+                    }
+                }
+            });
+        });
+        
+        observer.observe(burgerMenu, { attributes: true, attributeFilter: ['style'] });
+        burgerMenu._styleObserver = observer;
     }
-    
-    const anchorRect = burgerAnchor.getBoundingClientRect();
-    
-    // Check if anchor has valid dimensions
-    if (anchorRect.width === 0 && anchorRect.height === 0) {
-        return;
-    }
-    
-    // Position burger menu relative to the anchor with some offset
-    const topPosition = Math.max(0, anchorRect.top + 10);
-    const rightPosition = Math.max(10, window.innerWidth - anchorRect.right + 10);
-    
-    burgerMenu.style.top = `${topPosition}px`;
-    burgerMenu.style.right = `${rightPosition}px`;
-    
-    // Ensure burger menu is visible after positioning
-    burgerMenu.style.visibility = 'visible';
-    burgerMenu.style.opacity = '1';
 }
 
 /**
@@ -3446,6 +3451,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle window resize and state changes to reposition burger menu
 window.addEventListener('resize', () => {
     positionBurgerMenu();
+    
+    // Adjust edit modal textarea height if modal is open
+    const editModal = document.getElementById('editModal');
+    if (editModal && editModal.style.display === 'block' && tracker) {
+        tracker.adjustEditTextareaHeight();
+    }
 });
 
 // Handle window state changes (maximize, restore, etc.)

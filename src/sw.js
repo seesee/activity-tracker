@@ -86,10 +86,12 @@ self.addEventListener('fetch', (event) => {
                         // Clone response before caching
                         const responseClone = response.clone();
                         
-                        // Cache the new version
-                        caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(event.request, responseClone);
-                        });
+                        // Cache the new version (only GET requests can be cached)
+                        if (event.request.method === 'GET') {
+                            caches.open(CACHE_NAME).then((cache) => {
+                                cache.put(event.request, responseClone);
+                            });
+                        }
                         
                         return response;
                     })
