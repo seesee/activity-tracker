@@ -111,9 +111,14 @@
             <div class="activity-entry-component" id="trackerEntryComponent">
                 <div class="entry-header">
                     <h2 id="entryTitle">Activity Entry</h2>
-                    <button class="entry-toggle-btn" id="trackerToggleBtn" onclick="toggleEntryForm('tracker')" title="Hide/Show entry form">
-                        <span class="toggle-icon">📝</span>
-                    </button>
+                    <div class="entry-header-buttons">
+                        <button class="batch-mode-btn" id="batchModeBtn" onclick="toggleBatchMode()" title="Batch mode: persist date across entries">
+                            <span class="batch-icon">📅</span>
+                        </button>
+                        <button class="entry-toggle-btn" id="trackerToggleBtn" onclick="toggleEntryForm('tracker')" title="Hide/Show entry form">
+                            <span class="toggle-icon">📝</span>
+                        </button>
+                    </div>
                 </div>
                 <form id="activityForm">
                     <div class="form-group">

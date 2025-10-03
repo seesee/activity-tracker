@@ -5397,7 +5397,13 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
     margin-bottom: 20px;
 }
 
-.entry-toggle-btn {
+.entry-header-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.entry-toggle-btn, .batch-mode-btn {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -5412,7 +5418,7 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
     height: 44px;
 }
 
-.entry-toggle-btn:hover {
+.entry-toggle-btn:hover, .batch-mode-btn:hover {
     background: rgba(255, 255, 255, 1);
     border-color: #cbd5e0;
     transform: translateY(-1px);
@@ -5430,6 +5436,17 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
     border-color: #5a67d8;
 }
 
+.batch-mode-btn.active {
+    background: #48bb78;
+    color: white;
+    border-color: #48bb78;
+}
+
+.batch-mode-btn.active:hover {
+    background: #38a169;
+    border-color: #38a169;
+}
+
 .entry-toggle-btn.glow-hint {
     animation: glowPulse 2s ease-in-out infinite;
     box-shadow: 0 0 12px rgba(102, 126, 234, 0.6);
@@ -5440,7 +5457,7 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
     50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
 }
 
-.toggle-icon {
+.toggle-icon, .batch-icon {
     transition: transform 0.3s ease;
 }
 
@@ -5449,13 +5466,13 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
 }
 
 /* Dark mode styles for entry toggle */
-.dark-mode .entry-toggle-btn {
+.dark-mode .entry-toggle-btn, .dark-mode .batch-mode-btn {
     background: rgba(45, 55, 72, 0.8);
     border-color: #4a5568;
     color: #e2e8f0;
 }
 
-.dark-mode .entry-toggle-btn:hover {
+.dark-mode .entry-toggle-btn:hover, .dark-mode .batch-mode-btn:hover {
     background: rgba(45, 55, 72, 1);
     border-color: #718096;
 }
@@ -5463,6 +5480,12 @@ div[style*="position: fixed"][style*="top: 20px"][style*="right: 20px"] .refresh
 .dark-mode .entry-toggle-btn.hidden-form {
     background: #667eea;
     border-color: #667eea;
+    color: white;
+}
+
+.dark-mode .batch-mode-btn.active {
+    background: #48bb78;
+    border-color: #48bb78;
     color: white;
 }
 

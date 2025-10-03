@@ -108,6 +108,40 @@ function addCurrentTime() {
 }
 
 /**
+ * Toggle batch mode for activity tracker
+ */
+function toggleBatchMode() {
+    if (tracker) {
+        tracker.toggleBatchMode();
+    }
+}
+
+/**
+ * Initialize batch mode button state from saved state
+ */
+function initializeBatchModeButton() {
+    if (!tracker) return;
+
+    const btn = document.getElementById('batchModeBtn');
+    if (!btn) return;
+
+    // Ensure batchMode state exists
+    if (!tracker.state.batchMode) {
+        tracker.state.batchMode = {
+            enabled: false,
+            savedDate: null
+        };
+    }
+
+    // Restore button state
+    if (tracker.state.batchMode.enabled) {
+        btn.classList.add('active');
+    } else {
+        btn.classList.remove('active');
+    }
+}
+
+/**
  * Generate sound option elements for dropdowns
  * @param {Array} excludeSounds - Array of sound keys to exclude (e.g., tick sounds)
  * @param {string} selectedValue - Currently selected value
@@ -3186,13 +3220,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Create tracker instance
     tracker = new ActivityTracker();
-    
+
     // Initialize version checking for automatic updates
     tracker.initializeVersionChecking();
-    
+
     // Initialize backup prompt system
     tracker.initializeBackupPrompt();
-    
+
     // Clean up intervals on page unload
     window.addEventListener('beforeunload', () => {
         if (tracker) {
@@ -3202,9 +3236,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    
+
     // Initialize form timestamps to current time
     initializeFormTimestamps();
+
+    // Restore batch mode button state
+    initializeBatchModeButton();
     
     // Register service worker if supported
     if ('serviceWorker' in navigator) {

@@ -1464,7 +1464,13 @@ class ActivityTracker {
         return {
             // Undo buffer for deletions (max 5 items)
             deletedEntriesBuffer: [],
-            
+
+            // Batch mode state
+            batchMode: {
+                enabled: false,
+                savedDate: null // Store the date portion when batch mode is active
+            },
+
             // Pomodoro session state
             pomodoro: {
                 isRunning: false,
@@ -1479,7 +1485,7 @@ class ActivityTracker {
                 cycleCount: 0,
                 totalSessions: 0
             },
-            
+
             // Current activity being worked on (not yet logged)
             currentActivity: {
                 name: '',
@@ -1487,13 +1493,13 @@ class ActivityTracker {
                 startTime: null,
                 tags: []
             },
-            
+
             // Todo state
             todos: {
                 currentTodo: null,
                 completedSinceLastLog: []
             },
-            
+
             timestamp: Date.now()
         };
     }
@@ -2636,12 +2642,71 @@ class ActivityTracker {
 
     /**
      * Set current time in the timestamp input
+     * Respects batch mode to preserve the date
      */
     setCurrentTime() {
         const timestamp = document.getElementById('timestamp');
-        if (timestamp) {
+        if (!timestamp) return;
+
+        // Ensure batchMode state exists
+        if (!this.state.batchMode) {
+            this.state.batchMode = {
+                enabled: false,
+                savedDate: null
+            };
+        }
+
+        // If batch mode is active and we have a saved date, preserve it
+        if (this.state.batchMode.enabled && this.state.batchMode.savedDate) {
+            const currentTime = new Date();
+            const [year, month, day] = this.state.batchMode.savedDate.split('-');
+            currentTime.setFullYear(parseInt(year), parseInt(month) - 1, parseInt(day));
+
+            // Format as datetime-local string
+            const timeStr = currentTime.toISOString().slice(0, 16);
+            timestamp.value = timeStr;
+        } else {
             timestamp.value = getCurrentTimeForInput();
         }
+    }
+
+    /**
+     * Toggle batch mode on/off
+     */
+    toggleBatchMode() {
+        // Ensure batchMode state exists
+        if (!this.state.batchMode) {
+            this.state.batchMode = {
+                enabled: false,
+                savedDate: null
+            };
+        }
+
+        this.state.batchMode.enabled = !this.state.batchMode.enabled;
+
+        const btn = document.getElementById('batchModeBtn');
+        const timestamp = document.getElementById('timestamp');
+
+        if (this.state.batchMode.enabled) {
+            // Store current date from the timestamp input
+            if (timestamp && timestamp.value) {
+                const date = new Date(timestamp.value);
+                this.state.batchMode.savedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            } else {
+                // If no timestamp set, use today's date
+                const today = new Date();
+                this.state.batchMode.savedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            }
+
+            if (btn) btn.classList.add('active');
+            showNotification('Batch mode enabled - date will persist across entries', 'success');
+        } else {
+            this.state.batchMode.savedDate = null;
+            if (btn) btn.classList.remove('active');
+            showNotification('Batch mode disabled', 'info');
+        }
+
+        this.saveState();
     }
 
     /**
